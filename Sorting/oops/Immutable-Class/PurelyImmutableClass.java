@@ -22,7 +22,7 @@ class Student {
     public Student(String name, int age, College college) {
         this.name = name;
         this.age = age;
-        this.college = college;
+        this.college = new College(college.name, college.address);
     } 
     //getters
     String getName() {
