@@ -1,6 +1,6 @@
 
-public class NotPurelyImmutable {
-    public static void main(String[] args) {
+public class PurelyImmutableClass {
+     public static void main(String[] args) {
         
         College college = new College("AIET", "Lucknow");
         Student s1 = new Student("Divyansh", 21, college);
@@ -8,10 +8,12 @@ public class NotPurelyImmutable {
         System.out.println(s1.getAge());
         System.out.println(s1.getCollege().name);
         System.out.println(s1.getCollege().address);
-        System.out.println(s1.getCollege().address = "Kanpur"); // This is where it fails we can change the data. This basically give the reference of college address so even i dont have setCollege() in Student class we still change the college address
+        s1.getCollege().address = "Kanpur";
+        System.out.println(s1.getCollege().address); 
     }
 }
-//(Not purely immutable) ==> Shallow Copy
+//Immutable
+//Defensive copy OR Deep Copy
 class Student {
     private final String name;
     private final int age;
@@ -30,7 +32,7 @@ class Student {
         return this.age;
     }
     College getCollege() {
-        return this.college;
+        return new College(college.name, college.address); //Not passing actual reference addres firslty creating a new obj copy values and pass the new obj reference
     }
 }
 class College {
@@ -42,3 +44,4 @@ class College {
         this.address = address;
     }
 }
+
