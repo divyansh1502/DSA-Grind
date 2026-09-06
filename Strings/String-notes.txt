@@ -1,0 +1,3039 @@
+/*
+================================================================================
+                    STRING & STRINGBUILDER - COMPLETE NOTES
+================================================================================
+
+String and StringBuilder are extremely important in Java.
+
+They are used heavily in:
+
+    -> DSA
+    -> Backend Development
+    -> String Manipulation
+    -> Parsing
+    -> Searching
+    -> Pattern Matching
+    -> Input Processing
+    -> APIs
+    -> File Processing
+    -> Data Validation
+
+
+================================================================================
+                              1. STRING
+================================================================================
+
+DEFINITION:
+-----------
+String is a sequence of characters.
+
+Example:
+
+    "Hello"
+    "Java"
+    "Divyansh"
+
+
+In Java:
+
+    String is a CLASS.
+
+It is NOT a primitive data type.
+
+
+Example:
+
+    String name = "Divyansh";
+
+
+String belongs to:
+
+    java.lang.String
+
+
+Therefore, we do NOT need to import it.
+
+================================================================================
+                     STRING DECLARATION
+================================================================================
+
+Example:
+
+    String str;
+
+
+Here:
+
+    str
+
+is a reference variable.
+
+No String object has been explicitly created yet.
+
+
+We can create a String using:
+
+    String str = "Hello";
+
+
+or:
+
+    String str = new String("Hello");
+
+
+Both are valid, but they behave differently in terms of
+object creation and the String Pool.
+
+
+================================================================================
+                       STRING LITERAL
+================================================================================
+
+Example:
+
+    String s = "Hello";
+
+
+"Hello" is called a:
+
+    STRING LITERAL
+
+
+String literals are handled specially by Java using the:
+
+    STRING CONSTANT POOL
+
+also called:
+
+    STRING POOL
+
+
+================================================================================
+                         STRING POOL
+================================================================================
+
+String Pool is a special area associated with the JVM heap where
+Java can store and reuse String literals.
+
+Example:
+
+    String a = "Hello";
+    String b = "Hello";
+
+
+Java can reuse the same pooled String object for both references.
+
+Conceptually:
+
+                 String Pool
+                +-----------+
+                |  "Hello"  |
+                +-----------+
+                  ↑       ↑
+                  |       |
+                  a       b
+
+
+Therefore:
+
+    a == b
+
+can be:
+
+    true
+
+
+because both references can point to the same pooled object.
+
+
+IMPORTANT:
+----------
+This does NOT mean we should compare String contents using ==.
+
+
+For content comparison, use:
+
+    equals()
+
+
+Example:
+
+    a.equals(b)
+
+
+================================================================================
+                    STRING USING new KEYWORD
+================================================================================
+
+Example:
+
+    String a = new String("Hello");
+    String b = new String("Hello");
+
+
+Here, each new String explicitly creates a separate String object.
+
+Conceptually:
+
+    a ---> "Hello"
+
+    b ---> "Hello"
+
+
+The objects are different.
+
+
+Therefore:
+
+    a == b
+
+returns:
+
+    false
+
+
+But:
+
+    a.equals(b)
+
+returns:
+
+    true
+
+
+because their CONTENT is the same.
+
+
+================================================================================
+                         == VS equals()
+================================================================================
+
+This is one of the MOST IMPORTANT String concepts.
+
+
+==
+
+Checks:
+
+    REFERENCE / OBJECT IDENTITY
+
+
+equals()
+
+Checks:
+
+    CONTENT / VALUE
+
+
+Example:
+
+    String a = new String("Java");
+    String b = new String("Java");
+
+
+    a == b
+
+    false
+
+
+    a.equals(b)
+
+    true
+
+
+🔥 MEMORY TRICK:
+
+    ==       -> "Are they the SAME OBJECT?"
+    equals() -> "Do they have the SAME CONTENT?"
+
+
+================================================================================
+                         STRING IMMUTABILITY
+================================================================================
+
+String is:
+
+    IMMUTABLE
+
+
+Immutable means:
+
+    Once a String object is created, its content cannot be changed.
+
+
+Example:
+
+    String s = "Hello";
+
+    s = s + " World";
+
+
+It may look like the existing String was modified.
+
+But actually:
+
+    "Hello"
+
+was NOT modified.
+
+
+A new String:
+
+    "Hello World"
+
+is created.
+
+
+Then:
+
+    s
+
+is made to refer to the new String.
+
+
+Conceptually:
+
+Before:
+
+    s
+    |
+    v
+    "Hello"
+
+
+After:
+
+    s
+    |
+    v
+    "Hello World"
+
+
+The original "Hello" object remains unchanged.
+
+
+================================================================================
+                    WHY IS STRING IMMUTABLE?
+================================================================================
+
+String immutability provides several benefits:
+
+1. SECURITY
+-----------
+
+Strings are used for:
+
+    passwords
+    file paths
+    URLs
+    database connections
+    class names
+
+
+If Strings could change unexpectedly, security problems could occur.
+
+
+2. STRING POOL
+--------------
+
+Because Strings are immutable, Java can safely reuse String objects
+from the String Pool.
+
+
+3. THREAD SAFETY
+----------------
+
+Immutable objects can safely be shared between threads because
+their state cannot be changed.
+
+
+4. HASHING
+----------
+
+Strings are commonly used as keys in:
+
+    HashMap
+    HashSet
+
+
+Immutability ensures their hash value/content does not unexpectedly change.
+
+
+================================================================================
+                      STRING CONCATENATION
+================================================================================
+
+Concatenation means joining Strings.
+
+
+Using +:
+
+    String first = "Hello";
+    String second = "World";
+
+    String result = first + " " + second;
+
+
+Result:
+
+    "Hello World"
+
+
+================================================================================
+                       concat() METHOD
+================================================================================
+
+Method:
+
+    concat()
+
+
+Example:
+
+    String a = "Hello";
+
+    String b = a.concat(" World");
+
+
+Result:
+
+    "Hello World"
+
+
+IMPORTANT:
+----------
+concat() returns a NEW String.
+
+It does not modify the original String.
+
+
+================================================================================
+                     STRING LENGTH
+================================================================================
+
+Method:
+
+    length()
+
+
+Example:
+
+    String s = "Java";
+
+    System.out.println(s.length());
+
+
+Output:
+
+    4
+
+
+IMPORTANT:
+
+Array:
+
+    arr.length
+
+String:
+
+    str.length()
+
+
+Array uses a property.
+
+String uses a method.
+
+
+================================================================================
+                        charAt()
+================================================================================
+
+Returns the character at a particular index.
+
+
+Syntax:
+
+    str.charAt(index)
+
+
+Example:
+
+    String s = "Java";
+
+    s.charAt(0) -> 'J'
+    s.charAt(1) -> 'a'
+    s.charAt(2) -> 'v'
+    s.charAt(3) -> 'a'
+
+
+Indexes start from:
+
+    0
+
+
+If index is invalid:
+
+    StringIndexOutOfBoundsException
+
+
+================================================================================
+                         substring()
+================================================================================
+
+Used to extract part of a String.
+
+
+METHOD 1:
+---------
+
+    substring(beginIndex)
+
+
+Example:
+
+    String s = "HelloWorld";
+
+    s.substring(5);
+
+
+Result:
+
+    "World"
+
+
+The substring starts from index 5 and goes to the end.
+
+
+METHOD 2:
+---------
+
+    substring(beginIndex, endIndex)
+
+
+Example:
+
+    String s = "HelloWorld";
+
+    s.substring(0, 5);
+
+
+Result:
+
+    "Hello"
+
+
+IMPORTANT:
+----------
+beginIndex is INCLUDED.
+
+endIndex is EXCLUDED.
+
+
+🔥 MEMORY TRICK:
+
+    [begin, end)
+
+
+Example:
+
+    substring(2, 5)
+
+takes:
+
+    index 2
+    index 3
+    index 4
+
+NOT index 5.
+
+
+================================================================================
+                         equals()
+================================================================================
+
+Checks whether two Strings have the same content.
+
+
+Example:
+
+    String a = "Java";
+    String b = "Java";
+
+    a.equals(b)
+
+
+Returns:
+
+    true
+
+
+It is case-sensitive.
+
+
+Example:
+
+    "Java".equals("java")
+
+
+Returns:
+
+    false
+
+
+================================================================================
+                       equalsIgnoreCase()
+================================================================================
+
+Compares Strings while ignoring uppercase/lowercase differences.
+
+
+Example:
+
+    "Java".equalsIgnoreCase("JAVA")
+
+
+Returns:
+
+    true
+
+
+================================================================================
+                          compareTo()
+================================================================================
+
+compareTo() compares Strings lexicographically.
+
+Lexicographical means dictionary-like ordering based on characters.
+
+
+Example:
+
+    "apple".compareTo("banana")
+
+
+Result:
+
+    negative value
+
+
+Because:
+
+    apple < banana
+
+
+If:
+
+    a.compareTo(b) == 0
+
+Then both Strings are equal in lexicographical ordering.
+
+
+If:
+
+    a.compareTo(b) < 0
+
+Then:
+
+    a comes before b.
+
+
+If:
+
+    a.compareTo(b) > 0
+
+Then:
+
+    a comes after b.
+
+
+IMPORTANT:
+----------
+Do NOT memorize the exact non-zero number.
+
+Remember:
+
+    negative -> smaller
+    zero     -> equal
+    positive -> greater
+
+
+================================================================================
+                     compareToIgnoreCase()
+================================================================================
+
+Same concept as compareTo(),
+
+but ignores case differences.
+
+
+Example:
+
+    "java".compareToIgnoreCase("JAVA")
+
+
+Returns:
+
+    0
+
+
+================================================================================
+                         contains()
+================================================================================
+
+Checks whether a String contains another sequence.
+
+
+Example:
+
+    String s = "Hello Java";
+
+    s.contains("Java");
+
+
+Returns:
+
+    true
+
+
+Example:
+
+    s.contains("Python");
+
+
+Returns:
+
+    false
+
+
+================================================================================
+                         startsWith()
+================================================================================
+
+Checks whether String starts with a specific sequence.
+
+
+Example:
+
+    String s = "Hello Java";
+
+    s.startsWith("Hello");
+
+
+Returns:
+
+    true
+
+
+================================================================================
+                          endsWith()
+================================================================================
+
+Checks whether String ends with a specific sequence.
+
+
+Example:
+
+    String s = "Hello Java";
+
+    s.endsWith("Java");
+
+
+Returns:
+
+    true
+
+
+================================================================================
+                           indexOf()
+================================================================================
+
+Returns the index of the first occurrence.
+
+
+Example:
+
+    String s = "banana";
+
+    s.indexOf('a');
+
+
+Result:
+
+    1
+
+
+Another example:
+
+    s.indexOf("ana");
+
+
+Result:
+
+    1
+
+
+If the element/substring is not found:
+
+    -1
+
+
+================================================================================
+                        lastIndexOf()
+================================================================================
+
+Returns the index of the last occurrence.
+
+
+Example:
+
+    String s = "banana";
+
+    s.lastIndexOf('a');
+
+
+Result:
+
+    5
+
+
+If not found:
+
+    -1
+
+
+================================================================================
+                            isEmpty()
+================================================================================
+
+Checks whether String length is exactly zero.
+
+
+Example:
+
+    String s = "";
+
+    s.isEmpty();
+
+
+Returns:
+
+    true
+
+
+IMPORTANT:
+
+    "   "
+
+is NOT empty.
+
+Because it contains spaces.
+
+
+================================================================================
+                            isBlank()
+================================================================================
+
+Checks whether a String is empty or contains only whitespace.
+
+
+Example:
+
+    "".isBlank()
+    -> true
+
+
+    "   ".isBlank()
+    -> true
+
+
+    "Hello".isBlank()
+    -> false
+
+
+NOTE:
+-----
+isBlank() is available in modern Java versions.
+
+
+Difference:
+
+    isEmpty() -> length == 0
+
+    isBlank() -> empty OR only whitespace
+
+
+================================================================================
+                             trim()
+================================================================================
+
+Removes leading and trailing whitespace.
+
+
+Example:
+
+    String s = "   Hello Java   ";
+
+    s.trim();
+
+
+Result:
+
+    "Hello Java"
+
+
+IMPORTANT:
+----------
+trim() does NOT remove spaces between words.
+
+
+    "Hello   Java"
+
+remains:
+
+    "Hello   Java"
+
+
+Also, trim() returns a String rather than modifying the original.
+
+
+================================================================================
+                            strip()
+================================================================================
+
+strip() also removes leading and trailing whitespace.
+
+Example:
+
+    String s = "   Hello   ";
+
+    s.strip();
+
+
+Result:
+
+    "Hello"
+
+
+Modern Java's strip() is Unicode-aware compared with trim()'s older
+whitespace behavior.
+
+
+Related methods:
+
+    stripLeading()
+    stripTrailing()
+
+
+================================================================================
+                          toUpperCase()
+================================================================================
+
+Converts String to uppercase.
+
+
+Example:
+
+    "java".toUpperCase();
+
+
+Result:
+
+    "JAVA"
+
+
+================================================================================
+                          toLowerCase()
+================================================================================
+
+Converts String to lowercase.
+
+
+Example:
+
+    "JAVA".toLowerCase();
+
+
+Result:
+
+    "java"
+
+
+================================================================================
+                          replace()
+================================================================================
+
+Replaces characters or literal sequences.
+
+
+Example:
+
+    String s = "banana";
+
+    s.replace('a', 'x');
+
+
+Result:
+
+    "bxnxnx"
+
+
+Another example:
+
+    s.replace("banana", "apple");
+
+
+Returns:
+
+    "apple"
+
+
+IMPORTANT:
+----------
+replace() works with literal characters/sequences.
+
+
+================================================================================
+                        replaceFirst()
+================================================================================
+
+Replaces the first substring matching a regular expression.
+
+
+Example:
+
+    String s = "banana";
+
+    s.replaceFirst("a", "x");
+
+
+Result:
+
+    "bxnana"
+
+
+It works using REGEX rules.
+
+
+================================================================================
+                        replaceAll()
+================================================================================
+
+Replaces every substring matching a regular expression.
+
+
+Example:
+
+    String s = "a1b2c3";
+
+    s.replaceAll("[0-9]", "");
+
+
+Result:
+
+    "abc"
+
+
+IMPORTANT:
+----------
+replaceAll() uses REGEX.
+
+
+replace():
+    Literal replacement.
+
+
+replaceAll():
+    Regex-based replacement.
+
+
+================================================================================
+                             split()
+================================================================================
+
+Splits a String into an array of Strings.
+
+
+Example:
+
+    String s = "Java is powerful";
+
+    String[] words = s.split(" ");
+
+
+Result:
+
+    ["Java", "is", "powerful"]
+
+
+Example:
+
+    String s = "apple,banana,mango";
+
+    String[] fruits = s.split(",");
+
+
+Result:
+
+    ["apple", "banana", "mango"]
+
+
+IMPORTANT:
+----------
+split() uses REGEX as its delimiter.
+
+
+For example:
+
+    "." 
+
+has special meaning in regex.
+
+
+================================================================================
+                          toCharArray()
+================================================================================
+
+Converts String into a character array.
+
+
+Example:
+
+    String s = "Java";
+
+    char[] arr = s.toCharArray();
+
+
+Result:
+
+    ['J', 'a', 'v', 'a']
+
+
+Very useful in DSA.
+
+
+================================================================================
+                       String -> char[]
+================================================================================
+
+Example:
+
+    String s = "hello";
+
+    char[] arr = s.toCharArray();
+
+
+Now we can manipulate individual characters using:
+
+    arr[i]
+
+
+Useful for:
+
+    Character frequency
+    Palindrome
+    Anagram
+    Sorting characters
+    Two pointer problems
+
+
+================================================================================
+                    char[] -> String
+================================================================================
+
+Method:
+
+    new String(charArray)
+
+
+Example:
+
+    char[] arr = {'J', 'a', 'v', 'a'};
+
+    String s = new String(arr);
+
+
+Result:
+
+    "Java"
+
+
+Another common method:
+
+    String.valueOf(arr)
+
+
+================================================================================
+                         valueOf()
+================================================================================
+
+String.valueOf() converts values into Strings.
+
+
+Examples:
+
+    String.valueOf(100)
+    String.valueOf(10.5)
+    String.valueOf(true)
+    String.valueOf('A')
+
+
+Example:
+
+    int n = 123;
+
+    String s = String.valueOf(n);
+
+
+Now:
+
+    s = "123"
+
+
+================================================================================
+                            join()
+================================================================================
+
+String.join() joins multiple Strings using a delimiter.
+
+
+Example:
+
+    String result = String.join("-", "2026", "09", "06");
+
+
+Result:
+
+    "2026-09-06"
+
+
+Another example:
+
+    String.join(" ", "Hello", "Java");
+
+
+Result:
+
+    "Hello Java"
+
+
+================================================================================
+                        formatted()
+================================================================================
+
+String.formatted() can create formatted Strings.
+
+
+Example:
+
+    String name = "Divyansh";
+
+    String s = "Hello, %s".formatted(name);
+
+
+Result:
+
+    "Hello, Divyansh"
+
+
+================================================================================
+                       format()
+================================================================================
+
+String.format() creates formatted Strings.
+
+
+Example:
+
+    String s = String.format("Age = %d", 22);
+
+
+Result:
+
+    "Age = 22"
+
+
+================================================================================
+                     STRING METHODS CHEAT SHEET
+================================================================================
+
+length()
+    -> Returns length.
+
+
+charAt(index)
+    -> Returns character.
+
+
+substring()
+    -> Extracts part of String.
+
+
+equals()
+    -> Compares content.
+
+
+equalsIgnoreCase()
+    -> Compares content ignoring case.
+
+
+compareTo()
+    -> Lexicographical comparison.
+
+
+contains()
+    -> Checks substring.
+
+
+startsWith()
+    -> Checks prefix.
+
+
+endsWith()
+    -> Checks suffix.
+
+
+indexOf()
+    -> First occurrence.
+
+
+lastIndexOf()
+    -> Last occurrence.
+
+
+isEmpty()
+    -> Checks length == 0.
+
+
+isBlank()
+    -> Checks empty/whitespace.
+
+
+trim()
+    -> Removes leading/trailing whitespace.
+
+
+strip()
+    -> Unicode-aware whitespace removal.
+
+
+toUpperCase()
+    -> Converts to uppercase.
+
+
+toLowerCase()
+    -> Converts to lowercase.
+
+
+replace()
+    -> Literal replacement.
+
+
+replaceFirst()
+    -> Regex replacement of first match.
+
+
+replaceAll()
+    -> Regex replacement of all matches.
+
+
+split()
+    -> Splits into String array.
+
+
+toCharArray()
+    -> String -> char[]
+
+
+concat()
+    -> Concatenates Strings.
+
+
+String.valueOf()
+    -> Converts value to String.
+
+
+String.join()
+    -> Joins Strings.
+
+
+================================================================================
+                     2. STRINGBUILDER
+================================================================================
+
+DEFINITION:
+-----------
+StringBuilder is a mutable sequence of characters.
+
+Unlike String:
+
+    String       -> Immutable
+    StringBuilder -> Mutable
+
+
+Package:
+
+    java.lang.StringBuilder
+
+
+No import is required.
+
+
+Example:
+
+    StringBuilder sb = new StringBuilder();
+
+
+================================================================================
+                       WHY STRINGBUILDER?
+================================================================================
+
+Suppose:
+
+    String s = "";
+
+    for(int i = 0; i < 1000; i++) {
+        s = s + i;
+    }
+
+
+Because String is immutable, many intermediate String objects
+may be created.
+
+
+StringBuilder is designed for repeated modifications.
+
+
+Example:
+
+    StringBuilder sb = new StringBuilder();
+
+    for(int i = 0; i < 1000; i++) {
+        sb.append(i);
+    }
+
+
+This is generally much more efficient for repeated concatenation.
+
+
+================================================================================
+                          append()
+================================================================================
+
+Adds data at the end.
+
+
+Example:
+
+    StringBuilder sb = new StringBuilder("Hello");
+
+    sb.append(" Java");
+
+
+Result:
+
+    "Hello Java"
+
+
+Can append many types:
+
+    sb.append(10);
+    sb.append(10.5);
+    sb.append(true);
+    sb.append('A');
+
+
+================================================================================
+                          insert()
+================================================================================
+
+Inserts data at a specified index.
+
+
+Example:
+
+    StringBuilder sb = new StringBuilder("Hello");
+
+    sb.insert(5, " Java");
+
+
+Result:
+
+    "Hello Java"
+
+
+Example:
+
+    StringBuilder sb = new StringBuilder("Helo");
+
+    sb.insert(2, "l");
+
+
+Result:
+
+    "Hello"
+
+
+================================================================================
+                          delete()
+================================================================================
+
+Deletes characters from:
+
+    start index
+
+to:
+
+    end index
+
+
+Example:
+
+    StringBuilder sb = new StringBuilder("Hello World");
+
+    sb.delete(5, 11);
+
+
+Result:
+
+    "Hello"
+
+
+IMPORTANT:
+----------
+Like substring():
+
+    start -> INCLUDED
+    end   -> EXCLUDED
+
+
+🔥 MEMORY TRICK:
+
+    delete(start, end)
+    = [start, end)
+
+
+================================================================================
+                         deleteCharAt()
+================================================================================
+
+Deletes one character.
+
+
+Example:
+
+    StringBuilder sb = new StringBuilder("Hello");
+
+    sb.deleteCharAt(1);
+
+
+Result:
+
+    "Helo"
+
+
+================================================================================
+                            setCharAt()
+================================================================================
+
+Changes the character at a specific index.
+
+
+Example:
+
+    StringBuilder sb = new StringBuilder("Java");
+
+    sb.setCharAt(0, 'K');
+
+
+Result:
+
+    "Kava"
+
+
+IMPORTANT:
+----------
+This demonstrates mutability.
+
+String cannot directly do:
+
+    str.setCharAt(...)
+
+
+StringBuilder can.
+
+
+================================================================================
+                            charAt()
+================================================================================
+
+Returns character at index.
+
+
+Example:
+
+    StringBuilder sb = new StringBuilder("Java");
+
+    sb.charAt(2);
+
+
+Result:
+
+    'v'
+
+
+Same concept as String.
+
+
+================================================================================
+                            reverse()
+================================================================================
+
+Reverses the sequence.
+
+
+Example:
+
+    StringBuilder sb = new StringBuilder("Java");
+
+    sb.reverse();
+
+
+Result:
+
+    "avaJ"
+
+
+VERY IMPORTANT FOR DSA.
+
+
+Example:
+
+    String s = "hello";
+
+    String reversed =
+            new StringBuilder(s).reverse().toString();
+
+
+Result:
+
+    "olleh"
+
+
+================================================================================
+                            length()
+================================================================================
+
+Returns number of characters.
+
+
+Example:
+
+    StringBuilder sb = new StringBuilder("Hello");
+
+    sb.length();
+
+
+Result:
+
+    5
+
+
+================================================================================
+                          capacity()
+================================================================================
+
+Returns the current capacity of the StringBuilder.
+
+
+Example:
+
+    StringBuilder sb = new StringBuilder();
+
+    System.out.println(sb.capacity());
+
+
+The default initial capacity in standard Java implementations is
+16 characters.
+
+
+If we create:
+
+    StringBuilder sb = new StringBuilder(50);
+
+
+Initial capacity is:
+
+    50
+
+
+IMPORTANT:
+----------
+Capacity != Length
+
+
+Example:
+
+    StringBuilder sb = new StringBuilder(50);
+
+    sb.append("Hello");
+
+
+Then:
+
+    length   = 5
+    capacity = 50
+
+
+Capacity means approximately how many characters can be stored before
+another expansion is required.
+
+
+================================================================================
+                          ensureCapacity()
+================================================================================
+
+Ensures that the builder has at least the specified capacity.
+
+
+Example:
+
+    sb.ensureCapacity(100);
+
+
+This can be useful when we know a large amount of data will be appended.
+
+
+================================================================================
+                          setLength()
+================================================================================
+
+Changes the length of the StringBuilder.
+
+
+Example:
+
+    StringBuilder sb = new StringBuilder("Hello");
+
+    sb.setLength(3);
+
+
+Result:
+
+    "Hel"
+
+
+If the new length is greater than the current length, the builder is
+extended with null characters.
+
+
+================================================================================
+                          toString()
+================================================================================
+
+Converts StringBuilder into String.
+
+
+Example:
+
+    StringBuilder sb = new StringBuilder("Hello");
+
+    String s = sb.toString();
+
+
+Result:
+
+    "Hello"
+
+
+VERY IMPORTANT:
+
+    StringBuilder -> String
+
+Use:
+
+    sb.toString()
+
+
+================================================================================
+                     STRINGBUILDER METHODS
+================================================================================
+
+append()
+    -> Adds at end.
+
+
+insert()
+    -> Inserts at index.
+
+
+delete()
+    -> Deletes range.
+
+
+deleteCharAt()
+    -> Deletes one character.
+
+
+setCharAt()
+    -> Changes one character.
+
+
+charAt()
+    -> Gets character.
+
+
+reverse()
+    -> Reverses sequence.
+
+
+length()
+    -> Current number of characters.
+
+
+capacity()
+    -> Current storage capacity.
+
+
+ensureCapacity()
+    -> Ensures minimum capacity.
+
+
+setLength()
+    -> Changes length.
+
+
+toString()
+    -> Converts to String.
+
+
+================================================================================
+                  STRING VS STRINGBUILDER
+================================================================================
+
+String:
+
+    Immutable
+
+
+StringBuilder:
+
+    Mutable
+
+
+String:
+
+    Every modification creates/returns a new String.
+
+
+StringBuilder:
+
+    Modifies the same builder object.
+
+
+String:
+
+    Good when content does not need repeated modification.
+
+
+StringBuilder:
+
+    Good for frequent modifications.
+
+
+String:
+
+    Thread-safe due to immutability for shared state.
+
+
+StringBuilder:
+
+    Not synchronized.
+
+
+For synchronized mutable character sequences:
+
+    StringBuffer
+
+
+================================================================================
+                  STRING VS STRINGBUILDER EXAMPLE
+================================================================================
+
+STRING:
+
+    String s = "Hello";
+
+    s = s + " Java";
+
+
+Original:
+
+    "Hello"
+
+remains unchanged.
+
+A new String is produced.
+
+
+STRINGBUILDER:
+
+    StringBuilder sb = new StringBuilder("Hello");
+
+    sb.append(" Java");
+
+
+The same StringBuilder object is modified.
+
+
+================================================================================
+                   STRINGBUILDER VS STRINGBUFFER
+================================================================================
+
+StringBuilder:
+    Mutable
+    Not synchronized
+    Generally faster
+    Preferred in single-threaded code
+
+
+StringBuffer:
+    Mutable
+    Synchronized
+    Thread-safe methods
+    Usually slower because of synchronization
+
+
+MEMORY TRICK:
+
+    String        -> Immutable
+    StringBuilder -> Mutable + Faster
+    StringBuffer  -> Mutable + Synchronized
+
+
+================================================================================
+                     STRING CONCATENATION IN DSA
+================================================================================
+
+Suppose:
+
+    String result = "";
+
+    for(int i = 0; i < n; i++) {
+        result += i;
+    }
+
+
+Repeated String concatenation can be inefficient because Strings are immutable.
+
+
+Better:
+
+    StringBuilder result = new StringBuilder();
+
+    for(int i = 0; i < n; i++) {
+        result.append(i);
+    }
+
+
+Finally:
+
+    result.toString();
+
+
+🔥 DSA RULE:
+
+    Frequent String modification
+            ↓
+      StringBuilder
+
+
+================================================================================
+                       PALINDROME USING STRING
+================================================================================
+
+A palindrome reads the same forward and backward.
+
+
+Example:
+
+    "madam"
+
+Reverse:
+
+    "madam"
+
+
+Therefore it is a palindrome.
+
+
+Using StringBuilder:
+
+    String s = "madam";
+
+    String reverse =
+            new StringBuilder(s)
+                    .reverse()
+                    .toString();
+
+    if(s.equals(reverse)) {
+        System.out.println("Palindrome");
+    }
+
+
+================================================================================
+                    STRINGBUILDER FOR REVERSAL
+================================================================================
+
+Example:
+
+    String s = "hello";
+
+    StringBuilder sb = new StringBuilder(s);
+
+    sb.reverse();
+
+    System.out.println(sb);
+
+
+Output:
+
+    olleh
+
+
+IMPORTANT:
+
+    reverse()
+
+modifies the StringBuilder itself.
+
+
+================================================================================
+                       STRING CHARACTER LOOP
+================================================================================
+
+Example:
+
+    String s = "Java";
+
+    for(int i = 0; i < s.length(); i++) {
+
+        System.out.println(s.charAt(i));
+    }
+
+
+Output:
+
+    J
+    a
+    v
+    a
+
+
+This is one of the MOST COMMON patterns in String DSA.
+
+
+================================================================================
+                   CHARACTER FREQUENCY PATTERN
+================================================================================
+
+Example:
+
+    String s = "banana";
+
+    int[] freq = new int[26];
+
+    for(char ch : s.toCharArray()) {
+
+        freq[ch - 'a']++;
+    }
+
+
+Why:
+
+    'a' - 'a' = 0
+    'b' - 'a' = 1
+    'c' - 'a' = 2
+
+and so on.
+
+
+This is extremely important for:
+
+    Anagrams
+    Frequency counting
+    Duplicate characters
+    Character comparison
+
+
+================================================================================
+                     STRING DSA IMPORTANCE
+================================================================================
+
+Strings are extremely important in DSA.
+
+Common String problems include:
+
+    1. Reverse a String
+    2. Check Palindrome
+    3. Valid Anagram
+    4. Character Frequency
+    5. Remove Duplicates
+    6. Longest Common Prefix
+    7. Longest Substring
+    8. String Compression
+    9. Valid Parentheses
+    10. String Rotation
+    11. Substring Search
+    12. Pattern Matching
+    13. Longest Palindromic Substring
+    14. Group Anagrams
+    15. Minimum Window Substring
+
+
+================================================================================
+                    IMPORTANT STRING PATTERNS
+================================================================================
+
+1. TWO POINTER
+---------------
+
+Used for:
+
+    Palindrome
+    Reverse
+    Comparing characters
+
+
+Example:
+
+    left  = 0
+    right = s.length() - 1
+
+
+Compare:
+
+    s.charAt(left)
+    s.charAt(right)
+
+
+Then:
+
+    left++
+    right--
+
+
+2. SLIDING WINDOW
+-----------------
+
+Used for:
+
+    Longest substring
+    Minimum window
+    Character frequency problems
+
+
+3. HASHING / FREQUENCY ARRAY
+----------------------------
+
+Used for:
+
+    Anagrams
+    Duplicate characters
+    Character counts
+
+
+4. STRINGBUILDER
+----------------
+
+Used for:
+
+    Repeated concatenation
+    Constructing answers
+    Reversing
+    Efficient modifications
+
+
+5. SORTING
+----------
+
+Used for:
+
+    Anagram checking
+    Character ordering
+    Grouping
+
+
+6. BINARY SEARCH
+----------------
+
+Can be used when searching over a sorted collection/string-related
+problem space.
+
+
+================================================================================
+                         STRING TIME COMPLEXITY
+================================================================================
+
+Important:
+
+String operation complexity depends on the operation and implementation.
+
+Common practical expectations:
+
+length():
+    O(1)
+
+
+charAt():
+    O(1)
+
+
+equals():
+    O(n) worst case
+
+
+compareTo():
+    O(n) worst case
+
+
+indexOf():
+    O(n) for simple cases, with behavior depending on implementation
+    and searched sequence.
+
+
+substring():
+    Modern Java creates an appropriate String representation/copy,
+    so do not assume old Java's historical shared-character-array behavior.
+
+
+toCharArray():
+    O(n)
+
+
+toLowerCase()/toUpperCase():
+    Generally O(n), with Unicode/casing details depending on content.
+
+
+trim()/strip():
+    Generally O(n)
+
+
+split():
+    O(n) or more depending on regex complexity and number of pieces.
+
+
+concat():
+    Generally O(n + m) for resulting content.
+
+
+IMPORTANT:
+----------
+Always consider the amount of data that must be processed/copied.
+
+
+================================================================================
+                  STRINGBUILDER TIME COMPLEXITY
+================================================================================
+
+charAt():
+    O(1)
+
+
+setCharAt():
+    O(1)
+
+
+append():
+    O(1) amortized
+
+
+insert():
+    O(n) in general
+
+
+delete():
+    O(n) in general
+
+
+deleteCharAt():
+    O(n) in general
+
+
+reverse():
+    O(n)
+
+
+toString():
+    O(n)
+
+
+length():
+    O(1)
+
+
+capacity():
+    O(1)
+
+
+================================================================================
+                        IMMUTABILITY EXAMPLE
+================================================================================
+
+Example:
+
+    String s = "Hello";
+
+    s.concat(" World");
+
+If we don't store the returned String:
+
+    s
+
+still refers to:
+
+    "Hello"
+
+
+Correct:
+
+    s = s.concat(" World");
+
+
+OR:
+
+    s = s + " World";
+
+
+This is because String is immutable.
+
+
+================================================================================
+                      COMMON STRING MISTAKES
+================================================================================
+
+MISTAKE 1:
+----------
+
+    if(s1 == s2)
+
+
+Don't use == for String content comparison.
+
+
+Use:
+
+    s1.equals(s2)
+
+
+
+
+
+MISTAKE 2:
+----------
+
+Thinking String methods modify the original String.
+
+
+Example:
+
+    s.toUpperCase();
+
+
+This does not change s.
+
+
+Use:
+
+    s = s.toUpperCase();
+
+
+
+
+
+MISTAKE 3:
+----------
+
+Using String concatenation repeatedly in a large loop.
+
+
+Prefer:
+
+    StringBuilder
+
+
+
+
+
+MISTAKE 4:
+----------
+
+Confusing:
+
+    length
+    length()
+
+
+Array:
+
+    arr.length
+
+
+String:
+
+    str.length()
+
+
+StringBuilder:
+
+    sb.length()
+
+
+
+
+
+MISTAKE 5:
+----------
+
+Forgetting substring end index is exclusive.
+
+
+    substring(2, 5)
+
+means:
+
+    2, 3, 4
+
+
+NOT:
+
+    2, 3, 4, 5
+
+
+
+
+
+MISTAKE 6:
+----------
+
+Confusing StringBuilder length and capacity.
+
+
+    length()
+        -> number of actual characters
+
+
+    capacity()
+        -> available internal capacity before expansion
+
+
+================================================================================
+                    STRING POOL IMPORTANT EXAMPLE
+================================================================================
+
+Example:
+
+    String a = "Java";
+    String b = "Java";
+
+    System.out.println(a == b);
+
+
+Can print:
+
+    true
+
+
+because both may refer to the same pooled literal.
+
+
+Now:
+
+    String c = new String("Java");
+
+    System.out.println(a == c);
+
+
+Returns:
+
+    false
+
+
+because c refers to a separately created String object.
+
+
+But:
+
+    System.out.println(a.equals(c));
+
+
+Returns:
+
+    true
+
+
+because content is equal.
+
+
+================================================================================
+                            intern()
+================================================================================
+
+intern() returns the canonical pooled representation of a String.
+
+
+Example:
+
+    String a = new String("Java");
+
+    String b = a.intern();
+
+
+Now b refers to the pooled "Java" representation.
+
+
+Then:
+
+    b == "Java"
+
+can be:
+
+    true
+
+
+IMPORTANT:
+----------
+You usually don't need intern() in normal DSA programming.
+
+Just understand the concept for Java memory/string-pool questions.
+
+
+================================================================================
+                     STRING CONVERSION CHEAT SHEET
+================================================================================
+
+String -> char[]:
+
+    s.toCharArray()
+
+
+char[] -> String:
+
+    new String(arr)
+
+
+int -> String:
+
+    String.valueOf(n)
+
+
+String -> int:
+
+    Integer.parseInt(s)
+
+
+double -> String:
+
+    String.valueOf(d)
+
+
+String -> double:
+
+    Double.parseDouble(s)
+
+
+StringBuilder -> String:
+
+    sb.toString()
+
+
+String -> StringBuilder:
+
+    new StringBuilder(s)
+
+
+================================================================================
+                     USEFUL PARSING METHODS
+================================================================================
+
+String:
+
+    "123"
+
+
+Convert to int:
+
+    Integer.parseInt("123");
+
+
+Result:
+
+    123
+
+
+Convert to long:
+
+    Long.parseLong("123");
+
+
+Convert to double:
+
+    Double.parseDouble("10.5");
+
+
+Convert to boolean:
+
+    Boolean.parseBoolean("true");
+
+
+IMPORTANT:
+----------
+Invalid numeric String can cause:
+
+    NumberFormatException
+
+
+================================================================================
+                         REGEX CONNECTION
+================================================================================
+
+Some String methods use regular expressions:
+
+    split()
+    replaceFirst()
+    replaceAll()
+
+
+Example:
+
+    String s = "a1b2c3";
+
+    s.replaceAll("[0-9]", "");
+
+
+Result:
+
+    "abc"
+
+
+Remember:
+
+    replace()
+        -> literal replacement
+
+
+    replaceAll()
+        -> regex replacement
+
+
+================================================================================
+                    STRINGBUILDER CAPACITY
+================================================================================
+
+Example:
+
+    StringBuilder sb = new StringBuilder();
+
+
+Initially:
+
+    length = 0
+
+
+Default capacity is commonly:
+
+    16
+
+
+If more characters are added than the current capacity allows,
+StringBuilder expands its internal storage.
+
+
+You generally don't need to manually manage capacity unless performance
+matters.
+
+
+If you know the approximate required size:
+
+    StringBuilder sb = new StringBuilder(1000);
+
+
+This can reduce unnecessary resizing.
+
+
+================================================================================
+                     STRINGBUILDER MUTABILITY
+================================================================================
+
+Example:
+
+    StringBuilder sb = new StringBuilder("Java");
+
+
+Then:
+
+    sb.setCharAt(0, 'K');
+
+
+Result:
+
+    "Kava"
+
+
+The same StringBuilder object has been modified.
+
+
+This is the fundamental difference from String.
+
+
+================================================================================
+                     QUICK COMPARISON TABLE
+================================================================================
+
+Feature              String       StringBuilder       StringBuffer
+-----------------------------------------------------------------------
+Mutable?              No           Yes                 Yes
+Immutable?            Yes          No                  No
+Synchronized?         N/A          No                  Yes
+Generally faster?     Depends      Yes for mutable     Usually slower
+                     on use
+Thread-safe?          Immutable    No                  Yes
+Frequent modification Good?        No                  Yes
+Use in DSA            Yes          🔥 Very useful       Sometimes
+
+
+================================================================================
+                     MOST IMPORTANT METHODS
+================================================================================
+
+STRING:
+
+    length()
+    charAt()
+    substring()
+    equals()
+    equalsIgnoreCase()
+    compareTo()
+    contains()
+    startsWith()
+    endsWith()
+    indexOf()
+    lastIndexOf()
+    isEmpty()
+    isBlank()
+    trim()
+    strip()
+    toUpperCase()
+    toLowerCase()
+    replace()
+    replaceFirst()
+    replaceAll()
+    split()
+    toCharArray()
+    concat()
+    valueOf()
+    join()
+
+
+STRINGBUILDER:
+
+    append()
+    insert()
+    delete()
+    deleteCharAt()
+    setCharAt()
+    charAt()
+    reverse()
+    length()
+    capacity()
+    ensureCapacity()
+    setLength()
+    toString()
+
+
+================================================================================
+                         🔥 DSA MEMORY TRICKS
+================================================================================
+
+STRING:
+
+    IMMUTABLE
+
+
+STRINGBUILDER:
+
+    MUTABLE
+
+
+==:
+
+    REFERENCE
+
+
+equals():
+
+    CONTENT
+
+
+length():
+
+    STRING -> length()
+
+
+Array:
+
+    arr.length
+
+
+StringBuilder:
+
+    sb.length()
+
+
+substring:
+
+    [start, end)
+
+
+delete:
+
+    [start, end)
+
+
+charAt():
+
+    CHARACTER AT INDEX
+
+
+toCharArray():
+
+    STRING -> ARRAY
+
+
+toString():
+
+    BUILDER -> STRING
+
+
+append():
+
+    ADD AT END
+
+
+insert():
+
+    ADD AT INDEX
+
+
+delete():
+
+    REMOVE RANGE
+
+
+deleteCharAt():
+
+    REMOVE ONE CHARACTER
+
+
+setCharAt():
+
+    CHANGE ONE CHARACTER
+
+
+reverse():
+
+    REVERSE BUILDER
+
+
+capacity():
+
+    INTERNAL STORAGE CAPACITY
+
+
+================================================================================
+                    🔥 STRING DSA RECOGNITION TRICKS
+================================================================================
+
+If the problem says:
+
+    "Check whether string is palindrome"
+
+Think:
+
+    TWO POINTER
+
+
+If it says:
+
+    "Character frequency"
+
+Think:
+
+    int[26]
+    OR
+    HashMap
+
+
+If it says:
+
+    "Anagram"
+
+Think:
+
+    Frequency
+    OR
+    Sorting
+
+
+If it says:
+
+    "Longest substring"
+
+Think:
+
+    SLIDING WINDOW
+
+
+If it says:
+
+    "Build a string repeatedly"
+
+Think:
+
+    STRINGBUILDER
+
+
+If it says:
+
+    "Reverse string"
+
+Think:
+
+    Two Pointer
+    OR
+    StringBuilder.reverse()
+
+
+If it says:
+
+    "Remove characters"
+
+Think:
+
+    StringBuilder
+    OR
+    create a new result
+
+
+If it says:
+
+    "Compare strings"
+
+Think:
+
+    equals()
+
+
+NOT:
+
+    ==
+
+
+================================================================================
+                         FINAL REVISION SHEET
+================================================================================
+
+STRING
+------
+
+    String is a class.
+
+    String is immutable.
+
+    String literals can be stored/reused through String Pool.
+
+    == compares references.
+
+    equals() compares content.
+
+    String modifications produce new String results.
+
+
+STRINGBUILDER
+-------------
+
+    StringBuilder is mutable.
+
+    It maintains a modifiable sequence of characters.
+
+    append() -> add at end.
+
+    insert() -> insert at index.
+
+    delete() -> delete range.
+
+    deleteCharAt() -> delete one character.
+
+    setCharAt() -> modify character.
+
+    reverse() -> reverse.
+
+    charAt() -> access character.
+
+    toString() -> convert to String.
+
+
+================================================================================
+                         🔥 FINAL MEMORY TRICK
+================================================================================
+
+                STRING
+                   |
+             IMMUTABLE
+                   |
+          Modification creates
+              NEW STRING
+
+
+             STRINGBUILDER
+                   |
+                MUTABLE
+                   |
+          Modification happens
+            in the SAME object
+
+
+Remember:
+
+    STRING       = "I CANNOT CHANGE" 😭
+    STRINGBUILDER = "I CAN CHANGE" 😎
+
+
+And for DSA:
+
+    STRING
+       ↓
+    charAt()
+    substring()
+    equals()
+    indexOf()
+    toCharArray()
+       ↓
+    Character / Frequency / Two Pointer / Sliding Window
+
+
+    STRINGBUILDER
+       ↓
+    append()
+    insert()
+    delete()
+    setCharAt()
+    reverse()
+    toString()
+       ↓
+    Efficient String Construction 🔥
+
+
+================================================================================
+                              END
+================================================================================
+*/
