@@ -67,7 +67,7 @@ public class EmployeeManagementSystem {
                     break;
                 case 5:
                     int deleteId;
-                    System.out.print("Enter employee id to delete details");
+                    System.out.print("Enter employee id to delete details: ");
                     deleteId = sc.nextInt();
                     int employeeDelete = employeeFound(deleteId);
                     if(employeeDelete != -1) {

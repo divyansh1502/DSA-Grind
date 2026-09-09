@@ -1,0 +1,415 @@
+/*
+====================================================================
+                         OBJECT CLASS
+====================================================================
+
+Object is the root class of Java.
+
+Every class in Java directly or indirectly inherits from Object.
+
+For example:
+
+    Student -> Object
+
+    Dog -> Animal -> Object
+
+
+Therefore, methods such as:
+
+    toString()
+    equals()
+    hashCode()
+    getClass()
+    clone()
+    wait()
+    notify()
+    notifyAll()
+
+are available to objects because they originate from Object.
+
+--------------------------------------------------------------------
+1. toString()
+--------------------------------------------------------------------
+
+toString() returns the string representation of an object.
+
+Object already provides a toString() method, but we commonly
+override it to provide meaningful information.
+
+Example:
+
+    System.out.println(s1);
+
+is effectively calling:
+
+    System.out.println(s1.toString());
+
+because println() internally uses toString() when an object is
+passed to it.
+
+Our overridden method:
+
+    return name + " " + age;
+
+therefore prints:
+
+    Divyansh 21
+
+
+--------------------------------------------------------------------
+2. equals()
+--------------------------------------------------------------------
+
+equals() is used to check whether two objects are logically equal.
+
+The equals() method inherited from Object compares references,
+similar to ==.
+
+If we want to compare the actual data/state of objects, we override
+equals().
+
+Here, two Student objects are considered equal when:
+
+    name is equal
+    AND
+    age is equal
+
+
+Example:
+
+    Student s1 = new Student();
+    Student s2 = new Student();
+
+Even though s1 and s2 are different objects:
+
+    s1 == s2
+
+is false.
+
+But after overriding equals():
+
+    s1.equals(s2)
+
+can be true if their data is the same.
+
+
+IMPORTANT:
+
+For Strings, use equals() or Objects.equals() for value comparison.
+
+Correct:
+
+    Objects.equals(this.name, s.name)
+
+Avoid:
+
+    this.name == s.name
+
+because == compares String references, not String contents.
+
+
+--------------------------------------------------------------------
+3. == OPERATOR
+--------------------------------------------------------------------
+
+For objects, == compares references.
+
+Example:
+
+    Student s1 = new Student();
+    Student s2 = new Student();
+
+Both objects are created separately.
+
+Therefore:
+
+    s1 == s2
+
+returns:
+
+    false
+
+because s1 and s2 point to different objects.
+
+
+--------------------------------------------------------------------
+4. hashCode()
+--------------------------------------------------------------------
+
+hashCode() returns an integer hash value for an object.
+
+It is heavily used by hash-based collections such as:
+
+    HashMap
+    HashSet
+    Hashtable
+
+
+IMPORTANT CONTRACT:
+
+If:
+
+    s1.equals(s2)
+
+is true,
+
+then:
+
+    s1.hashCode() == s2.hashCode()
+
+MUST also be true.
+
+Therefore, whenever equals() is overridden, hashCode() should
+also be overridden.
+
+Here we use:
+
+    Objects.hash(name, age)
+
+to generate the hash code using the object's fields.
+
+
+--------------------------------------------------------------------
+5. getClass()
+--------------------------------------------------------------------
+
+getClass() returns the runtime class of an object.
+
+Example:
+
+    s1.getClass()
+
+returns the Class object representing Student.
+
+Then:
+
+    s1.getClass().getName()
+
+returns the class name.
+
+For this program:
+
+    Student
+
+
+IMPORTANT:
+
+getClass() tells us the actual runtime class of the object.
+
+
+--------------------------------------------------------------------
+6. instanceof
+--------------------------------------------------------------------
+
+instanceof checks whether an object is an instance of a particular
+class or one of its subclasses.
+
+Example:
+
+    s1 instanceof Student
+
+returns:
+
+    true
+
+
+Since Student ultimately inherits from Object:
+
+    s1 instanceof Object
+
+also returns:
+
+    true
+
+
+With inheritance:
+
+    Animal d = new Dog();
+
+The reference type is Animal, but the actual object is Dog.
+
+Therefore:
+
+    d instanceof Animal
+
+is true.
+
+And:
+
+    d instanceof Dog
+
+is also true.
+
+
+--------------------------------------------------------------------
+7. clone()
+--------------------------------------------------------------------
+
+clone() is used to create a copy of an object.
+
+The clone() method belongs to Object.
+
+To use Object.clone(), the class implements Cloneable:
+
+    class Student implements Cloneable
+
+
+Cloneable is a MARKER INTERFACE.
+
+A marker interface is an interface that does not contain methods.
+It provides information to Java about a particular capability.
+
+Cloneable tells Java that objects of this class are allowed to be
+cloned using Object.clone().
+
+
+Our clone() method:
+
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+calls Object's clone() method.
+
+Because clone() returns Object, we cast it to Student:
+
+    Student s3 = (Student) s1.clone();
+
+
+--------------------------------------------------------------------
+8. SHALLOW COPY
+--------------------------------------------------------------------
+
+Object.clone() performs a shallow copy by default.
+
+Suppose Student contains:
+
+    Address address;
+
+When shallow copying:
+
+    s1 -----> Student
+                |
+                +-----> Address A
+
+    s2 -----> Student
+                |
+                +-----> Address A
+
+
+Both Student objects have separate outer objects, but they share
+the same Address object.
+
+Primitive values are copied directly.
+
+Reference variables are copied as references.
+
+
+--------------------------------------------------------------------
+9. DEEP COPY
+--------------------------------------------------------------------
+
+Deep copy creates completely independent copies of referenced
+objects as well.
+
+Example:
+
+    s1 -----> Student
+                |
+                +-----> Address A
+
+
+    s2 -----> Student
+                |
+                +-----> Address B
+
+
+Address A and Address B are different objects.
+
+Therefore, modifying Address B does not affect Address A.
+
+
+--------------------------------------------------------------------
+10. getClass() vs instanceof
+--------------------------------------------------------------------
+
+getClass() checks the exact runtime class.
+
+For example:
+
+    d.getClass() == Dog.class
+
+returns true when d refers to a Dog object.
+
+
+instanceof checks whether the object belongs to a class or its
+inheritance hierarchy.
+
+Example:
+
+    d instanceof Animal
+
+is true because Dog extends Animal.
+
+
+So remember:
+
+    getClass()
+        -> Exact runtime class
+
+    instanceof
+        -> Class or subclass relationship
+
+
+--------------------------------------------------------------------
+11. finalize()
+--------------------------------------------------------------------
+
+finalize() was historically associated with garbage collection.
+
+However, finalization has been deprecated and should not be relied
+upon for resource cleanup.
+
+Modern Java programs should use proper resource-management
+mechanisms instead.
+
+
+--------------------------------------------------------------------
+12. wait(), notify(), notifyAll()
+--------------------------------------------------------------------
+
+These methods are inherited from Object and are related to
+thread synchronization.
+
+They are generally studied along with Java's multithreading and
+concurrency concepts.
+
+
+--------------------------------------------------------------------
+QUICK MEMORY TRICK
+--------------------------------------------------------------------
+
+toString()
+    -> "What does this object look like?"
+
+equals()
+    -> "Are these objects logically equal?"
+
+==
+    -> "Are these the SAME object/reference?"
+
+hashCode()
+    -> "What is this object's hash value?"
+
+getClass()
+    -> "What is the EXACT runtime class?"
+
+instanceof
+    -> "Is this object an instance of this type or its subclass?"
+
+clone()
+    -> "Create a copy of this object."
+
+
+====================================================================
+*/

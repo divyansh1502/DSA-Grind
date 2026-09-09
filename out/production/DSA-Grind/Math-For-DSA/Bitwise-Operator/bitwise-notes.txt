@@ -1,0 +1,3650 @@
+Below is a **GitHub-ready `Bitwise Notes.txt`**. I’ve arranged it from fundamentals → number systems → bitwise operators → bit manipulation → common problems → signed/negative representation → floating point/IEEE 754 → ranges → interview cheat sheet.
+
+============================================================
+BITWISE OPERATORS & BIT MANIPULATION
+JAVA + DSA NOTES
+================
+
+## CONTENTS
+
+1. What is a Number System?
+2. Types of Number Systems
+3. Decimal Number System
+4. Binary Number System
+5. Octal Number System
+6. Hexadecimal Number System
+7. Number System Conversions
+8. Bits, Bytes, MSB and LSB
+9. Signed and Unsigned Numbers
+10. Bitwise Operators
+11. Bitwise AND (&)
+12. Bitwise OR (|)
+13. Bitwise XOR (^)
+14. Bitwise NOT (~)
+15. Left Shift (<<)
+16. Right Shift (>>)
+17. Unsigned Right Shift (>>>)
+18. Odd and Even Using Bitwise AND
+19. XOR Properties
+20. Find Unique Element Using XOR
+21. Bit Mask
+22. Find the i-th Bit
+23. Set the i-th Bit
+24. Reset/Clear the i-th Bit
+25. Toggle the i-th Bit
+26. Check Power of 2
+27. Find Number of Set Bits
+28. Find Rightmost Set Bit
+29. Position of Rightmost Set Bit
+30. Remove Rightmost Set Bit
+31. Find the Only Non-Repeating Element
+32. Negative Binary Numbers
+33. Two's Complement
+34. Convert Positive Number to Negative
+35. Integer Ranges
+36. Floating Point Numbers
+37. IEEE 754 Standard
+38. Sign, Exponent and Mantissa
+39. Bias
+40. Normalized Scientific Binary Notation
+41. Floating Point Formula
+42. Important Interview Points
+43. Bitwise Cheat Sheet
+
+============================================================
+
+1. WHAT IS A NUMBER SYSTEM?
+   ============================================================
+
+A number system is a method of representing numbers using a fixed
+set of symbols/digits.
+
+The most important concept in number systems is the BASE (or RADIX).
+
+For example:
+
+Decimal -> Base 10 -> digits 0 to 9
+Binary  -> Base 2  -> digits 0 and 1
+Octal   -> Base 8  -> digits 0 to 7
+Hex     -> Base 16 -> digits 0 to 9 and A to F
+
+## WHY DO COMPUTERS USE BINARY?
+
+Computers are electronic devices.
+
+At the hardware level, a circuit can represent two basic states:
+
+ON  -> 1
+OFF -> 0
+
+Therefore, computers naturally work with the Binary Number System.
+
+Everything such as:
+
+* integers
+* characters
+* images
+* videos
+* instructions
+* programs
+
+is ultimately represented using bits.
+
+============================================================
+2. TYPES OF NUMBER SYSTEMS
+==========================
+
+There are four commonly used number systems:
+
+1. Decimal  -> Base 10
+2. Binary   -> Base 2
+3. Octal    -> Base 8
+4. Hexadecimal -> Base 16
+
+---
+
+## DECIMAL
+
+Digits:
+
+0 1 2 3 4 5 6 7 8 9
+
+Example:
+
+538
+
+Position values:
+
+5 × 10² + 3 × 10¹ + 8 × 10⁰
+
+= 500 + 30 + 8
+= 538
+
+---
+
+## BINARY
+
+Digits:
+
+0 and 1
+
+Example:
+
+1011
+
+Position values:
+
+1 × 2³ + 0 × 2² + 1 × 2¹ + 1 × 2⁰
+
+= 8 + 0 + 2 + 1
+= 11
+
+---
+
+## OCTAL
+
+Digits:
+
+0 to 7
+
+Example:
+
+725
+
+= 7 × 8² + 2 × 8¹ + 5 × 8⁰
+
+= 448 + 16 + 5
+= 469
+
+---
+
+## HEXADECIMAL
+
+Base = 16
+
+Digits:
+
+0 1 2 3 4 5 6 7 8 9 A B C D E F
+
+Where:
+
+A = 10
+B = 11
+C = 12
+D = 13
+E = 14
+F = 15
+
+Example:
+
+2F
+
+= 2 × 16¹ + F × 16⁰
+
+= 2 × 16 + 15
+
+= 47
+
+============================================================
+3. NUMBER SYSTEM CONVERSIONS
+============================
+
+---
+
+## DECIMAL -> BINARY
+
+Repeatedly divide the number by 2 and record the remainder.
+
+Example:
+
+Convert 13 to binary.
+
+13 / 2 = 6 remainder 1
+6 / 2 = 3 remainder 0
+3 / 2 = 1 remainder 1
+1 / 2 = 0 remainder 1
+
+Read remainders from bottom to top:
+
+1101
+
+Therefore:
+
+13(decimal) = 1101(binary)
+
+---
+
+## BINARY -> DECIMAL
+
+Multiply each bit by its corresponding power of 2.
+
+Example:
+
+10110
+
+= 1×2⁴ + 0×2³ + 1×2² + 1×2¹ + 0×2⁰
+
+= 16 + 0 + 4 + 2 + 0
+
+= 22
+
+Therefore:
+
+10110₂ = 22₁₀
+
+---
+
+## BINARY -> OCTAL
+
+Group binary digits into groups of 3 from right to left.
+
+Example:
+
+101101
+
+Group:
+
+101 101
+
+101 = 5
+101 = 5
+
+Therefore:
+
+101101₂ = 55₈
+
+---
+
+## BINARY -> HEXADECIMAL
+
+Group binary digits into groups of 4.
+
+Example:
+
+10101111
+
+Group:
+
+1010 1111
+
+1010 = A
+1111 = F
+
+Therefore:
+
+10101111₂ = AF₁₆
+
+---
+
+## OCTAL/HEX -> BINARY
+
+Each octal digit can be represented using exactly 3 bits.
+
+Example:
+
+5 -> 101
+7 -> 111
+
+Therefore:
+
+57₈ = 101111₂
+
+Each hexadecimal digit can be represented using exactly 4 bits.
+
+Example:
+
+A -> 1010
+F -> 1111
+
+Therefore:
+
+AF₁₆ = 10101111₂
+
+============================================================
+4. BIT, BYTE, MSB AND LSB
+=========================
+
+## BIT
+
+A bit is the smallest unit of data.
+
+A bit can contain:
+
+0 or 1
+
+## BYTE
+
+1 byte = 8 bits
+
+Example:
+
+10110101
+
+This contains 8 bits = 1 byte.
+
+---
+
+## MSB
+
+MSB = Most Significant Bit
+
+It is the leftmost bit.
+
+Example:
+
+10110110
+^
+
+The first 1 is the MSB.
+
+---
+
+## LSB
+
+LSB = Least Significant Bit
+
+It is the rightmost bit.
+
+Example:
+
+10110110
+       ^
+
+The final 0 is the LSB.
+
+IMPORTANT:
+
+MSB tells us about the highest positional value.
+
+LSB represents the 2⁰ position.
+
+Because:
+
+2⁰ = 1
+
+the LSB is especially useful for checking whether an integer is
+odd or even.
+
+============================================================
+5. SIGNED AND UNSIGNED NUMBERS
+==============================
+
+An unsigned number represents only non-negative numbers.
+
+For n bits:
+
+Range of unsigned number:
+
+0 to 2ⁿ - 1
+
+Example:
+
+8-bit unsigned:
+
+0 to 255
+
+A signed number can represent both positive and negative numbers.
+
+In modern computers, signed integers are generally represented using
+Two's Complement.
+
+For n-bit signed integer:
+
+Minimum = -2ⁿ⁻¹
+
+Maximum = 2ⁿ⁻¹ - 1
+
+For 8 bits:
+
+Minimum = -128
+Maximum = 127
+
+============================================================
+6. BITWISE OPERATORS
+====================
+
+Bitwise operators work directly on individual bits of integers.
+
+Java provides:
+
+1. &   Bitwise AND
+2. |   Bitwise OR
+3. ^   Bitwise XOR
+4. ~   Bitwise NOT
+5. <<  Left Shift
+6. > > Signed Right Shift
+7. > > > Unsigned Right Shift
+
+IMPORTANT:
+
+Bitwise operators work at the bit level.
+
+Example:
+
+5 = 0101
+3 = 0011
+
+============================================================
+7. BITWISE AND (&)
+==================
+
+AND compares corresponding bits.
+
+Truth table:
+
+## A   B   A & B
+
+0   0    0
+0   1    0
+1   0    0
+1   1    1
+
+Only:
+
+1 AND 1 = 1
+
+Example:
+
+0101   (5)
+& 0011   (3)
+------------
+
+0001   (1)
+
+Therefore:
+
+5 & 3 = 1
+
+## MAIN USES OF AND
+
+1. Check whether a bit is set.
+2. Find the i-th bit.
+3. Clear/reset a bit.
+4. Check odd/even.
+5. Apply a mask.
+
+============================================================
+8. BITWISE OR (|)
+=================
+
+OR compares corresponding bits.
+
+Truth table:
+
+## A   B   A | B
+
+0   0    0
+0   1    1
+1   0    1
+1   1    1
+
+Only:
+
+0 OR 0 = 0
+
+Example:
+
+0101
+| 0011
+------
+
+0111
+
+Therefore:
+
+5 | 3 = 7
+
+MAIN USE:
+
+OR can be used to SET a bit.
+
+============================================================
+9. BITWISE XOR (^)
+==================
+
+XOR = Exclusive OR
+
+Truth table:
+
+## A   B   A ^ B
+
+0   0    0
+0   1    1
+1   0    1
+1   1    0
+
+XOR gives 1 when the two bits are DIFFERENT.
+
+Important:
+
+Same bits -> 0
+Different bits -> 1
+
+Example:
+
+0101
+^ 0011
+------
+
+0110
+
+Therefore:
+
+5 ^ 3 = 6
+
+============================================================
+10. XOR PROPERTIES
+==================
+
+XOR has extremely useful properties.
+
+PROPERTY 1:
+
+x ^ 0 = x
+
+Example:
+
+5 ^ 0 = 5
+
+PROPERTY 2:
+
+x ^ x = 0
+
+Example:
+
+5 ^ 5 = 0
+
+PROPERTY 3:
+
+x ^ y = y ^ x
+
+This is commutative.
+
+PROPERTY 4:
+
+(x ^ y) ^ z = x ^ (y ^ z)
+
+This is associative.
+
+PROPERTY 5:
+
+x ^ y ^ y = x
+
+Because:
+
+y ^ y = 0
+
+and:
+
+x ^ 0 = x
+
+These properties make XOR extremely useful in DSA.
+
+============================================================
+11. BITWISE NOT (~)
+===================
+
+NOT flips every bit.
+
+0 becomes 1
+1 becomes 0
+
+Example:
+
+Assume 8 bits:
+
+5:
+
+00000101
+
+~5:
+
+11111010
+
+However, when working with Java int values, remember that int is
+32 bits.
+
+The result of:
+
+~5
+
+is:
+
+-6
+
+Why?
+
+Because Java int uses Two's Complement representation.
+
+IMPORTANT FORMULA:
+
+~x = -(x + 1)
+
+Example:
+
+~5 = -(5 + 1)
+= -6
+
+============================================================
+12. LEFT SHIFT (<<)
+===================
+
+Left shift moves bits toward the left.
+
+Syntax:
+
+x << n
+
+Example:
+
+5 = 0101
+
+5 << 1
+
+= 1010
+
+= 10
+
+For positive integers:
+
+x << n
+
+is approximately equivalent to:
+
+x × 2ⁿ
+
+provided no overflow occurs.
+
+Examples:
+
+5 << 1 = 10
+5 << 2 = 20
+5 << 3 = 40
+
+WHY?
+
+Every left shift by one position moves each bit to a position
+having twice the value.
+
+============================================================
+13. RIGHT SHIFT (>>)
+====================
+
+Right shift moves bits toward the right.
+
+Example:
+
+20:
+
+10100
+
+20 >> 1:
+
+01010
+
+= 10
+
+For positive integers:
+
+x >> n
+
+is approximately:
+
+x / 2ⁿ
+
+using integer division.
+
+Examples:
+
+20 >> 1 = 10
+20 >> 2 = 5
+
+For negative numbers, >> preserves the sign bit.
+
+============================================================
+14. UNSIGNED RIGHT SHIFT (>>>)
+==============================
+
+Java also provides:
+
+> > >
+
+Unsigned right shift.
+
+It fills the leftmost positions with 0.
+
+Example conceptually:
+
+11110000 >>> 2
+
+becomes:
+
+00111100
+
+Difference:
+
+> > -> preserves sign
+> >
+> > > -> fills with zero
+
+For positive numbers, >> and >>> generally produce the same result.
+
+============================================================
+15. ODD AND EVEN USING BITWISE AND
+==================================
+
+This is one of the most important bitwise tricks.
+
+To check whether a number is odd:
+
+n & 1
+
+Why does this work?
+
+Consider:
+
+Even number:
+
+10 = 1010
+
+Odd number:
+
+11 = 1011
+
+Look at the LSB.
+
+Even:
+
+1010
+   ^
+   0
+
+Odd:
+
+1011
+   ^
+   1
+
+Now:
+
+n & 1
+
+For 10:
+
+1010
+0001
+----
+
+0000
+
+Result = 0
+
+Therefore 10 is EVEN.
+
+For 11:
+
+1011
+0001
+----
+
+0001
+
+Result = 1
+
+Therefore 11 is ODD.
+
+RULE:
+
+if ((n & 1) == 0)
+-> EVEN
+
+if ((n & 1) != 0)
+-> ODD
+
+WHY?
+
+The last bit represents the 2⁰ position.
+
+2⁰ = 1.
+
+Every even number has 0 in the 1's position.
+
+Every odd number has 1 in the 1's position.
+
+============================================================
+16. UNIQUE ELEMENT IN AN ARRAY USING XOR
+========================================
+
+PROBLEM:
+
+Given an array where every element occurs twice except one element,
+find the unique element.
+
+Example:
+
+arr = [2, 3, 4, 2, 3]
+
+Answer:
+
+4
+
+SOLUTION:
+
+XOR all elements.
+
+result = 0
+
+result = result ^ 2
+result = result ^ 3
+result = result ^ 4
+result = result ^ 2
+result = result ^ 3
+
+Rearrange using XOR properties:
+
+2 ^ 2 ^ 3 ^ 3 ^ 4
+
+Since:
+
+2 ^ 2 = 0
+3 ^ 3 = 0
+
+Therefore:
+
+0 ^ 0 ^ 4
+
+= 4
+
+JAVA:
+
+int ans = 0;
+
+for (int num : arr) {
+ans = ans ^ num;
+}
+
+System.out.println(ans);
+
+TIME COMPLEXITY:
+
+O(n)
+
+SPACE COMPLEXITY:
+
+O(1)
+
+WHY XOR WORKS?
+
+Because:
+
+x ^ x = 0
+
+and:
+
+x ^ 0 = x
+
+Therefore all duplicate elements cancel each other.
+
+IMPORTANT CONDITION:
+
+This simple XOR approach works when:
+
+* Every duplicate occurs exactly twice.
+* Only one element occurs once.
+
+If there are different frequencies or multiple unique elements,
+another technique may be required.
+
+============================================================
+17. WHAT IS A BIT MASK?
+=======================
+
+A MASK is a number whose bits are intentionally arranged so that
+we can select, modify, or inspect particular bits of another number.
+
+The most common mask is created using:
+
+1 << i
+
+For example:
+
+i = 3
+
+1 << 3
+
+Binary:
+
+0001
+left shift 3
+
+1000
+
+Therefore:
+
+1 << 3 = 8
+
+This creates a mask where only the 3rd bit is 1.
+
+IMPORTANT:
+
+Bit positions are generally counted from RIGHT TO LEFT,
+starting at 0.
+
+Example:
+
+Binary:
+
+1 0 1 1 0 1
+          ↑
+Positions:
+
+5 4 3 2 1 0
+
+Position 0 = LSB.
+
+============================================================
+18. HOW DOES (1 << i) WORK?
+===========================
+
+Suppose:
+
+i = 4
+
+Start:
+
+1 = 00001
+
+Shift left by 4:
+
+1 << 4
+
+= 10000
+
+= 16
+
+General idea:
+
+1 << i
+
+creates:
+
+000...001...000
+↑
+i-th bit
+
+The only set bit is at position i.
+
+Examples:
+
+1 << 0 = 0001 = 1
+1 << 1 = 0010 = 2
+1 << 2 = 0100 = 4
+1 << 3 = 1000 = 8
+1 << 4 = 10000 = 16
+
+Therefore:
+
+1 << i = 2ⁱ
+
+============================================================
+19. FIND THE i-th BIT
+=====================
+
+We can use AND.
+
+Formula:
+
+n & (1 << i)
+
+Step 1:
+Create a mask:
+
+mask = 1 << i
+
+Step 2:
+AND the number with the mask:
+
+n & mask
+
+Example:
+
+Find the 2nd bit of:
+
+n = 13
+
+Binary:
+
+13 = 1101
+
+Positions:
+
+1 1 0 1
+3 2 1 0
+
+We want position 2.
+
+Mask:
+
+1 << 2
+
+= 0100
+
+Now:
+
+1101
+& 0100
+------
+
+0100
+
+Result is non-zero.
+
+Therefore, bit 2 is SET.
+
+JAVA:
+
+int mask = 1 << i;
+
+if ((n & mask) != 0) {
+System.out.println("Bit is SET");
+} else {
+System.out.println("Bit is NOT SET");
+}
+
+IMPORTANT:
+
+If result == 0:
+
+bit is 0.
+
+If result != 0:
+
+bit is 1.
+
+============================================================
+20. SET THE i-th BIT
+====================
+
+SET means:
+
+Make the i-th bit equal to 1.
+
+Use OR.
+
+Formula:
+
+n | (1 << i)
+
+Why OR?
+
+Because:
+
+0 | 1 = 1
+1 | 1 = 1
+
+So regardless of the previous value, the selected bit becomes 1.
+
+Example:
+
+n = 9
+
+Binary:
+
+1001
+
+Set bit 1.
+
+Mask:
+
+1 << 1
+
+= 0010
+
+OR:
+
+1001
+| 0010
+------
+
+1011
+
+Result:
+
+11
+
+JAVA:
+
+n = n | (1 << i);
+
+Shortcut:
+
+n |= (1 << i);
+
+============================================================
+21. RESET / CLEAR THE i-th BIT
+==============================
+
+RESET means:
+
+Make the i-th bit equal to 0.
+
+We use:
+
+AND + NOT
+
+Formula:
+
+n & ~(1 << i)
+
+First create the mask:
+
+1 << i
+
+This has:
+
+...010...
+
+NOT reverses it:
+
+...101...
+
+Then AND with n.
+
+Why?
+
+For selected bit:
+
+anything & 0 = 0
+
+For all other bits:
+
+anything & 1 = anything
+
+Example:
+
+n = 13
+
+Binary:
+
+1101
+
+Reset bit 2.
+
+Mask:
+
+1 << 2 = 0100
+
+NOT:
+
+~0100
+
+Conceptually:
+
+1011
+
+AND:
+
+1101
+& 1011
+------
+
+1001
+
+Result:
+
+9
+
+JAVA:
+
+n = n & ~(1 << i);
+
+Shortcut:
+
+n &= ~(1 << i);
+
+============================================================
+22. TOGGLE THE i-th BIT
+=======================
+
+Toggle means:
+
+0 -> 1
+1 -> 0
+
+Use XOR.
+
+Formula:
+
+n ^ (1 << i)
+
+Why?
+
+0 ^ 1 = 1
+1 ^ 1 = 0
+
+Therefore XOR with 1 flips the bit.
+
+Example:
+
+n = 9
+
+1001
+
+Toggle bit 1.
+
+Mask:
+
+0010
+
+XOR:
+
+1001
+0010
+----
+
+1011
+
+Result:
+
+11
+
+JAVA:
+
+n ^= (1 << i);
+
+============================================================
+23. CLEAR ALL BITS FROM i TO 0
+==============================
+
+Sometimes we want to clear all bits from position i down to
+position 0.
+
+Mask:
+
+(1 << i) - 1
+
+Example:
+
+i = 4
+
+1 << 4:
+
+10000
+
+Subtract 1:
+
+01111
+
+Therefore:
+
+(1 << 4) - 1
+
+creates a mask with the lower 4 bits set to 1.
+
+IMPORTANT:
+
+(1 << i) - 1
+
+has i number of 1s.
+
+Examples:
+
+(1 << 1) - 1 = 00001
+(1 << 2) - 1 = 00011
+(1 << 3) - 1 = 00111
+(1 << 4) - 1 = 01111
+(1 << 5) - 1 = 11111
+
+WHY?
+
+Because powers of 2 have exactly one 1:
+
+1 << 4 = 10000
+
+Subtracting 1:
+
+10000
+-00001
+------
+
+01111
+
+============================================================
+24. CLEAR THE LOWER i BITS
+==========================
+
+To clear the lowest i bits:
+
+n & ~((1 << i) - 1)
+
+Example:
+
+n = 29
+
+Binary:
+
+11101
+
+Suppose we want to clear lower 3 bits.
+
+Mask:
+
+(1 << 3) - 1
+
+= 1000 - 1
+
+= 0111
+
+NOT:
+
+1000
+
+AND:
+
+11101
+& 11000
+-------
+
+11000
+
+Result:
+
+24
+
+============================================================
+25. CHECK IF A NUMBER IS A POWER OF 2
+=====================================
+
+A positive power of 2 has exactly ONE set bit.
+
+Examples:
+
+1  = 0001
+2  = 0010
+4  = 0100
+8  = 1000
+16 = 10000
+
+For a power of 2:
+
+n & (n - 1) = 0
+
+Example:
+
+n = 8
+
+1000
+
+n - 1 = 7
+
+0111
+
+AND:
+
+1000
+0111
+----
+
+0000
+
+Therefore 8 is a power of 2.
+
+Example:
+
+n = 10
+
+1010
+
+n - 1 = 9
+
+1001
+
+AND:
+
+1010
+1001
+----
+
+1000
+
+Not zero.
+
+Therefore 10 is NOT a power of 2.
+
+JAVA:
+
+if (n > 0 && (n & (n - 1)) == 0) {
+// power of 2
+}
+
+============================================================
+26. WHY n & (n - 1) REMOVES THE RIGHTMOST SET BIT
+=================================================
+
+Consider:
+
+n = 12
+
+Binary:
+
+1100
+
+n - 1:
+
+1011
+
+AND:
+
+1100
+1011
+----
+
+1000
+
+The rightmost set bit disappeared.
+
+Why?
+
+For a binary number:
+
+...1000...
+
+Subtracting 1 changes:
+
+...1000
+
+into:
+
+...0111
+
+Therefore, the rightmost 1 becomes 0 and all bits after it
+become 1.
+
+ANDing the original number with n - 1 removes that rightmost 1.
+
+GENERAL FORMULA:
+
+n & (n - 1)
+
+= n with its rightmost set bit removed.
+
+============================================================
+27. COUNT NUMBER OF SET BITS
+============================
+
+A set bit is a bit whose value is 1.
+
+Example:
+
+13 = 1101
+
+Number of set bits:
+
+3
+
+## METHOD 1: CHECK EVERY BIT
+
+while (n > 0) {
+
+```
+if ((n & 1) != 0) {
+    count++;
+}
+
+n = n >> 1;
+```
+
+}
+
+## METHOD 2: REMOVE RIGHTMOST SET BIT
+
+count = 0;
+
+while (n != 0) {
+
+```
+n = n & (n - 1);
+
+count++;
+```
+
+}
+
+This method runs once for every set bit.
+
+TIME COMPLEXITY:
+
+O(number of set bits)
+
+This is often called the Brian Kernighan technique.
+
+JAVA BUILT-IN:
+
+Integer.bitCount(n)
+
+============================================================
+28. FIND THE RIGHTMOST SET BIT
+==============================
+
+A set bit means a bit containing 1.
+
+Example:
+
+n = 12
+
+Binary:
+
+1100
+
+Rightmost set bit:
+
+0100
+
+The formula is:
+
+n & -n
+
+Example:
+
+n = 12
+
+Binary:
+
+00001100
+
+Two's complement of 12:
+
+11110100
+
+Now:
+
+00001100
+11110100
+--------
+
+00000100
+
+Result:
+
+4
+
+Therefore:
+
+12 & -12 = 4
+
+This isolates the rightmost set bit.
+
+============================================================
+29. WHY n & -n FINDS THE RIGHTMOST SET BIT
+==========================================
+
+Remember:
+
+-n is the Two's Complement of n.
+
+For example:
+
+n:
+
+00001100
+
+Invert:
+
+11110011
+
+Add 1:
+
+11110100
+
+Therefore:
+
+-n = 11110100
+
+Now AND:
+
+00001100
+11110100
+--------
+
+00000100
+
+All bits except the rightmost set bit become 0.
+
+FORMULA:
+
+rightmostSetBit = n & -n
+
+IMPORTANT:
+
+This works because of Two's Complement representation.
+
+============================================================
+30. FIND POSITION OF RIGHTMOST SET BIT
+======================================
+
+Suppose:
+
+n = 12
+
+Binary:
+
+1100
+
+Rightmost set bit:
+
+0100
+
+Its position is:
+
+2
+
+because positions start from 0:
+
+1 1 0 0
+3 2 1 0
+
+## METHOD 1: REPEATEDLY CHECK BITS
+
+int position = 0;
+
+while ((n & 1) == 0) {
+n >>= 1;
+position++;
+}
+
+System.out.println(position);
+
+For n = 12:
+
+1100
+-> 0110
+-> 0011
+
+We shifted twice.
+
+Position = 2.
+
+## METHOD 2: USING n & -n
+
+int rightmost = n & -n;
+
+Then the position can be found using logarithm:
+
+position = log2(rightmost)
+
+Example:
+
+rightmost = 4
+
+log2(4) = 2
+
+In Java:
+
+int position = Integer.numberOfTrailingZeros(n);
+
+This directly gives the number of zero bits after the rightmost
+set bit.
+
+Example:
+
+n = 12 = 1100
+
+Trailing zeros = 2.
+
+============================================================
+31. REMOVE THE RIGHTMOST SET BIT
+================================
+
+Formula:
+
+n & (n - 1)
+
+Example:
+
+n = 12
+
+1100
+
+n - 1:
+
+1011
+
+AND:
+
+1100
+1011
+----
+
+1000
+
+Therefore:
+
+12 -> 8
+
+This operation removes the rightmost set bit.
+
+============================================================
+32. COMMON BIT MANIPULATION FORMULAS
+====================================
+
+CHECK i-th BIT:
+
+n & (1 << i)
+
+SET i-th BIT:
+
+n | (1 << i)
+
+RESET i-th BIT:
+
+n & ~(1 << i)
+
+TOGGLE i-th BIT:
+
+n ^ (1 << i)
+
+CHECK ODD:
+
+(n & 1) != 0
+
+CHECK EVEN:
+
+(n & 1) == 0
+
+REMOVE RIGHTMOST SET BIT:
+
+n & (n - 1)
+
+ISOLATE RIGHTMOST SET BIT:
+
+n & -n
+
+CHECK POWER OF 2:
+
+n > 0 && (n & (n - 1)) == 0
+
+LOWER i BITS MASK:
+
+(1 << i) - 1
+
+CLEAR LOWER i BITS:
+
+n & ~((1 << i) - 1)
+
+LEFT SHIFT:
+
+n << i
+
+RIGHT SHIFT:
+
+n >> i
+
+UNSIGNED RIGHT SHIFT:
+
+n >>> i
+
+============================================================
+33. NEGATIVE BINARY NUMBERS
+===========================
+
+A common question is:
+
+How does a computer represent a negative number?
+
+For signed integers, modern computers use:
+
+TWO'S COMPLEMENT
+
+There are three common historical methods:
+
+1. Sign-Magnitude
+2. One's Complement
+3. Two's Complement
+
+Two's Complement is the standard representation used by modern
+computer systems for signed integers.
+
+============================================================
+34. SIGN-MAGNITUDE REPRESENTATION
+=================================
+
+In sign-magnitude:
+
+MSB is used as the sign.
+
+0 -> positive
+1 -> negative
+
+Remaining bits represent magnitude.
+
+For example, using 8 bits:
+
++5:
+
+00000101
+
+-5:
+
+10000101
+
+However, this representation has some disadvantages and is not
+the standard representation for modern integer arithmetic.
+
+============================================================
+35. ONE'S COMPLEMENT
+====================
+
+To represent a negative number:
+
+Take the positive binary number and invert every bit.
+
+Example:
+
++5:
+
+00000101
+
+One's complement:
+
+11111010
+
+But One's Complement also has issues such as having two zeros:
+
++0 = 00000000
+-0 = 11111111
+
+Therefore modern systems use Two's Complement.
+
+============================================================
+36. TWO'S COMPLEMENT
+====================
+
+To convert a positive number into its negative representation:
+
+STEP 1:
+Write the positive number in binary.
+
+STEP 2:
+Invert all bits.
+
+STEP 3:
+Add 1.
+
+Example:
+
+Convert +5 to -5 using 8 bits.
+
+Step 1:
+
++5:
+
+00000101
+
+Step 2: Invert bits
+
+11111010
+
+Step 3: Add 1
+
+11111010
+      +1
+---------
+11111011
+
+Therefore:
+
+-5 = 11111011
+
+in 8-bit Two's Complement.
+
+=======================================
+37. CONVERT NEGATIVE BINARY TO POSITIVE
+=======================================
+
+The reverse process also works.
+
+Given:
+
+11111011
+
+We want to find its decimal value.
+
+Step 1:
+Invert bits:
+
+00000100
+
+Step 2:
+Add 1:
+
+00000101
+
+= 5
+
+Since the number is negative:
+
+answer = -5
+
+Therefore:
+
+11111011 = -5
+
+===============================
+38. WHY MSB HELPS FIND THE SIGN
+===============================
+
+For signed Two's Complement integers:
+
+MSB = 0
+
+means:
+
+non-negative / positive number
+
+MSB = 1
+
+means:
+
+negative number
+
+Example using 8 bits:
+
+00000101
+
+MSB = 0
+
+Therefore positive.
+
+11111011
+
+MSB = 1
+
+Therefore negative.
+
+IMPORTANT:
+
+This interpretation applies to signed representation.
+
+For unsigned numbers, the MSB is simply another value-bearing bit
+and does NOT represent a sign.
+
+============================================================
+39. SPECIAL CASE: MINIMUM INTEGER
+=================================
+
+In an n-bit Two's Complement system:
+
+Minimum:
+
+-2ⁿ⁻¹
+
+Maximum:
+
+2ⁿ⁻¹ - 1
+
+For 8 bits:
+
+Minimum = -128
+Maximum = 127
+
+Why is the negative side one number larger?
+
+Because zero occupies one of the possible non-negative values.
+
+============================================================
+40. JAVA INTEGER RANGES
+=======================
+
+Java primitive integer types:
+
+byte:
+
+8 bits
+
+Range:
+
+-128 to 127
+
+short:
+
+16 bits
+
+Range:
+
+-32,768 to 32,767
+
+int:
+
+32 bits
+
+Range:
+
+-2³¹ to 2³¹ - 1
+
+= -2,147,483,648
+to
+2,147,483,647
+
+long:
+
+64 bits
+
+Range:
+
+-2⁶³ to 2⁶³ - 1
+
+IMPORTANT:
+
+Java's int is ALWAYS 32 bits.
+
+Java's long is ALWAYS 64 bits.
+
+This is one reason Java is platform-independent regarding primitive
+integer sizes.
+
+============================================================
+41. HOW DOES ~n BECOME -(n + 1)?
+================================
+
+A very important identity:
+
+~n = -(n + 1)
+
+Example:
+
+n = 5
+
+~5 = -6
+
+Why?
+
+Because in Two's Complement:
+
+-n = ~n + 1
+
+Therefore:
+
+~n = -n - 1
+
+= -(n + 1)
+
+This identity is useful when understanding the NOT operator in Java.
+
+============================================================
+42. CONVERT POSITIVE NUMBER TO NEGATIVE NUMBER
+==============================================
+
+For Two's Complement:
+
+negative = ~positive + 1
+
+Example:
+
+positive = 5
+
+00000101
+
+NOT:
+
+11111010
+
+Add 1:
+
+11111011
+
+Therefore:
+
+-5 = 11111011
+
+In Java, simply:
+
+int negative = -positive;
+
+The JVM/compiler handles the representation.
+
+============================================================
+43. INTEGER BINARY RANGE
+========================
+
+For n bits:
+
+UNSIGNED:
+
+0 to 2ⁿ - 1
+
+SIGNED TWO'S COMPLEMENT:
+
+-2ⁿ⁻¹ to 2ⁿ⁻¹ - 1
+
+Examples:
+
+4-bit unsigned:
+
+0 to 15
+
+4-bit signed:
+
+-8 to 7
+
+8-bit unsigned:
+
+0 to 255
+
+8-bit signed:
+
+-128 to 127
+
+16-bit signed:
+
+-32768 to 32767
+
+32-bit signed:
+
+-2147483648 to 2147483647
+
+64-bit signed:
+
+-9223372036854775808 to 9223372036854775807
+
+============================================================
+44. FLOATING POINT NUMBERS
+==========================
+
+Integers are not enough to represent values such as:
+
+3.14
+0.5
+-12.75
+123.456
+
+Computers use floating-point representation for such values.
+
+Examples:
+
+Java:
+
+float
+double
+
+The IEEE 754 standard defines a widely used representation for
+floating-point numbers.
+
+============================================================
+45. SCIENTIFIC NOTATION
+=======================
+
+In decimal:
+
+1234 = 1.234 × 10³
+
+0.0123 = 1.23 × 10⁻²
+
+The same idea exists in binary.
+
+Example:
+
+101.101
+
+Move the binary point until there is exactly one 1 before it.
+
+101.101
+
+= 1.01101 × 2²
+
+This is called NORMALIZED BINARY SCIENTIFIC NOTATION.
+
+============================================================
+46. WHY 1.XXXX × 2^EXPONENT?
+============================
+
+For a normalized positive binary number, the first non-zero digit
+is always 1.
+
+Therefore the number can be written as:
+
+1.XXXX × 2^E
+
+Example:
+
+Binary:
+
+1101.01
+
+Move the binary point:
+
+1.10101 × 2³
+
+Why 3?
+
+Because the binary point moved 3 positions to the left.
+
+Another example:
+
+0.00101
+
+Move point:
+
+1.01 × 2⁻³
+
+Therefore:
+
+0.00101₂ = 1.01₂ × 2⁻³
+
+This normalized form is the foundation of IEEE 754 floating-point
+representation.
+
+============================================================
+47. IEEE 754 STANDARD
+=====================
+
+IEEE 754 is a standard for representing floating-point numbers.
+
+The common formats are:
+
+1. Single Precision
+2. Double Precision
+
+---
+
+## SINGLE PRECISION (float)
+
+Total:
+
+32 bits
+
+Structure:
+
+SIGN | EXPONENT | FRACTION
+1   |    8     |    23
+
+Therefore:
+
+1 + 8 + 23 = 32 bits
+
+---
+
+## DOUBLE PRECISION (double)
+
+Total:
+
+64 bits
+
+Structure:
+
+SIGN | EXPONENT | FRACTION
+1   |    11    |    52
+
+Therefore:
+
+1 + 11 + 52 = 64 bits
+
+============================================================
+48. SIGN BIT IN IEEE 754
+========================
+
+The first bit is the SIGN bit.
+
+0 -> positive
+1 -> negative
+
+The sign contribution is represented using:
+
+(-1)^sign
+
+If sign = 0:
+
+(-1)^0 = +1
+
+If sign = 1:
+
+(-1)^1 = -1
+
+Therefore:
+
+sign = 0 -> positive
+sign = 1 -> negative
+
+IMPORTANT:
+
+This is different from Two's Complement integer representation,
+but the idea of using the MSB/sign field to represent sign is
+important in floating-point representation.
+
+============================================================
+49. EXPONENT
+============
+
+The exponent is stored using a BIASED representation.
+
+Instead of storing the actual exponent directly, IEEE 754 stores:
+
+actual exponent + bias
+
+Therefore:
+
+stored exponent = actual exponent + bias
+
+So:
+
+actual exponent = stored exponent - bias
+
+This is why the formula contains:
+
+exponent - bias
+
+---
+
+## BIAS VALUES
+
+For float:
+
+Exponent bits = 8
+
+Bias = 127
+
+For double:
+
+Exponent bits = 11
+
+Bias = 1023
+
+General formula:
+
+Bias = 2^(k - 1) - 1
+
+where:
+
+k = number of exponent bits
+
+For float:
+
+k = 8
+
+Bias:
+
+2^(8-1) - 1
+
+= 2⁷ - 1
+
+= 127
+
+For double:
+
+k = 11
+
+Bias:
+
+2^(11-1) - 1
+
+= 2¹⁰ - 1
+
+= 1023
+
+============================================================
+50. WHAT IS BIAS?
+=================
+
+Bias allows both positive and negative exponents to be stored using
+an unsigned exponent field.
+
+Example for float:
+
+Bias = 127
+
+Suppose actual exponent = 3.
+
+Stored exponent:
+
+3 + 127 = 130
+
+Suppose actual exponent = -3.
+
+Stored exponent:
+
+-3 + 127 = 124
+
+Therefore, the exponent field itself can remain non-negative while
+representing both positive and negative actual exponents.
+
+============================================================
+51. FLOATING POINT FORMULA
+==========================
+
+For a normalized IEEE 754 number:
+
+VALUE = (-1)^sign × (1 + fraction) × 2^(exponent - bias)
+
+More precisely, the fraction field represents the bits after the
+implicit leading 1.
+
+If the fraction bits represent:
+
+.XXXX
+
+then the significand is:
+
+1.XXXX
+
+Therefore the commonly written formula is:
+
+VALUE =
+(-1)^S × (1 + M) × 2^(E - Bias)
+
+where:
+
+S = Sign bit
+E = Stored exponent
+M = Fraction/Mantissa contribution
+Bias = exponent bias
+
+IMPORTANT:
+
+The commonly used term "mantissa" is often used in programming
+discussions, but IEEE 754 technically refers to the fractional
+part as the fraction field and the complete significant value as
+the significand.
+
+============================================================
+52. WHAT DOES "1 + M" MEAN?
+===========================
+
+Suppose the fraction bits are:
+
+101000...
+
+The normalized significand becomes:
+
+1.101000...
+
+The leading 1 is implicit for normal numbers.
+
+Therefore:
+
+1.101₂
+
+can be viewed as:
+
+1 + 0.101₂
+
+So:
+
+1 + M
+
+represents the complete significand.
+
+Example:
+
+Fraction:
+
+101
+
+Then:
+
+1.101₂
+
+= 1 + 1×2⁻¹ + 0×2⁻² + 1×2⁻³
+
+= 1 + 0.5 + 0.125
+
+= 1.625
+
+============================================================
+53. IEEE 754 SINGLE PRECISION EXAMPLE
+=====================================
+
+Suppose a floating-point number is represented as:
+
+Sign = 0
+
+Exponent = 10000010
+
+Fraction = 01000000000000000000000
+
+Step 1: Sign
+
+S = 0
+
+Therefore:
+
+(-1)^0 = +1
+
+Step 2: Exponent
+
+10000010₂
+
+= 130
+
+Bias for float:
+
+127
+
+Actual exponent:
+
+130 - 127
+
+= 3
+
+Step 3: Fraction
+
+Fraction:
+
+010000...
+
+Significand:
+
+1.010000...
+
+1.01₂:
+
+= 1 + 0×2⁻¹ + 1×2⁻²
+
+= 1 + 0.25
+
+= 1.25
+
+Therefore:
+
+Value:
+
+(+1) × 1.25 × 2³
+
+= 1.25 × 8
+
+= 10
+
+So the represented value is:
+
+10.0
+
+============================================================
+54. NORMALIZED NUMBERS IN IEEE 754
+==================================
+
+For normalized numbers:
+
+Significand:
+
+1.xxxxx...
+
+There is an implicit leading 1.
+
+This allows IEEE 754 to store one extra bit of precision without
+actually storing that leading 1.
+
+For example:
+
+1.101101...
+
+Only:
+
+101101...
+
+needs to be stored in the fraction field.
+
+============================================================
+55. SPECIAL IEEE 754 VALUES
+===========================
+
+IEEE 754 also defines special representations.
+
+Important ones include:
+
+1. Positive Zero
+2. Negative Zero
+3. Positive Infinity
+4. Negative Infinity
+5. NaN
+6. Subnormal numbers
+
+These are handled using special exponent/fraction patterns.
+
+For normal numbers:
+
+Exponent field is neither all 0s nor all 1s.
+
+If exponent field is all 0s:
+
+The representation is used for zero/subnormal numbers.
+
+If exponent field is all 1s:
+
+It is used for infinity or NaN depending on the fraction field.
+
+============================================================
+56. FLOAT VS DOUBLE
+===================
+
+float:
+
+32 bits
+
+Sign = 1 bit
+Exponent = 8 bits
+Fraction = 23 bits
+
+double:
+
+64 bits
+
+Sign = 1 bit
+Exponent = 11 bits
+Fraction = 52 bits
+
+Because double has more bits, it generally provides greater
+precision and a wider range than float.
+
+In Java:
+
+float x = 3.14f;
+
+double y = 3.14;
+
+By default, decimal floating-point literals such as:
+
+3.14
+
+are treated as double.
+
+============================================================
+57. WHY FLOATING POINT NUMBERS CAN HAVE PRECISION ERRORS
+========================================================
+
+Some decimal fractions cannot be represented exactly using a finite
+number of binary bits.
+
+For example:
+
+0.1 in decimal
+
+has a repeating binary representation.
+
+Therefore the computer stores the closest representable binary
+floating-point value.
+
+This can cause results such as:
+
+0.1 + 0.2
+
+not being represented exactly as decimal 0.3 internally.
+
+This is why floating-point equality should often be handled using
+a tolerance rather than direct == comparison when exact decimal
+precision is required.
+
+============================================================
+58. IMPORTANT DIFFERENCE: INTEGER VS FLOAT
+==========================================
+
+INTEGER:
+
+Uses exact binary representation within its range.
+
+Example:
+
+int x = 10;
+
+FLOATING POINT:
+
+Uses:
+
+SIGN + EXPONENT + FRACTION
+
+and may involve approximation.
+
+Integer:
+
+Two's Complement
+
+Floating point:
+
+IEEE 754
+
+============================================================
+59. BITWISE OPERATIONS WITH JAVA
+================================
+
+Example:
+
+public class Main {
+
+```
+public static void main(String[] args) {
+
+    int a = 5;
+    int b = 3;
+
+    System.out.println(a & b);
+    System.out.println(a | b);
+    System.out.println(a ^ b);
+    System.out.println(~a);
+    System.out.println(a << 1);
+    System.out.println(a >> 1);
+    System.out.println(a >>> 1);
+}
+```
+
+}
+
+For:
+
+a = 5  -> 0101
+b = 3  -> 0011
+
+a & b = 0001 = 1
+
+a | b = 0111 = 7
+
+a ^ b = 0110 = 6
+
+============================================================
+60. BIT POSITIONING
+===================
+
+Always remember:
+
+Positions start from 0.
+
+Example:
+
+Binary:
+
+1 0 1 1 0 1 0
+6 5 4 3 2 1 0
+
+LSB:
+
+position 0
+
+MSB:
+
+position 6
+
+For an n-bit value:
+
+LSB position = 0
+
+MSB position = n - 1
+
+============================================================
+61. COMMON DSA BIT MANIPULATION QUESTIONS
+=========================================
+
+QUESTION 1:
+Check whether a number is odd or even.
+
+ANSWER:
+
+n & 1
+
+QUESTION 2:
+Find unique element where every other element occurs twice.
+
+ANSWER:
+
+XOR all elements.
+
+QUESTION 3:
+Find whether a number is power of 2.
+
+ANSWER:
+
+n > 0 && (n & (n - 1)) == 0
+
+QUESTION 4:
+Find number of set bits.
+
+ANSWER:
+
+Repeatedly use:
+
+n = n & (n - 1)
+
+QUESTION 5:
+Find rightmost set bit.
+
+ANSWER:
+
+n & -n
+
+QUESTION 6:
+Find rightmost set bit position.
+
+ANSWER:
+
+Integer.numberOfTrailingZeros(n)
+
+QUESTION 7:
+Check i-th bit.
+
+ANSWER:
+
+n & (1 << i)
+
+QUESTION 8:
+Set i-th bit.
+
+ANSWER:
+
+n | (1 << i)
+
+QUESTION 9:
+Reset i-th bit.
+
+ANSWER:
+
+n & ~(1 << i)
+
+QUESTION 10:
+Toggle i-th bit.
+
+ANSWER:
+
+n ^ (1 << i)
+
+============================================================
+62. COMPLETE BIT MANIPULATION EXAMPLE
+=====================================
+
+Suppose:
+
+n = 13
+
+Binary:
+
+1101
+
+CHECK BIT 2:
+
+Mask:
+
+1 << 2
+
+= 0100
+
+AND:
+
+1101
+0100
+----
+
+0100
+
+Non-zero.
+
+Therefore bit 2 is SET.
+
+SET BIT 1:
+
+Mask:
+
+0010
+
+OR:
+
+1101
+0010
+----
+
+1111
+
+Result:
+
+15
+
+RESET BIT 2:
+
+Mask:
+
+0100
+
+NOT mask:
+
+1011
+
+AND:
+
+1101
+1011
+----
+
+1001
+
+Result:
+
+9
+
+TOGGLE BIT 1:
+
+Mask:
+
+0010
+
+XOR:
+
+1101
+0010
+----
+
+1111
+
+Result:
+
+15
+
+============================================================
+63. IMPORTANT MASKS TO REMEMBER
+===============================
+
+MASK FOR BIT i:
+
+1 << i
+
+LOWER i BITS:
+
+(1 << i) - 1
+
+ALL BITS EXCEPT BIT i:
+
+~(1 << i)
+
+CLEAR BIT i:
+
+~(1 << i)
+
+CHECK BIT i:
+
+1 << i
+
+============================================================
+64. BITWISE OPERATOR VS LOGICAL OPERATOR
+========================================
+
+BITWISE:
+
+&
+|
+^
+
+Logical:
+
+&&
+||
+
+Bitwise operators work with bits.
+
+Logical operators work with boolean conditions.
+
+Example:
+
+5 & 3
+
+is valid and produces:
+
+1
+
+For boolean conditions:
+
+true && false
+
+produces:
+
+false
+
+IMPORTANT:
+
+Do not confuse:
+
+& with &&
+| with ||
+
+Also:
+
+^ is XOR.
+
+============================================================
+65. SHORT-CIRCUIT OPERATORS
+===========================
+
+Java:
+
+&&
+
+and:
+
+||
+
+are short-circuit logical operators.
+
+Example:
+
+if (a != 0 && b / a > 5)
+
+If:
+
+a != 0
+
+is false, Java does not evaluate the second condition.
+
+Bitwise:
+
+&
+
+does not work the same way for boolean expressions.
+
+It evaluates both operands.
+
+============================================================
+66. OPERATOR PRECEDENCE NOTE
+============================
+
+When writing complex bitwise expressions, parentheses are highly
+recommended.
+
+Example:
+
+if ((n & 1) == 0)
+
+Rather than relying on precedence, use:
+
+(n & 1)
+
+This makes the intention clear and avoids mistakes.
+
+============================================================
+67. OVERFLOW IN LEFT SHIFT
+==========================
+
+Left shifting increases the numerical value by powers of 2 when
+there is no overflow.
+
+For Java int:
+
+int = 32 bits
+
+If a bit is shifted beyond the available range, information can
+be lost.
+
+Example:
+
+1 << 31
+
+sets the sign bit of an int.
+
+Its value is:
+
+-2147483648
+
+Therefore bitwise shifts should be used carefully when working near
+integer limits.
+
+============================================================
+68. SIGN BIT AND TWO'S COMPLEMENT
+=================================
+
+For a signed Java int:
+
+MSB = bit 31.
+
+If MSB is:
+
+0 -> non-negative
+
+1 -> negative
+
+Example conceptually:
+
+00000000 00000000 00000000 00000101
+
+MSB = 0
+
+Value = +5
+
+For -5:
+
+11111111 11111111 11111111 11111011
+
+MSB = 1
+
+Value = -5
+
+============================================================
+69. WHY TWO'S COMPLEMENT IS PREFERRED
+=====================================
+
+Two's Complement has major advantages:
+
+1. Only one representation of zero.
+2. Addition works naturally for positive and negative numbers.
+3. Subtraction can be performed using addition and Two's Complement.
+4. Hardware implementation is simpler.
+5. Sign extension works naturally.
+
+============================================================
+70. SIGN EXTENSION
+==================
+
+When a signed negative number is represented using more bits,
+the sign bit is copied.
+
+Example:
+
+4-bit representation of -3:
+
+1101
+
+Extend to 8 bits:
+
+11111101
+
+The leading 1s preserve the negative value.
+
+For positive:
+
+0011
+
+Extended to 8 bits:
+
+00000011
+
+Therefore:
+
+0 is extended for positive values.
+
+1 is extended for negative values.
+
+============================================================
+71. ARITHMETIC VS LOGICAL RIGHT SHIFT
+=====================================
+
+Arithmetic right shift:
+
+> >
+
+Preserves the sign bit.
+
+Logical right shift:
+
+> > >
+
+Fills with zeros.
+
+Example conceptually:
+
+Negative number:
+
+11110000
+
+Arithmetic shift:
+
+11111000
+
+Logical shift:
+
+00111100
+
+This distinction is extremely important when working with signed
+numbers.
+
+============================================================
+72. QUICK MENTAL BIT TRICKS
+===========================
+
+1. Last bit 0 -> EVEN
+
+2. Last bit 1 -> ODD
+
+3. x ^ x -> 0
+
+4. x ^ 0 -> x
+
+5. x & (x - 1) -> removes rightmost 1
+
+6. x & -x -> isolates rightmost 1
+
+7. 1 << i -> creates mask for bit i
+
+8. (1 << i) - 1 -> creates i lower 1s
+
+9. ~x -> -(x + 1)
+
+10. x << i -> approximately x × 2ⁱ
+
+11. x >> i -> approximately x / 2ⁱ for positive x
+
+============================================================
+73. BITWISE CHEAT SHEET
+=======================
+
+## OPERATOR
+
+&
+
+NAME:
+Bitwise AND
+
+MAIN USE:
+Check/clear bits
+
+|
+
+NAME:
+Bitwise OR
+
+MAIN USE:
+Set bits
+
+^
+
+NAME:
+Bitwise XOR
+
+MAIN USE:
+Toggle bits / unique element
+
+~
+
+NAME:
+Bitwise NOT
+
+MAIN USE:
+Invert bits
+
+<<
+
+NAME:
+Left Shift
+
+MAIN USE:
+Multiply by powers of 2
+
+> >
+
+NAME:
+Signed Right Shift
+
+MAIN USE:
+Divide by powers of 2 for positive values / preserve sign
+
+> > >
+
+NAME:
+Unsigned Right Shift
+
+MAIN USE:
+Shift right and fill with zero
+
+============================================================
+74. MASTER FORMULA SHEET
+========================
+
+ODD:
+
+(n & 1) != 0
+
+EVEN:
+
+(n & 1) == 0
+
+CHECK i-th BIT:
+
+(n & (1 << i)) != 0
+
+SET i-th BIT:
+
+n | (1 << i)
+
+RESET i-th BIT:
+
+n & ~(1 << i)
+
+TOGGLE i-th BIT:
+
+n ^ (1 << i)
+
+RIGHTMOST SET BIT:
+
+n & -n
+
+REMOVE RIGHTMOST SET BIT:
+
+n & (n - 1)
+
+POWER OF 2:
+
+n > 0 && (n & (n - 1)) == 0
+
+COUNT SET BITS:
+
+while (n != 0)
+n = n & (n - 1);
+
+LOWER i BITS MASK:
+
+(1 << i) - 1
+
+CLEAR LOWER i BITS:
+
+n & ~((1 << i) - 1)
+
+NEGATIVE REPRESENTATION:
+
+~n + 1
+
+NOT:
+
+~n = -(n + 1)
+
+LEFT SHIFT:
+
+n << i
+
+RIGHT SHIFT:
+
+n >> i
+
+UNSIGNED RIGHT SHIFT:
+
+n >>> i
+
+UNSIGNED n-BIT RANGE:
+
+0 to 2ⁿ - 1
+
+SIGNED n-BIT RANGE:
+
+-2ⁿ⁻¹ to 2ⁿ⁻¹ - 1
+
+IEEE 754 FLOAT:
+
+1 sign bit
+8 exponent bits
+23 fraction bits
+bias = 127
+
+IEEE 754 DOUBLE:
+
+1 sign bit
+11 exponent bits
+52 fraction bits
+bias = 1023
+
+IEEE 754 BIAS:
+
+2^(k - 1) - 1
+
+IEEE 754 NORMALIZED VALUE:
+
+(-1)^S × (1 + M) × 2^(E - Bias)
+
+============================================================
+75. INTERVIEW MEMORY TRICKS
+===========================
+
+## AND (&)
+
+"AND = CHECK"
+
+Think:
+
+AND can check whether a particular bit is 1.
+
+## OR (|)
+
+"OR = SET"
+
+Think:
+
+OR with 1 makes the bit 1.
+
+## XOR (^)
+
+"XOR = DIFFERENT / TOGGLE"
+
+Different -> 1
+
+Same -> 0
+
+## NOT (~)
+
+"NOT = FLIP"
+
+0 -> 1
+
+1 -> 0
+
+## LEFT SHIFT (<<)
+
+"LEFT = MULTIPLY"
+
+Approximately:
+
+× 2ⁿ
+
+## RIGHT SHIFT (>>)
+
+"RIGHT = DIVIDE"
+
+Approximately:
+
+÷ 2ⁿ
+
+for positive values.
+
+## n & (n - 1)
+
+"REMOVE RIGHTMOST 1"
+
+## n & -n
+
+"ISOLATE RIGHTMOST 1"
+
+## 1 << i
+
+"CREATE MASK AT POSITION i"
+
+## (1 << i) - 1
+
+"CREATE i ONES"
+
+============================================================
+76. FINAL CONCEPT MAP
+=====================
+
+NUMBER SYSTEM
+|
++---- Decimal
+|
++---- Binary
+|
++---- Octal
+|
++---- Hexadecimal
+|
++---- Conversions
+|
++---- Decimal <-> Binary
++---- Binary <-> Octal
++---- Binary <-> Hexadecimal
+
+BINARY
+|
++---- Bits
+|
++---- MSB
+|
++---- LSB
+|
++---- Signed
+|
++---- Unsigned
+|
++---- Two's Complement
+
+BITWISE OPERATORS
+|
++---- &
+|      |
+|      +---- Check bit
+|      +---- Clear bit
+|      +---- Odd/Even
+|
++---- |
+|      |
+|      +---- Set bit
+|
++---- ^
+|      |
+|      +---- Toggle bit
+|      +---- Unique element
+|
++---- ~
+|      |
+|      +---- Invert bits
+|
++---- <<
+|      |
+|      +---- Shift left
+|
++---- >>
+|      |
+|      +---- Signed shift right
+|
++---- >>>
+|
++---- Unsigned shift right
+
+BIT MANIPULATION
+|
++---- Mask
+|
++---- i-th bit
+|
++---- Set i-th bit
+|
++---- Reset i-th bit
+|
++---- Toggle i-th bit
+|
++---- Rightmost set bit
+|
++---- Remove rightmost set bit
+|
++---- Count set bits
+|
++---- Power of 2
+
+NUMBER REPRESENTATION
+|
++---- Positive
+|
++---- Negative
+|      |
+|      +---- Two's Complement
+|
++---- Integer range
+|
++---- Floating Point
+|
++---- IEEE 754
+|
++---- Sign
+|
++---- Exponent
+|
++---- Bias
+|
++---- Fraction
+|
++---- Normalization
+
+============================================================
+77. MOST IMPORTANT THINGS TO REMEMBER
+=====================================
+
+If you are preparing for DSA/interviews, remember these first:
+
+1. Binary uses only 0 and 1.
+
+2. LSB is the rightmost bit.
+
+3. MSB is the leftmost bit.
+
+4. For signed Two's Complement integers:
+   MSB = 1 means negative.
+
+5. For integer odd/even:
+   n & 1
+
+6. XOR:
+   x ^ x = 0
+   x ^ 0 = x
+
+7. Unique element:
+   XOR all elements.
+
+8. Mask for i-th bit:
+   1 << i
+
+9. Check i-th bit:
+   n & (1 << i)
+
+10. Set i-th bit:
+    n | (1 << i)
+
+11. Reset i-th bit:
+    n & ~(1 << i)
+
+12. Toggle i-th bit:
+    n ^ (1 << i)
+
+13. Remove rightmost set bit:
+    n & (n - 1)
+
+14. Isolate rightmost set bit:
+    n & -n
+
+15. Power of 2:
+    n > 0 && (n & (n - 1)) == 0
+
+16. Lower i bits:
+    (1 << i) - 1
+
+17. Negative Two's Complement:
+    ~n + 1
+
+18. NOT:
+    ~n = -(n + 1)
+
+19. Signed n-bit range:
+    -2ⁿ⁻¹ to 2ⁿ⁻¹ - 1
+
+20. IEEE 754 float:
+    1 + 8 + 23 = 32 bits
+
+21. IEEE 754 double:
+    1 + 11 + 52 = 64 bits
+
+22. Float bias:
+    127
+
+23. Double bias:
+    1023
+
+24. IEEE normalized form:
+
+    1.xxxxx × 2^exponent
+
+25. IEEE value:
+
+    (-1)^S × (1 + M) × 2^(E - Bias)
+
+============================================================
+END
+===
+
+BITWISE IN ONE LINE:
+
+"AND checks, OR sets, XOR toggles/cancels,
+NOT flips, LEFT SHIFT multiplies, RIGHT SHIFT divides."
+
+============================================================

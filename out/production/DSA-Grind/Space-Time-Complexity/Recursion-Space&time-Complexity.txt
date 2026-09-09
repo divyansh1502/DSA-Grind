@@ -1,0 +1,1304 @@
+/*
+====================================================================
+        RECURSIVE ALGORITHM — TIME, SPACE & RECURRENCE
+====================================================================
+
+
+1. WHAT IS RECURSION?
+====================================================================
+
+Recursion is a technique where a function calls itself to solve
+a smaller version of the same problem.
+
+Every recursive function generally has TWO parts:
+
+1. Base Case
+   -> Stops the recursion.
+
+2. Recursive Case
+   -> Function calls itself with a smaller/simpler input.
+
+
+Example:
+
+static void fun(int n) {
+
+    if(n == 0)              // Base Case
+        return;
+
+    System.out.println(n);
+
+    fun(n - 1);             // Recursive Case
+}
+
+
+For:
+
+fun(3)
+
+Call sequence:
+
+fun(3)
+   ↓
+fun(2)
+   ↓
+fun(1)
+   ↓
+fun(0)
+   ↓
+return
+
+
+====================================================================
+2. HOW RECURSION USES MEMORY
+====================================================================
+
+Every function call creates a STACK FRAME in the call stack.
+
+Example:
+
+fun(3)
+
+Stack:
+
+┌─────────────┐
+│   fun(1)    │
+├─────────────┤
+│   fun(2)    │
+├─────────────┤
+│   fun(3)    │
+└─────────────┘
+
+When fun(0) is reached, the functions start returning.
+
+Therefore, recursion depth determines the stack space.
+
+
+====================================================================
+3. SPACE COMPLEXITY OF RECURSION
+====================================================================
+
+IMPORTANT:
+
+Recursive space complexity mainly comes from:
+
+        CALL STACK
+
+Example:
+
+static void fun(int n) {
+
+    if(n == 0)
+        return;
+
+    fun(n - 1);
+}
+
+
+Calls:
+
+fun(n)
+fun(n-1)
+fun(n-2)
+...
+fun(1)
+fun(0)
+
+
+There can be approximately n active calls.
+
+Therefore:
+
+Space Complexity = O(n)
+
+
+Even though we didn't create an array,
+
+the recursion itself uses O(n) stack memory.
+
+
+====================================================================
+4. SIMPLE RECURSION — TIME COMPLEXITY
+====================================================================
+
+Example:
+
+static void fun(int n) {
+
+    if(n == 0)
+        return;
+
+    fun(n - 1);
+}
+
+
+There are n recursive calls.
+
+Therefore:
+
+Time Complexity  = O(n)
+Space Complexity = O(n)
+
+
+Reason:
+
+Time:
+    n function calls
+
+Space:
+    n function calls exist in the call stack
+    before returning.
+
+
+====================================================================
+5. RECURSION WITH TWO CALLS
+====================================================================
+
+Example:
+
+static int fun(int n) {
+
+    if(n <= 1)
+        return n;
+
+    return fun(n - 1) + fun(n - 2);
+}
+
+
+This is the famous Fibonacci-style recursion.
+
+Each function call creates TWO more calls.
+
+                    fun(n)
+                   /      \
+              fun(n-1)   fun(n-2)
+              /    \      /    \
+             ...   ...   ...   ...
+
+
+The number of calls grows exponentially.
+
+Time Complexity:
+
+        O(2^n)
+
+
+But IMPORTANT:
+
+The maximum depth of the recursion tree is approximately n.
+
+Therefore:
+
+Space Complexity:
+
+        O(n)
+
+
+So:
+
+Time  = O(2^n)
+Space = O(n)
+
+
+====================================================================
+6. WHAT IS A RECURRENCE RELATION?
+====================================================================
+
+A recurrence relation is a mathematical equation that describes
+the running time of a recursive algorithm in terms of smaller
+inputs.
+
+In simple words:
+
+        "How much work does the current problem do
+         + how much work do its recursive calls do?"
+
+
+General form:
+
+        T(n) = Recursive Work + Extra Work
+
+
+Example:
+
+fun(n) calls fun(n-1) and does constant work.
+
+Therefore:
+
+        T(n) = T(n-1) + O(1)
+
+
+This is the recurrence relation.
+
+
+====================================================================
+7. HOW TO CREATE A RECURRENCE RELATION
+====================================================================
+
+Look at THREE things:
+
+1. How many recursive calls?
+2. What is the size of each recursive input?
+3. How much EXTRA work happens outside recursion?
+
+
+General form:
+
+        T(n) = aT(n/b) + f(n)
+
+
+Where:
+
+a = number of recursive calls
+
+n/b = size of each subproblem
+
+f(n) = work done outside recursive calls
+
+
+Example:
+
+T(n) = 2T(n/2) + O(n)
+
+means:
+
+2 recursive calls
+each receives n/2 input
+and O(n) extra work is performed.
+
+
+====================================================================
+8. EXAMPLE — T(n) = T(n-1) + O(1)
+====================================================================
+
+Code:
+
+static void fun(int n) {
+
+    if(n == 0)
+        return;
+
+    fun(n - 1);
+
+    // O(1) work
+}
+
+
+Recurrence:
+
+        T(n) = T(n-1) + O(1)
+
+
+Expand it:
+
+T(n)
+ = T(n-1) + 1
+
+ = T(n-2) + 1 + 1
+
+ = T(n-3) + 1 + 1 + 1
+
+ ...
+
+ = T(0) + n
+
+
+Therefore:
+
+        T(n) = O(n)
+
+
+Space:
+
+        O(n)
+
+because there are n recursive calls on the stack.
+
+
+====================================================================
+9. EXAMPLE — T(n) = T(n/2) + O(1)
+====================================================================
+
+Example:
+
+static void fun(int n) {
+
+    if(n <= 1)
+        return;
+
+    fun(n / 2);
+}
+
+
+Recurrence:
+
+        T(n) = T(n/2) + O(1)
+
+
+Expand:
+
+T(n)
+ = T(n/2) + 1
+
+ = T(n/4) + 1 + 1
+
+ = T(n/8) + 1 + 1 + 1
+
+ ...
+
+
+After k divisions:
+
+        n / 2^k = 1
+
+
+Therefore:
+
+        n = 2^k
+
+Taking log:
+
+        k = log₂(n)
+
+
+Therefore:
+
+Time = O(log n)
+
+
+And recursion depth is log n:
+
+Space = O(log n)
+
+
+====================================================================
+10. EXAMPLE — BINARY SEARCH
+====================================================================
+
+Binary Search recursively divides the array into HALF.
+
+Each call:
+
+        input size = n/2
+
+Only ONE recursive call is made.
+
+Recurrence:
+
+        T(n) = T(n/2) + O(1)
+
+
+Therefore:
+
+Time = O(log n)
+
+
+Recursive version:
+
+Space = O(log n)
+
+because the recursion stack can contain log n calls.
+
+
+Iterative version:
+
+Space = O(1)
+
+
+IMPORTANT:
+
+Recursive Binary Search:
+
+        Time  = O(log n)
+        Space = O(log n)
+
+
+Iterative Binary Search:
+
+        Time  = O(log n)
+        Space = O(1)
+
+
+====================================================================
+11. EXAMPLE — MERGE SORT
+====================================================================
+
+Merge Sort:
+
+1. Divide array into TWO halves.
+2. Recursively sort both halves.
+3. Merge them in O(n) time.
+
+
+There are TWO recursive calls:
+
+        mergeSort(n/2)
+        mergeSort(n/2)
+
+
+And merging takes:
+
+        O(n)
+
+
+Therefore:
+
+        T(n) = 2T(n/2) + O(n)
+
+
+Using Master Theorem:
+
+        T(n) = O(n log n)
+
+
+Space Complexity:
+
+        O(n)
+
+because merging requires additional array space.
+
+Therefore:
+
+        Time  = O(n log n)
+        Space = O(n)
+
+
+====================================================================
+12. MASTER THEOREM
+====================================================================
+
+Master Theorem is used for recurrences of the form:
+
+        T(n) = aT(n/b) + f(n)
+
+
+Where:
+
+a = number of recursive calls
+
+b = factor by which input is divided
+
+f(n) = extra work outside recursive calls
+
+
+We compare:
+
+        f(n)
+
+with:
+
+        n^(log_b(a))
+
+
+---------------------------------------------------------------
+CASE 1
+---------------------------------------------------------------
+
+If:
+
+        f(n) = O(n^(log_b(a) - ε))
+
+Then:
+
+        T(n) = O(n^(log_b(a)))
+
+
+Example:
+
+        T(n) = 4T(n/2) + O(n)
+
+
+Here:
+
+a = 4
+b = 2
+
+Calculate:
+
+        n^(log₂4)
+      = n²
+
+
+f(n) = n
+
+n is smaller than n².
+
+Therefore:
+
+        T(n) = O(n²)
+
+
+---------------------------------------------------------------
+CASE 2
+---------------------------------------------------------------
+
+If:
+
+        f(n) = Θ(n^(log_b(a)))
+
+
+Then:
+
+        T(n) = O(n^(log_b(a)) log n)
+
+
+Example:
+
+        T(n) = 2T(n/2) + O(n)
+
+
+a = 2
+b = 2
+
+n^(log₂2)
+
+= n
+
+
+f(n) = n
+
+
+They are the same.
+
+Therefore:
+
+        T(n) = O(n log n)
+
+
+This is the case for Merge Sort.
+
+
+---------------------------------------------------------------
+CASE 3
+---------------------------------------------------------------
+
+If:
+
+        f(n) = Ω(n^(log_b(a) + ε))
+
+and the regularity condition is satisfied,
+
+then:
+
+        T(n) = O(f(n))
+
+
+Example:
+
+        T(n) = 2T(n/2) + O(n²)
+
+
+a = 2
+b = 2
+
+n^(log₂2) = n
+
+
+f(n) = n²
+
+
+n² grows faster than n.
+
+Therefore:
+
+        T(n) = O(n²)
+
+
+====================================================================
+13. RECURSION TREE
+====================================================================
+
+A recursion tree represents recursive calls as a tree.
+
+Example:
+
+        T(n) = 2T(n/2) + n
+
+
+                n
+              /   \
+             n     n
+           / \     / \
+          n/2 n/2 n/2 n/2
+          ...
+
+
+Level 0:
+
+        n
+
+Level 1:
+
+        2 × n/2 = n
+
+Level 2:
+
+        4 × n/4 = n
+
+Every level costs:
+
+        O(n)
+
+
+Number of levels:
+
+        log n
+
+
+Therefore:
+
+        Total = n × log n
+
+        T(n) = O(n log n)
+
+
+====================================================================
+14. IMPORTANT: RECURSION TREE VS CALL STACK
+====================================================================
+
+These are NOT the same thing.
+
+Recursion Tree:
+
+Used to analyze TIME complexity.
+
+It shows ALL recursive calls.
+
+Call Stack:
+
+Used to analyze SPACE complexity.
+
+It shows only ACTIVE calls at one moment.
+
+
+Example:
+
+Fibonacci has many total calls:
+
+Time ≈ O(2^n)
+
+But only one path is active at a time.
+
+Maximum depth ≈ n.
+
+Therefore:
+
+Space = O(n)
+
+
+====================================================================
+15. LINEAR RECURSION
+====================================================================
+
+Only ONE recursive call per function.
+
+Example:
+
+fun(n) {
+    fun(n - 1);
+}
+
+
+Typical complexities:
+
+T(n) = T(n-1) + O(1)
+
+Time = O(n)
+Space = O(n)
+
+
+Or:
+
+T(n) = T(n/2) + O(1)
+
+Time = O(log n)
+Space = O(log n)
+
+
+====================================================================
+16. MULTIPLE RECURSIVE CALLS
+====================================================================
+
+Example:
+
+fun(n) {
+
+    fun(n - 1);
+    fun(n - 1);
+}
+
+
+Recurrence:
+
+        T(n) = 2T(n-1) + O(1)
+
+
+This grows exponentially.
+
+Time:
+
+        O(2^n)
+
+
+But space depends on the MAXIMUM DEPTH, not total calls.
+
+Maximum depth:
+
+        O(n)
+
+
+Therefore:
+
+Space:
+
+        O(n)
+
+
+IMPORTANT:
+
+Number of calls ≠ Space complexity.
+
+For recursive algorithms:
+
+TIME → count total work/calls
+
+SPACE → maximum simultaneous active calls
+
+
+====================================================================
+17. RECURSION WITH A LOOP
+====================================================================
+
+Example:
+
+fun(n) {
+
+    for(int i = 0; i < n; i++) {
+        // O(n)
+    }
+
+    fun(n - 1);
+}
+
+
+Recurrence:
+
+        T(n) = T(n-1) + O(n)
+
+
+Expand:
+
+T(n)
+= T(n-1) + n
+= T(n-2) + (n-1) + n
+= T(n-3) + (n-2) + (n-1) + n
+...
+
+
+Total:
+
+        1 + 2 + 3 + ... + n
+
+        = n(n+1)/2
+
+        = O(n²)
+
+
+Therefore:
+
+Time  = O(n²)
+Space = O(n)
+
+
+====================================================================
+18. TAIL RECURSION
+====================================================================
+
+Tail recursion means the recursive call is the LAST operation.
+
+Example:
+
+fun(n) {
+
+    if(n == 0)
+        return;
+
+    fun(n - 1);
+}
+
+
+In Java, tail recursion is still stored on the call stack.
+
+Java does NOT generally perform tail-call optimization.
+
+Therefore:
+
+Space = O(n)
+
+
+Don't assume tail recursion automatically means O(1) space
+in Java.
+
+
+====================================================================
+19. HEAD RECURSION
+====================================================================
+
+Example:
+
+fun(n) {
+
+    if(n == 0)
+        return;
+
+    fun(n - 1);
+
+    System.out.println(n);
+}
+
+
+The recursive call happens before the remaining work.
+
+Still:
+
+Time  = O(n)
+Space = O(n)
+
+
+The position of the recursive call does not automatically
+change its Big-O complexity.
+
+
+====================================================================
+20. COMMON RECURSION COMPLEXITIES
+====================================================================
+
+Pattern:
+
+T(n) = T(n-1) + O(1)
+
+Time  = O(n)
+Space = O(n)
+
+
+Pattern:
+
+T(n) = T(n/2) + O(1)
+
+Time  = O(log n)
+Space = O(log n)
+
+
+Pattern:
+
+T(n) = 2T(n/2) + O(n)
+
+Time  = O(n log n)
+Space depends on implementation,
+often O(n)
+
+
+Pattern:
+
+T(n) = 2T(n-1) + O(1)
+
+Time  = O(2^n)
+Space = O(n)
+
+
+Pattern:
+
+T(n) = 2T(n) + O(1)
+
+This does NOT reduce the problem size and therefore
+does not terminate for normal positive n.
+
+It leads to infinite recursion / StackOverflowError.
+
+
+====================================================================
+21. BASE CASE AND COMPLEXITY
+====================================================================
+
+Base case normally takes:
+
+        O(1)
+
+
+Example:
+
+if(n == 0)
+    return 1;
+
+
+The important part is how many recursive calls occur
+before reaching the base case.
+
+
+====================================================================
+22. HOW TO ANALYZE ANY RECURSIVE ALGORITHM
+====================================================================
+
+Follow these steps:
+
+STEP 1:
+Find the base case.
+
+STEP 2:
+Count the number of recursive calls.
+
+STEP 3:
+Find the size of each recursive subproblem.
+
+STEP 4:
+Calculate the non-recursive work.
+
+STEP 5:
+Write the recurrence relation.
+
+STEP 6:
+Solve the recurrence using:
+
+    - Expansion/Substitution
+    - Recursion Tree
+    - Master Theorem
+    - Known recurrence patterns
+
+STEP 7:
+Calculate SPACE separately.
+
+For space:
+
+Look at the maximum recursion depth.
+
+
+====================================================================
+23. VERY IMPORTANT EXAMPLE
+====================================================================
+
+Code:
+
+fun(n) {
+
+    if(n <= 1)
+        return;
+
+    fun(n/2);
+    fun(n/2);
+
+    for(int i = 0; i < n; i++) {
+        // O(n)
+    }
+}
+
+
+Analysis:
+
+Number of recursive calls:
+
+        2
+
+
+Size of each:
+
+        n/2
+
+
+Extra work:
+
+        O(n)
+
+
+Therefore:
+
+        T(n) = 2T(n/2) + O(n)
+
+
+Master Theorem:
+
+a = 2
+b = 2
+f(n) = n
+
+
+n^(log₂2) = n
+
+
+f(n) = Θ(n)
+
+
+Therefore:
+
+        Time = O(n log n)
+
+
+Space:
+
+At each level, there are multiple calls,
+but only ONE complete recursive path is active
+at a time.
+
+Depth:
+
+        n → n/2 → n/4 → ...
+
+        = O(log n)
+
+
+If the loop uses only O(1) extra space:
+
+        Space = O(log n)
+
+
+====================================================================
+24. TIME AND SPACE CAN BE DIFFERENT
+====================================================================
+
+Example:
+
+Fibonacci:
+
+        T(n) = T(n-1) + T(n-2) + O(1)
+
+
+Time:
+
+        O(2^n)
+
+
+Space:
+
+        O(n)
+
+
+So DON'T assume:
+
+        Time Complexity = Space Complexity
+
+
+They must be analyzed separately.
+
+
+====================================================================
+25. RECURSION + EXTRA DATA STRUCTURE
+====================================================================
+
+Example:
+
+fun(n) {
+
+    int[] arr = new int[n];
+
+    if(n == 0)
+        return;
+
+    fun(n - 1);
+}
+
+
+This creates an array of size n at EVERY recursive level.
+
+The space can become:
+
+        n + (n-1) + (n-2) + ... + 1
+
+        = O(n²)
+
+
+Therefore:
+
+Space = O(n²)
+
+
+IMPORTANT:
+
+When analyzing recursive space, consider BOTH:
+
+1. Call stack
+2. Extra memory created at each call
+
+
+====================================================================
+26. STACK SPACE VS AUXILIARY SPACE
+====================================================================
+
+For recursion:
+
+        Stack Space = memory used by active calls.
+
+
+Auxiliary Space can include:
+
+        Stack Space
+        +
+        Extra data structures
+
+
+Example:
+
+Recursive Binary Search:
+
+Stack = O(log n)
+Extra variables = O(1)
+
+Therefore:
+
+Auxiliary Space = O(log n)
+
+
+====================================================================
+27. QUICK RECURRENCE CHEAT SHEET
+====================================================================
+
+T(n) = T(n-1) + O(1)
+
+        → O(n)
+
+
+T(n) = T(n-1) + O(n)
+
+        → O(n²)
+
+
+T(n) = T(n/2) + O(1)
+
+        → O(log n)
+
+
+T(n) = T(n/2) + O(n)
+
+        → O(n)
+
+
+T(n) = 2T(n/2) + O(1)
+
+        → O(n)
+
+
+T(n) = 2T(n/2) + O(n)
+
+        → O(n log n)
+
+
+T(n) = 2T(n-1) + O(1)
+
+        → O(2^n)
+
+
+T(n) = T(n-1) + T(n-2) + O(1)
+
+        → O(2^n) approximately
+
+
+T(n) = 4T(n/2) + O(n)
+
+        → O(n²)
+
+
+====================================================================
+28. FINAL RECURSION CHEAT SHEET
+====================================================================
+
+RECURSION:
+
+Function calls itself.
+
+BASE CASE:
+
+Stops recursion.
+
+RECURSIVE CASE:
+
+Calls the function again with a smaller problem.
+
+
+RECURRENCE RELATION:
+
+Mathematical representation of recursive running time.
+
+General form:
+
+        T(n) = aT(n/b) + f(n)
+
+
+TIME COMPLEXITY:
+
+Count the total amount of work performed by all
+recursive calls.
+
+
+SPACE COMPLEXITY:
+
+Count the maximum memory used at one time.
+
+For recursion:
+
+        Space ≈ Maximum recursion depth
+
+
+RECURSION TREE:
+
+Useful for understanding and calculating TIME.
+
+
+CALL STACK:
+
+Useful for calculating recursive SPACE.
+
+
+MASTER THEOREM:
+
+Useful for:
+
+        T(n) = aT(n/b) + f(n)
+
+
+MOST IMPORTANT RULE:
+
+        TIME → Total work / total recursive calls
+
+        SPACE → Maximum simultaneous active calls
+
+
+====================================================================
+29. ONE-LINE MEMORY TRICKS
+====================================================================
+
+One recursive call:
+    Look at how fast n decreases.
+
+n → n-1:
+    O(n)
+
+n → n/2:
+    O(log n)
+
+
+Two recursive calls:
+    Look at the recurrence carefully.
+
+2T(n/2):
+    Often O(n log n) depending on extra work.
+
+
+For space:
+    DON'T count the entire recursion tree.
+
+    Count the MAXIMUM DEPTH of the call stack.
+
+
+For recurrence:
+
+    Number of calls
+          ↓
+    Size of subproblem
+          ↓
+    Extra work
+          ↓
+    Recurrence
+          ↓
+    Solve recurrence
+
+
+====================================================================
+*/

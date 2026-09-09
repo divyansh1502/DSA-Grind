@@ -1,0 +1,1454 @@
+/*
+================================================================================
+                         SORTING ALGORITHMS - DETAILED NOTES
+================================================================================
+
+WHAT IS SORTING?
+----------------
+Sorting is the process of arranging elements in a particular order.
+
+Usually:
+    Ascending  -> Smallest to Largest
+    Descending -> Largest to Smallest
+
+Example:
+    Before:  [5, 2, 8, 1, 3]
+    After:   [1, 2, 3, 5, 8]
+
+
+WHY DO WE NEED SORTING?
+-----------------------
+Sorting makes data easier to:
+    1. Search
+    2. Find duplicates
+    3. Find minimum/maximum
+    4. Perform binary search
+    5. Process data efficiently
+    6. Solve many DSA problems
+
+
+================================================================================
+                         IMPORTANT SORTING TERMS
+================================================================================
+
+1. COMPARISON-BASED SORTING
+---------------------------
+Sorting algorithms that sort elements by comparing them with each other.
+
+Examples:
+    Bubble Sort
+    Selection Sort
+    Insertion Sort
+    Merge Sort
+    Quick Sort
+    Heap Sort
+    Shell Sort
+
+
+2. NON-COMPARISON-BASED SORTING
+-------------------------------
+These algorithms do not primarily sort elements by comparing them.
+
+Examples:
+    Counting Sort
+    Radix Sort
+    Bucket Sort
+    Cyclic Sort
+
+
+3. IN-PLACE SORTING
+-------------------
+An in-place algorithm uses very little extra memory.
+
+Usually:
+    Space Complexity = O(1)
+
+Examples:
+    Bubble Sort
+    Selection Sort
+    Insertion Sort
+    Quick Sort (ignoring recursion stack)
+    Heap Sort
+    Cyclic Sort
+
+
+4. STABLE SORTING
+-----------------
+A stable sorting algorithm maintains the relative order of equal elements.
+
+Example:
+
+Before:
+    (A, 5), (B, 5)
+
+After stable sorting:
+    (A, 5), (B, 5)
+
+The order of A and B remains unchanged.
+
+Stable:
+    Bubble Sort
+    Insertion Sort
+    Merge Sort
+    Tim Sort
+    Counting Sort (when implemented appropriately)
+
+Usually NOT stable:
+    Selection Sort
+    Quick Sort
+    Heap Sort
+    Shell Sort
+    Cyclic Sort
+
+
+================================================================================
+                              1. BUBBLE SORT
+================================================================================
+
+DEFINITION:
+-----------
+Bubble Sort repeatedly compares adjacent elements and swaps them if they
+are in the wrong order.
+
+The largest element "bubbles" toward the end of the array after every pass.
+
+Example:
+
+    [5, 3, 4, 1]
+
+Pass 1:
+    5 > 3 -> swap
+    [3, 5, 4, 1]
+
+    5 > 4 -> swap
+    [3, 4, 5, 1]
+
+    5 > 1 -> swap
+    [3, 4, 1, 5]
+
+Largest element 5 is now at its correct position.
+
+
+ALGORITHM:
+----------
+1. Compare adjacent elements.
+2. If left element > right element, swap them.
+3. Continue until the end.
+4. Repeat for remaining unsorted elements.
+5. Optimization: If no swap occurs in a complete pass,
+   the array is already sorted.
+
+
+TIME COMPLEXITY:
+----------------
+Best Case:    O(n)       -> When array is already sorted and optimized
+Average Case: O(n²)
+Worst Case:   O(n²)
+
+
+SPACE COMPLEXITY:
+-----------------
+O(1)
+
+
+STABLE?
+-------
+YES
+
+
+IN-PLACE?
+---------
+YES
+
+
+ADVANTAGE:
+----------
+Simple and easy to understand.
+
+
+DISADVANTAGE:
+-------------
+Very slow for large datasets.
+
+
+================================================================================
+                            2. SELECTION SORT
+================================================================================
+
+DEFINITION:
+-----------
+Selection Sort repeatedly finds the minimum element from the unsorted part
+and places it at the beginning of the unsorted part.
+
+Example:
+
+    [5, 3, 4, 1, 2]
+
+Find minimum = 1
+
+Swap 1 with first element:
+
+    [1, 3, 4, 5, 2]
+
+Find minimum in remaining part:
+
+    [3, 4, 5, 2] -> minimum = 2
+
+    [1, 2, 4, 5, 3]
+
+Continue until sorted.
+
+
+ALGORITHM:
+----------
+1. Assume current index contains minimum.
+2. Search for minimum in remaining array.
+3. Swap minimum with current index.
+4. Move current index forward.
+5. Repeat.
+
+
+TIME COMPLEXITY:
+----------------
+Best Case:    O(n²)
+Average Case: O(n²)
+Worst Case:   O(n²)
+
+
+SPACE COMPLEXITY:
+-----------------
+O(1)
+
+
+STABLE?
+-------
+NO (standard implementation)
+
+
+IN-PLACE?
+---------
+YES
+
+
+ADVANTAGE:
+----------
+Performs fewer swaps compared to Bubble Sort.
+
+
+DISADVANTAGE:
+-------------
+Still requires O(n²) comparisons even if the array is already sorted.
+
+
+================================================================================
+                            3. INSERTION SORT
+================================================================================
+
+DEFINITION:
+-----------
+Insertion Sort builds the sorted array one element at a time.
+
+It works similar to arranging playing cards in your hand.
+
+Example:
+
+    [5, 3, 4, 1]
+
+Start:
+    [5] -> considered sorted
+
+Take 3:
+    [5, 3]
+    Move 5 right
+    [3, 5]
+
+Take 4:
+    [3, 5, 4]
+    Move 5 right
+    [3, 4, 5]
+
+Take 1:
+    [3, 4, 5, 1]
+    Move 5, 4, 3
+    [1, 3, 4, 5]
+
+
+ALGORITHM:
+----------
+1. Start from index 1.
+2. Store current element.
+3. Compare it with elements on its left.
+4. Shift larger elements to the right.
+5. Insert current element at the correct position.
+
+
+TIME COMPLEXITY:
+----------------
+Best Case:    O(n)       -> Already sorted
+Average Case: O(n²)
+Worst Case:   O(n²)     -> Reverse sorted
+
+
+SPACE COMPLEXITY:
+-----------------
+O(1)
+
+
+STABLE?
+-------
+YES
+
+
+IN-PLACE?
+---------
+YES
+
+
+ADAPTIVE?
+---------
+YES
+
+It performs better when the array is already or nearly sorted.
+
+
+BEST USE CASE:
+--------------
+Small arrays or nearly sorted arrays.
+
+
+================================================================================
+                    4. MERGE SORT
+================================================================================
+
+DEFINITION:
+-----------
+Merge Sort is a Divide and Conquer sorting algorithm.
+
+It divides the array into smaller halves, recursively sorts them,
+and then merges the sorted halves.
+
+
+EXAMPLE:
+
+    [8, 3, 5, 4, 7, 6, 1, 2]
+
+Divide:
+
+    [8,3,5,4]       [7,6,1,2]
+
+    [8,3] [5,4]     [7,6] [1,2]
+
+Continue until individual elements remain.
+
+Then merge:
+
+    [3,8] [4,5] [6,7] [1,2]
+
+Then:
+
+    [3,4,5,8]       [1,2,6,7]
+
+Finally:
+
+    [1,2,3,4,5,6,7,8]
+
+
+MAIN IDEA:
+----------
+Divide -> Sort -> Merge
+
+
+TIME COMPLEXITY:
+----------------
+Best Case:    O(n log n)
+Average Case: O(n log n)
+Worst Case:   O(n log n)
+
+
+SPACE COMPLEXITY:
+-----------------
+O(n)
+
+
+STABLE?
+-------
+YES
+
+
+IN-PLACE?
+---------
+NO (standard implementation)
+
+
+ADVANTAGE:
+----------
+Guaranteed O(n log n) time.
+
+
+DISADVANTAGE:
+-------------
+Requires extra memory for merging.
+
+
+================================================================================
+                          5. QUICK SORT
+================================================================================
+
+DEFINITION:
+-----------
+Quick Sort is a Divide and Conquer algorithm.
+
+It selects an element called a PIVOT and partitions the array around it.
+
+After partition:
+
+    Elements smaller than pivot -> Left
+    Pivot                      -> Middle
+    Elements greater than pivot -> Right
+
+Then Quick Sort is recursively applied to both sides.
+
+
+EXAMPLE:
+
+    [5, 2, 8, 1, 3]
+
+Choose pivot = 5
+
+After partition:
+
+    [2, 1, 3]  5  [8]
+
+Then recursively sort:
+
+    [1, 2, 3]  5  [8]
+
+
+TIME COMPLEXITY:
+----------------
+Best Case:    O(n log n)
+Average Case: O(n log n)
+Worst Case:   O(n²)
+
+
+Worst case can happen when the pivot repeatedly becomes
+the smallest or largest element.
+
+
+SPACE COMPLEXITY:
+-----------------
+Average: O(log n) recursion stack
+Worst:   O(n) recursion stack
+
+
+STABLE?
+-------
+NO
+
+
+IN-PLACE?
+---------
+YES (standard partition implementations)
+
+
+ADVANTAGE:
+----------
+Usually very fast in practice.
+
+
+DISADVANTAGE:
+-------------
+Poor pivot selection can result in O(n²).
+
+
+================================================================================
+                            6. HEAP SORT
+================================================================================
+
+DEFINITION:
+-----------
+Heap Sort uses a Binary Heap data structure to sort elements.
+
+For ascending order, a Max Heap is generally used.
+
+MAX HEAP:
+---------
+Parent >= children
+
+Example:
+
+            9
+          /   \
+         7     8
+        / \
+       3   5
+
+
+ALGORITHM:
+----------
+1. Build a Max Heap.
+2. Maximum element is at the root.
+3. Swap root with last element.
+4. Reduce heap size.
+5. Heapify the remaining heap.
+6. Repeat.
+
+
+TIME COMPLEXITY:
+----------------
+Best Case:    O(n log n)
+Average Case: O(n log n)
+Worst Case:   O(n log n)
+
+
+SPACE COMPLEXITY:
+-----------------
+O(1)
+
+
+STABLE?
+-------
+NO
+
+
+IN-PLACE?
+---------
+YES
+
+
+ADVANTAGE:
+----------
+Guaranteed O(n log n) worst-case time.
+
+
+DISADVANTAGE:
+-------------
+Usually slower in practice than well-implemented Quick Sort.
+
+
+================================================================================
+                  7. 🔥 CYCLIC SORT — VERY IMPORTANT FOR DSA
+================================================================================
+
+DEFINITION:
+-----------
+Cyclic Sort is an in-place sorting algorithm that places every element
+directly at its correct index.
+
+It is mainly useful when the array contains numbers in a known range such as:
+
+    1 to n
+
+or:
+
+    0 to n
+
+
+IMPORTANT IDEA:
+---------------
+Every value has a predictable correct index.
+
+For values from 1 to n:
+
+    correctIndex = value - 1
+
+
+Example:
+
+    arr = [3, 1, 5, 4, 2]
+
+Correct positions:
+
+    1 -> index 0
+    2 -> index 1
+    3 -> index 2
+    4 -> index 3
+    5 -> index 4
+
+
+Instead of comparing elements like Bubble Sort,
+Cyclic Sort directly puts each element into its correct position.
+
+
+WORKING:
+
+    [3, 1, 5, 4, 2]
+
+i = 0
+
+arr[i] = 3
+
+correctIndex = 3 - 1
+              = 2
+
+Swap index 0 and index 2:
+
+    [5, 1, 3, 4, 2]
+
+
+Still i = 0
+
+arr[i] = 5
+
+correctIndex = 5 - 1
+              = 4
+
+Swap:
+
+    [2, 1, 3, 4, 5]
+
+
+Still i = 0
+
+arr[i] = 2
+
+correctIndex = 2 - 1
+              = 1
+
+Swap:
+
+    [1, 2, 3, 4, 5]
+
+
+Now 1 is at its correct position.
+
+Move i forward.
+
+Continue until the complete array is sorted.
+
+
+BASIC JAVA IMPLEMENTATION:
+
+    int i = 0;
+
+    while (i < arr.length) {
+
+        int correctIndex = arr[i] - 1;
+
+        if (arr[i] != arr[correctIndex]) {
+
+            int temp = arr[i];
+            arr[i] = arr[correctIndex];
+            arr[correctIndex] = temp;
+
+        } else {
+            i++;
+        }
+    }
+
+
+TIME COMPLEXITY:
+----------------
+Best Case:    O(n)
+Average Case: O(n)
+Worst Case:   O(n)
+
+
+SPACE COMPLEXITY:
+-----------------
+O(1)
+
+
+STABLE?
+-------
+NO
+
+
+IN-PLACE?
+---------
+YES
+
+
+IMPORTANT:
+----------
+Cyclic Sort is NOT a general-purpose sorting algorithm.
+
+It works best when:
+
+    1. Values are in a known range.
+    2. Usually values are from 1 to n.
+    3. Or values are from 0 to n.
+
+
+WHY IS CYCLIC SORT IMPORTANT IN DSA?
+------------------------------------
+Because many DSA/LeetCode problems can be solved in O(n) time and O(1)
+extra space using the Cyclic Sort pattern.
+
+Common problems:
+
+    1. Find Missing Number
+    2. Find All Numbers Disappeared in an Array
+    3. Find the Duplicate Number
+    4. Find All Duplicates in an Array
+    5. Set Mismatch
+    6. First Missing Positive
+
+
+CORE PATTERN:
+-------------
+
+    while (i < arr.length) {
+
+        int correctIndex = arr[i] - 1;
+
+        if (arr[i] != arr[correctIndex]) {
+            swap(arr, i, correctIndex);
+        } else {
+            i++;
+        }
+    }
+
+
+🔥 REMEMBER:
+
+    CYCLIC SORT = VALUE -> CORRECT INDEX
+
+For:
+
+    value = x
+
+    correctIndex = x - 1
+
+This is the most important idea behind Cyclic Sort.
+
+
+================================================================================
+                            8. COUNTING SORT
+================================================================================
+
+DEFINITION:
+-----------
+Counting Sort is a non-comparison-based sorting algorithm.
+
+Instead of comparing elements, it counts how many times each value occurs.
+
+
+Example:
+
+    arr = [4, 2, 2, 1, 3]
+
+Frequency:
+
+    1 -> 1 time
+    2 -> 2 times
+    3 -> 1 time
+    4 -> 1 time
+
+Reconstruct:
+
+    [1, 2, 2, 3, 4]
+
+
+TIME COMPLEXITY:
+----------------
+O(n + k)
+
+where:
+
+    n = number of elements
+    k = range of values
+
+
+SPACE COMPLEXITY:
+-----------------
+O(k)
+
+or O(n + k) depending on implementation.
+
+
+STABLE?
+-------
+Can be stable.
+
+
+ADVANTAGE:
+----------
+Very fast when the range of values is small.
+
+
+DISADVANTAGE:
+-------------
+Bad when the range of values is extremely large.
+
+
+================================================================================
+                            9. RADIX SORT
+================================================================================
+
+DEFINITION:
+-----------
+Radix Sort sorts numbers digit by digit.
+
+It usually processes digits from:
+
+    Least Significant Digit (LSD)
+
+to:
+
+    Most Significant Digit (MSD)
+
+
+Example:
+
+    [170, 45, 75, 90, 802, 24, 2, 66]
+
+Sort by units digit.
+
+Then tens digit.
+
+Then hundreds digit.
+
+Final result:
+
+    [2, 24, 45, 66, 75, 90, 170, 802]
+
+
+Radix Sort commonly uses Counting Sort internally.
+
+
+TIME COMPLEXITY:
+----------------
+O(d × (n + k))
+
+where:
+
+    d = number of digits
+    n = number of elements
+    k = range of each digit
+
+
+SPACE COMPLEXITY:
+-----------------
+O(n + k)
+
+
+STABLE?
+-------
+YES, when the internal sorting algorithm is stable.
+
+
+ADVANTAGE:
+----------
+Can be faster than comparison-based sorting for suitable integer/string data.
+
+
+DISADVANTAGE:
+-------------
+Not suitable for every type of data.
+
+
+================================================================================
+                            10. BUCKET SORT
+================================================================================
+
+DEFINITION:
+-----------
+Bucket Sort distributes elements into several buckets.
+
+Each bucket is then sorted individually.
+
+Example:
+
+    [0.42, 0.32, 0.23, 0.52, 0.25, 0.47, 0.51]
+
+Elements are distributed into buckets based on their value.
+
+Then each bucket is sorted.
+
+Finally, all buckets are combined.
+
+
+MAIN IDEA:
+
+    Input
+      |
+      v
+    Create Buckets
+      |
+      v
+    Distribute Elements
+      |
+      v
+    Sort Each Bucket
+      |
+      v
+    Combine Buckets
+
+
+TIME COMPLEXITY:
+----------------
+Average: O(n + k)
+Worst:   O(n²)
+
+The average case depends heavily on how uniformly elements
+are distributed among buckets.
+
+
+SPACE COMPLEXITY:
+-----------------
+O(n + k)
+
+
+STABLE?
+-------
+Depends on implementation.
+
+
+ADVANTAGE:
+----------
+Very efficient when data is uniformly distributed.
+
+
+DISADVANTAGE:
+-------------
+Performance can become poor if many elements fall into the same bucket.
+
+
+================================================================================
+                            11. SHELL SORT
+================================================================================
+
+DEFINITION:
+-----------
+Shell Sort is an optimized version of Insertion Sort.
+
+Instead of comparing adjacent elements, it compares elements
+that are separated by a GAP.
+
+The gap is gradually reduced until:
+
+    gap = 1
+
+When gap becomes 1, Shell Sort essentially performs Insertion Sort.
+
+
+Example:
+
+    [8, 5, 3, 7, 6, 2, 1, 4]
+
+Use a large gap first.
+
+Then reduce the gap.
+
+Finally:
+
+    gap = 1
+
+The array becomes sorted.
+
+
+TIME COMPLEXITY:
+----------------
+Depends on the gap sequence.
+
+Common simple implementation:
+
+Worst Case: O(n²)
+
+With better gap sequences, performance can be significantly better.
+
+
+SPACE COMPLEXITY:
+-----------------
+O(1)
+
+
+STABLE?
+-------
+NO
+
+
+IN-PLACE?
+---------
+YES
+
+
+ADVANTAGE:
+----------
+Faster than Insertion Sort for many medium-sized arrays.
+
+
+================================================================================
+                            12. TIM SORT
+================================================================================
+
+DEFINITION:
+-----------
+Tim Sort is a hybrid sorting algorithm derived from:
+
+    Merge Sort + Insertion Sort
+
+It is designed to perform very well on real-world data,
+especially when the data is partially sorted.
+
+It identifies already sorted sections called "runs" and
+efficiently combines them.
+
+
+MAIN IDEA:
+
+    Find sorted runs
+          ↓
+    Use Insertion Sort for small runs
+          ↓
+    Merge sorted runs
+
+
+TIME COMPLEXITY:
+----------------
+Best Case:    O(n)
+Average Case: O(n log n)
+Worst Case:   O(n log n)
+
+
+SPACE COMPLEXITY:
+-----------------
+O(n)
+
+
+STABLE?
+-------
+YES
+
+
+IMPORTANT:
+----------
+Tim Sort is used in several real-world programming environments
+and standard libraries.
+
+
+================================================================================
+                       SORTING ALGORITHM COMPARISON
+================================================================================
+
+Algorithm       Best       Average      Worst       Space    Stable
+---------------------------------------------------------------------------
+Bubble Sort     O(n)       O(n²)        O(n²)       O(1)     Yes
+Selection       O(n²)      O(n²)        O(n²)       O(1)     No
+Insertion       O(n)       O(n²)        O(n²)       O(1)     Yes
+Merge Sort      O(nlogn)   O(nlogn)     O(nlogn)    O(n)     Yes
+Quick Sort      O(nlogn)   O(nlogn)     O(n²)       O(logn)  No
+Heap Sort       O(nlogn)   O(nlogn)     O(nlogn)    O(1)     No
+Cyclic Sort     O(n)       O(n)         O(n)        O(1)     No
+Counting Sort   O(n+k)     O(n+k)       O(n+k)      O(k)     Yes*
+Radix Sort      O(nk)      O(nk)         O(nk)       O(n+k)   Yes*
+Bucket Sort     O(n+k)     O(n+k)        O(n²)       O(n+k)   Depends
+Shell Sort      Depends    Depends       O(n²)       O(1)     No
+Tim Sort        O(n)       O(nlogn)      O(nlogn)    O(n)     Yes
+
+* Stability depends on implementation.
+
+
+================================================================================
+                    STABLE VS NON-STABLE SORTING
+================================================================================
+
+STABLE SORTING:
+    Bubble Sort
+    Insertion Sort
+    Merge Sort
+    Tim Sort
+    Counting Sort (appropriate implementation)
+    Radix Sort (appropriate implementation)
+
+
+NON-STABLE SORTING:
+    Selection Sort
+    Quick Sort
+    Heap Sort
+    Shell Sort
+    Cyclic Sort
+
+
+================================================================================
+                       IN-PLACE SORTING
+================================================================================
+
+IN-PLACE:
+    Bubble Sort
+    Selection Sort
+    Insertion Sort
+    Quick Sort
+    Heap Sort
+    Cyclic Sort
+    Shell Sort
+
+
+NOT IN-PLACE (standard implementations):
+    Merge Sort
+    Counting Sort
+    Radix Sort
+    Bucket Sort
+    Tim Sort
+
+
+================================================================================
+                     DIVIDE AND CONQUER SORTING
+================================================================================
+
+Divide and Conquer means:
+
+    Divide the problem
+          ↓
+    Solve smaller problems
+          ↓
+    Combine the results
+
+
+Sorting algorithms using Divide and Conquer:
+
+    Merge Sort
+    Quick Sort
+
+
+================================================================================
+                         ADAPTIVE SORTING
+================================================================================
+
+An adaptive sorting algorithm takes advantage of existing order
+in the input.
+
+Examples:
+
+    Insertion Sort
+    Tim Sort
+
+
+Example:
+
+    [1, 2, 3, 4, 5, 6, 7]
+
+This array is already almost completely sorted.
+
+Insertion Sort can recognize this and perform very efficiently.
+
+
+================================================================================
+                    COMPARISON VS NON-COMPARISON
+================================================================================
+
+COMPARISON-BASED:
+
+    Bubble Sort
+    Selection Sort
+    Insertion Sort
+    Merge Sort
+    Quick Sort
+    Heap Sort
+    Shell Sort
+
+
+NON-COMPARISON-BASED:
+
+    Counting Sort
+    Radix Sort
+    Bucket Sort
+    Cyclic Sort
+
+
+IMPORTANT NOTE:
+---------------
+Cyclic Sort is often categorized separately because its O(n) behavior
+comes from exploiting the special relationship between values and
+their correct positions, rather than performing normal comparisons.
+
+
+================================================================================
+                      WHEN TO USE WHICH SORT?
+================================================================================
+
+1. BUBBLE SORT
+--------------
+Use mainly for:
+    Learning
+    Understanding sorting basics
+
+Rarely used in real applications.
+
+
+2. SELECTION SORT
+-----------------
+Useful when:
+    Number of swaps should be minimized.
+    Simplicity is important.
+
+
+3. INSERTION SORT
+-----------------
+Best for:
+    Small arrays
+    Nearly sorted arrays
+
+
+4. MERGE SORT
+-------------
+Best when:
+    Guaranteed O(n log n) is required.
+    Stability is important.
+    Linked lists are being sorted.
+
+
+5. QUICK SORT
+-------------
+Best when:
+    Fast average performance is required.
+    In-place sorting is preferred.
+
+
+6. HEAP SORT
+------------
+Best when:
+    Guaranteed O(n log n) is required.
+    O(1) extra space is important.
+
+
+7. 🔥 CYCLIC SORT
+-----------------
+Best when:
+
+    Array contains numbers in a known range.
+
+Especially:
+
+    1 to n
+    0 to n
+
+
+Very important for DSA problems involving:
+
+    Missing numbers
+    Duplicate numbers
+    Disappeared numbers
+    First missing positive
+
+
+8. COUNTING SORT
+----------------
+Best when:
+    Number range is small.
+
+
+9. RADIX SORT
+-------------
+Best when:
+    Sorting integers/digit-based data.
+
+
+10. BUCKET SORT
+---------------
+Best when:
+    Data is uniformly distributed.
+
+
+11. SHELL SORT
+--------------
+Best when:
+    You need an in-place algorithm that improves upon
+    simple insertion sorting for medium-sized data.
+
+
+12. TIM SORT
+------------
+Best when:
+    Data may already contain sorted portions.
+    Real-world/general-purpose sorting is needed.
+
+
+================================================================================
+                         MOST IMPORTANT DSA POINT
+================================================================================
+
+For DSA, don't just memorize sorting algorithms.
+
+Understand their PATTERN.
+
+Basic sorting:
+    Bubble
+    Selection
+    Insertion
+
+Divide & Conquer:
+    Merge
+    Quick
+
+Heap-based:
+    Heap Sort
+
+Range / Digit based:
+    Counting
+    Radix
+    Bucket
+
+Special DSA Pattern:
+    🔥 CYCLIC SORT
+
+
+================================================================================
+                         CYCLIC SORT CHEAT SHEET
+================================================================================
+
+If the array contains:
+
+    Numbers from 1 to n
+
+Then:
+
+    correctIndex = arr[i] - 1
+
+
+Pattern:
+
+    int i = 0;
+
+    while (i < arr.length) {
+
+        int correctIndex = arr[i] - 1;
+
+        if (arr[i] != arr[correctIndex]) {
+
+            int temp = arr[i];
+            arr[i] = arr[correctIndex];
+            arr[correctIndex] = temp;
+
+        } else {
+
+            i++;
+        }
+    }
+
+
+KEY FORMULA:
+
+    VALUE → CORRECT INDEX
+
+    x → x - 1
+
+
+COMPLEXITY:
+
+    Time  = O(n)
+    Space = O(1)
+
+
+================================================================================
+                            FINAL CHEAT SHEET
+================================================================================
+
+Bubble Sort
+    -> Adjacent swapping
+    -> O(n²)
+    -> Stable
+    -> In-place
+
+
+Selection Sort
+    -> Select minimum
+    -> O(n²)
+    -> Not stable
+    -> In-place
+
+
+Insertion Sort
+    -> Insert element into sorted portion
+    -> O(n) best
+    -> O(n²) worst
+    -> Stable
+    -> In-place
+
+
+Merge Sort
+    -> Divide + Merge
+    -> O(n log n)
+    -> Stable
+    -> Extra space
+
+
+Quick Sort
+    -> Pivot + Partition
+    -> O(n log n) average
+    -> O(n²) worst
+    -> Not stable
+
+
+Heap Sort
+    -> Binary Heap
+    -> O(n log n)
+    -> Not stable
+    -> O(1) extra space
+
+
+🔥 CYCLIC SORT
+    -> Value → Correct Index
+    -> O(n)
+    -> O(1) space
+    -> Mainly for 1 to n / 0 to n
+    -> Extremely important for DSA
+
+
+Counting Sort
+    -> Count frequencies
+    -> O(n + k)
+    -> Good for small ranges
+
+
+Radix Sort
+    -> Sort digit by digit
+    -> O(d × (n + k))
+
+
+Bucket Sort
+    -> Distribute into buckets
+    -> Good for uniformly distributed data
+
+
+Shell Sort
+    -> Gap-based Insertion Sort
+    -> In-place
+
+
+Tim Sort
+    -> Merge Sort + Insertion Sort
+    -> O(n log n)
+    -> Stable
+
+
+================================================================================
+                         FINAL MEMORY TRICK
+================================================================================
+
+BUBBLE    -> Adjacent Swap
+SELECTION -> Select Minimum
+INSERTION -> Insert Correctly
+MERGE     -> Divide + Merge
+QUICK     -> Pivot + Partition
+HEAP      -> Heap
+CYCLIC    -> 🔥 VALUE -> CORRECT INDEX
+COUNTING  -> Count Frequencies
+RADIX     -> Digit by Digit
+BUCKET    -> Distribute into Buckets
+SHELL     -> Gap
+TIM       -> Merge + Insertion
+
+
+🔥 FOR DSA:
+
+If you see an array like:
+
+    [3, 5, 2, 1, 4]
+
+and the problem says values are from:
+
+    1 to n
+
+Immediately think:
+
+                    CYCLIC SORT 🔥
+
+Because each value tells you exactly where it belongs.
+
+
+================================================================================
+                              END
+================================================================================
+*/
