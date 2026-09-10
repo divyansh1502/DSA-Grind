@@ -4,6 +4,9 @@ public class Demo1 {
         p1.pay();
     }
 }
+
+//Polymorphism
+
 interface Payment {
     void pay();
 }
