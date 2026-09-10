@@ -1,0 +1,1294 @@
+```java
+/*
+================================================================================
+                         JAVA INTERFACE — COMPLETE NOTES
+================================================================================
+
+1. WHAT IS AN INTERFACE?
+--------------------------------------------------------------------------------
+
+An interface in Java is a blueprint/contract that defines what a class MUST DO.
+
+It is mainly used for:
+    - Abstraction
+    - Polymorphism
+    - Loose coupling
+    - Multiple inheritance of type
+    - Functional programming (Functional Interface + Lambda)
+
+Example:
+
+interface Animal {
+    void eat();
+}
+
+class Dog implements Animal {
+
+    @Override
+    public void eat() {
+        System.out.println("Dog eats");
+    }
+}
+
+Here:
+    Animal = contract
+    Dog    = implementation
+
+Dog IS-A Animal
+Dog also CAN-DO whatever Animal specifies.
+
+
+IMPORTANT:
+Before Java 8, interfaces were mainly used for abstract method declarations.
+
+But Java 8 introduced:
+    - default methods
+    - static methods
+
+Java 9 introduced:
+    - private methods
+
+Therefore, modern interfaces can contain both abstract AND implemented methods.
+
+
+================================================================================
+2. DECLARING AN INTERFACE
+================================================================================
+
+Syntax:
+
+interface InterfaceName {
+
+    // methods
+    // variables
+}
+
+Example:
+
+interface Vehicle {
+    void start();
+}
+
+
+NAMING CONVENTION:
+--------------------------------------------------------------------------------
+
+Interface names commonly describe a capability or behavior.
+
+Examples:
+
+Runnable
+Comparable
+Cloneable
+Serializable
+AutoCloseable
+
+Notice many end with "able".
+
+Why?
+
+Because they often represent a capability:
+
+Runnable     -> can be run
+Comparable   -> can be compared
+Cloneable    -> can be cloned
+Serializable -> can be serialized
+
+BUT "able" is NOT compulsory.
+
+Examples:
+    List
+    Map
+    Set
+    Collection
+
+So "able" is a naming convention, NOT a Java rule.
+
+
+================================================================================
+3. VARIABLES INSIDE INTERFACE
+================================================================================
+
+Variables declared inside an interface are automatically:
+
+    public
+    static
+    final
+
+Example:
+
+interface Test {
+
+    int x = 10;
+}
+
+Compiler treats it approximately as:
+
+interface Test {
+
+    public static final int x = 10;
+}
+
+
+Therefore:
+
+System.out.println(Test.x);    // 10
+
+You cannot do:
+
+Test.x = 20;                   // ERROR
+
+Because x is final.
+
+You also normally access it using:
+
+InterfaceName.variable
+
+
+WHY static?
+--------------------------------------------------------------------------------
+
+Because the variable belongs to the interface itself, not to individual objects.
+
+There is no need to create:
+
+new Test();
+
+In fact, interfaces cannot be instantiated.
+
+
+WHY final?
+--------------------------------------------------------------------------------
+
+Because interface variables represent constants.
+
+Example:
+
+interface MathConstants {
+
+    double PI = 3.14159;
+}
+
+PI cannot be changed.
+
+
+IMPORTANT:
+--------------------------------------------------------------------------------
+
+Interface fields are ALWAYS:
+
+public static final
+
+even if you don't write these keywords.
+
+
+================================================================================
+4. METHODS INSIDE INTERFACE
+================================================================================
+
+Traditional interface method:
+
+interface Animal {
+
+    void eat();
+}
+
+The compiler treats:
+
+void eat();
+
+approximately as:
+
+public abstract void eat();
+
+
+So:
+
+interface Animal {
+    public abstract void eat();
+}
+
+and
+
+interface Animal {
+    void eat();
+}
+
+mean the same thing for a normal abstract interface method.
+
+
+WHY public?
+--------------------------------------------------------------------------------
+
+Because an interface represents a contract that implementing classes must be
+able to access.
+
+An implementing class cannot reduce the visibility of the method.
+
+Example:
+
+interface A {
+    void show();       // public abstract
+}
+
+class B implements A {
+
+    public void show() {
+        System.out.println("Hello");
+    }
+}
+
+
+This is NOT allowed:
+
+class B implements A {
+
+    void show() {      // ERROR
+        ...
+    }
+}
+
+Because package-private is weaker than public.
+
+
+IMPORTANT:
+Since Java 9, not every interface method is public.
+
+Interface can contain:
+
+    public abstract
+    public default
+    public static
+    private
+
+
+================================================================================
+5. INTERFACE INHERITANCE — extends
+================================================================================
+
+One interface can inherit another interface using:
+
+    extends
+
+Example:
+
+interface A {
+    void methodA();
+}
+
+interface B extends A {
+    void methodB();
+}
+
+
+Now B contains the contract of both:
+
+    A -> methodA()
+    B -> methodB()
+
+
+A class implementing B must implement both:
+
+class C implements B {
+
+    public void methodA() {
+        System.out.println("A");
+    }
+
+    public void methodB() {
+        System.out.println("B");
+    }
+}
+
+
+================================================================================
+6. WHY INTERFACE USES extends, NOT implements?
+================================================================================
+
+Remember:
+
+    Class       -> implements -> Interface
+    Interface   -> extends    -> Interface
+
+Why?
+
+Because an interface is inheriting/extending another interface's CONTRACT.
+
+Example:
+
+interface Animal {
+    void eat();
+}
+
+interface Dog extends Animal {
+    void bark();
+}
+
+
+Dog is saying:
+
+"I am extending Animal's contract."
+
+Dog is NOT providing the actual implementation.
+
+The concrete class provides the implementation:
+
+class Labrador implements Dog {
+
+    public void eat() {
+        System.out.println("Eating");
+    }
+
+    public void bark() {
+        System.out.println("Barking");
+    }
+}
+
+
+Easy memory trick:
+
+    extends    = inherit/expand
+    implements = fulfill the contract
+
+
+================================================================================
+7. INTERFACE SUPPORTS MULTIPLE INHERITANCE
+================================================================================
+
+Java does NOT allow a class to extend multiple classes:
+
+class C extends A, B { }       // ERROR
+
+
+Because it can create ambiguity.
+
+But an interface can extend multiple interfaces:
+
+interface A {
+    void show();
+}
+
+interface B {
+    void display();
+}
+
+interface C extends A, B {
+}
+
+
+Now C inherits both contracts.
+
+This is called:
+
+    Multiple inheritance of interfaces / type
+
+
+A class can also implement multiple interfaces:
+
+class D implements A, B {
+
+    public void show() {
+    }
+
+    public void display() {
+    }
+}
+
+
+================================================================================
+8. MULTIPLE INTERFACES + DEFAULT METHOD CONFLICT
+================================================================================
+
+Java 8 introduced default methods.
+
+Suppose:
+
+interface A {
+    default void show() {
+        System.out.println("A");
+    }
+}
+
+interface B {
+    default void show() {
+        System.out.println("B");
+    }
+}
+
+class C implements A, B {
+
+    @Override
+    public void show() {
+        System.out.println("C");
+    }
+}
+
+
+Why MUST C override show()?
+
+Because Java cannot decide:
+
+    Should C use A.show()?
+    OR
+    Should C use B.show()?
+
+
+This creates a conflict.
+
+Therefore C must resolve the conflict by overriding the method.
+
+
+RULE:
+--------------------------------------------------------------------------------
+
+If two interfaces provide conflicting default methods,
+the implementing class must resolve the ambiguity.
+
+
+================================================================================
+9. CLASS METHOD HAS PRIORITY OVER INTERFACE DEFAULT METHOD
+================================================================================
+
+This is VERY important for Java resolution.
+
+Example:
+
+interface A {
+
+    default void show() {
+        System.out.println("Interface A");
+    }
+}
+
+class B {
+
+    public void show() {
+        System.out.println("Class B");
+    }
+}
+
+class C extends B implements A {
+}
+
+
+Now:
+
+C obj = new C();
+obj.show();
+
+
+Output:
+
+Class B
+
+
+Why?
+
+Java gives priority to a superclass method over an interface default method.
+
+Resolution rule:
+
+    Class method
+        ↓
+    Interface default method
+
+
+Therefore:
+
+class B's show()
+wins over
+interface A's default show()
+
+
+This prevents an interface from unexpectedly overriding existing class behavior.
+
+
+================================================================================
+10. JAVA 8 — DEFAULT METHODS
+================================================================================
+
+Java 8 introduced default methods.
+
+Syntax:
+
+interface Vehicle {
+
+    default void start() {
+        System.out.println("Vehicle starts");
+    }
+}
+
+
+A default method has a body.
+
+A class can use it directly:
+
+class Car implements Vehicle {
+}
+
+Car c = new Car();
+c.start();
+
+
+Output:
+
+Vehicle starts
+
+
+Why were default methods introduced?
+
+Imagine Java had an interface:
+
+interface Vehicle {
+    void start();
+}
+
+
+Millions of classes implement Vehicle.
+
+If Java added a new abstract method:
+
+void stop();
+
+
+Then every existing implementing class would break.
+
+Default methods solved this problem:
+
+default void stop() {
+    System.out.println("Vehicle stopped");
+}
+
+
+Existing classes don't necessarily need to implement it.
+
+
+================================================================================
+11. JAVA 8 — STATIC METHODS IN INTERFACE
+================================================================================
+
+Interface can have static methods:
+
+interface Calculator {
+
+    static int add(int a, int b) {
+        return a + b;
+    }
+}
+
+
+Call:
+
+Calculator.add(10, 20);
+
+
+NOT:
+
+object.add()
+
+
+Static methods belong to the interface itself.
+
+They are NOT inherited as instance methods by implementing classes.
+
+
+================================================================================
+12. JAVA 9 — PRIVATE METHODS IN INTERFACE
+================================================================================
+
+Java 9 introduced private methods inside interfaces.
+
+Example:
+
+interface Vehicle {
+
+    default void start() {
+        check();
+        System.out.println("Starting");
+    }
+
+    default void stop() {
+        check();
+        System.out.println("Stopping");
+    }
+
+    private void check() {
+        System.out.println("Checking vehicle...");
+    }
+}
+
+
+Why private methods?
+
+Suppose multiple default methods share common code.
+
+Instead of duplicating:
+
+default void start() {
+    // same code
+}
+
+default void stop() {
+    // same code
+}
+
+
+We can create:
+
+private void commonCode() {
+    ...
+}
+
+
+Then default methods can reuse it.
+
+Private interface methods are only accessible inside that interface.
+
+
+================================================================================
+13. POLYMORPHISM WITH INTERFACE
+================================================================================
+
+Interface is heavily used for runtime polymorphism.
+
+Example:
+
+interface Animal {
+
+    void sound();
+}
+
+class Dog implements Animal {
+
+    public void sound() {
+        System.out.println("Bark");
+    }
+}
+
+class Cat implements Animal {
+
+    public void sound() {
+        System.out.println("Meow");
+    }
+}
+
+
+Now:
+
+Animal a;
+
+a = new Dog();
+a.sound();       // Bark
+
+a = new Cat();
+a.sound();       // Meow
+
+
+Same reference type:
+
+    Animal
+
+Different actual objects:
+
+    Dog
+    Cat
+
+
+The method executed depends on the actual object at runtime.
+
+This is:
+
+    Runtime Polymorphism
+
+
+Very important for loose coupling.
+
+
+================================================================================
+14. FUNCTIONAL INTERFACE
+================================================================================
+
+A Functional Interface is an interface having:
+
+    EXACTLY ONE ABSTRACT METHOD
+
+
+Example:
+
+@FunctionalInterface
+interface Calculator {
+
+    int add(int a, int b);
+}
+
+
+Why only ONE abstract method?
+
+Because a lambda expression needs ONE clear target behavior.
+
+Example:
+
+Calculator c = (a, b) -> a + b;
+
+
+The lambda represents the implementation of:
+
+    add()
+
+
+If there were two abstract methods:
+
+interface Test {
+
+    void show();
+    void display();
+}
+
+
+Then:
+
+Test t = () -> System.out.println("Hello");
+
+would be ambiguous.
+
+Which method is the lambda implementing?
+
+Therefore, a Functional Interface has exactly ONE abstract method.
+
+
+IMPORTANT:
+--------------------------------------------------------------------------------
+
+A Functional Interface CAN have:
+
+    1 abstract method
+    multiple default methods
+    multiple static methods
+    multiple private methods
+
+
+Example:
+
+@FunctionalInterface
+interface Test {
+
+    void show();               // one abstract method
+
+    default void display() {
+    }
+
+    static void print() {
+    }
+
+    private void helper() {
+    }
+}
+
+
+Common Functional Interfaces:
+
+    Runnable
+    Comparator
+    Consumer
+    Supplier
+    Function
+    Predicate
+
+
+================================================================================
+15. @FunctionalInterface
+================================================================================
+
+@FunctionalInterface is an annotation.
+
+Example:
+
+@FunctionalInterface
+interface MyInterface {
+
+    void show();
+}
+
+
+It tells the compiler:
+
+"This interface must remain a functional interface."
+
+If you add another abstract method:
+
+@FunctionalInterface
+interface MyInterface {
+
+    void show();
+    void display();        // ERROR
+}
+
+
+Compiler catches the mistake.
+
+
+================================================================================
+16. MARKER INTERFACE
+================================================================================
+
+A Marker Interface is an interface with:
+
+    NO METHODS
+    NO FIELDS
+
+It simply marks a class as having some special property/capability.
+
+
+Examples in Java:
+
+    1. Cloneable
+    2. Serializable
+    3. RandomAccess
+
+
+Example:
+
+class Student implements Serializable {
+}
+
+
+There may be no methods to implement.
+
+The interface simply tells Java/framework:
+
+"This class has this special capability."
+
+
+--------------------------------------------------------------------------------
+Cloneable
+--------------------------------------------------------------------------------
+
+Cloneable marks that an object can be cloned using Object.clone().
+
+class Student implements Cloneable {
+}
+
+
+--------------------------------------------------------------------------------
+Serializable
+--------------------------------------------------------------------------------
+
+Serializable marks that objects of the class can be serialized.
+
+class Student implements Serializable {
+}
+
+
+--------------------------------------------------------------------------------
+RandomAccess
+--------------------------------------------------------------------------------
+
+RandomAccess marks that a List supports efficient random access.
+
+For example:
+
+ArrayList implements RandomAccess
+
+
+It helps algorithms choose appropriate behavior based on the list's
+characteristics.
+
+
+IMPORTANT:
+Marker interfaces are different from normal interfaces because their primary
+purpose is MARKING, not declaring methods.
+
+
+================================================================================
+17. WHY DOES JAVA "TREAT INTERFACE LIKE A CLASS"?
+================================================================================
+
+This statement needs correction.
+
+Java does NOT literally treat an interface as a class.
+
+An interface and class are different JVM/reference types.
+
+But both can be used as REFERENCE TYPES.
+
+Example:
+
+Animal a = new Dog();
+
+
+Here:
+
+    Animal = interface reference
+    Dog    = object
+
+
+An interface can be used as a reference type because Java allows polymorphism.
+
+You can also use:
+
+Animal[] animals = new Animal[5];
+
+
+The array can hold objects of different classes implementing Animal.
+
+
+So the better statement is:
+
+    "Interface is a reference type, just like a class is a reference type."
+
+But:
+
+    interface != class
+
+
+They are different concepts.
+
+
+================================================================================
+18. INTERFACE vs ABSTRACT CLASS
+================================================================================
+
+Both provide abstraction, but they solve different problems.
+
+
+------------------------- ABSTRACT CLASS -------------------------------
+
+abstract class Animal {
+
+    String name;
+
+    Animal(String name) {
+        this.name = name;
+    }
+
+    abstract void sound();
+
+    void eat() {
+        System.out.println("Eating");
+    }
+}
+
+
+Abstract class can contain:
+
+    - instance variables
+    - constructors
+    - abstract methods
+    - concrete methods
+    - static methods
+    - final methods
+    - different access modifiers
+
+
+A class can extend ONLY ONE class:
+
+class Dog extends Animal {
+}
+
+
+------------------------- INTERFACE ------------------------------------
+
+interface Animal {
+
+    int MAX = 100;
+
+    void sound();
+
+    default void eat() {
+        System.out.println("Eating");
+    }
+
+    static void info() {
+        System.out.println("Animal");
+    }
+
+    private void helper() {
+    }
+}
+
+
+Interface can contain:
+
+    - public static final fields
+    - abstract methods
+    - default methods
+    - static methods
+    - private methods
+
+But no normal instance state like an abstract class.
+
+
+================================================================================
+19. ABSTRACT CLASS vs INTERFACE — DETAILED COMPARISON
+================================================================================
+
+Feature                 Abstract Class          Interface
+-------------------------------------------------------------------------------
+Keyword                 abstract class          interface
+
+Inheritance             extends                 implements
+
+Interface inheritance   N/A                     extends
+
+Multiple inheritance    No                      Yes (interfaces)
+
+Constructor             Yes                     No
+
+Instance variables      Yes                     No normal instance fields
+
+Fields                  Any type                public static final
+
+Abstract methods        Yes                     Yes
+
+Concrete methods        Yes                     Yes (default/static/private)
+
+Default methods         Not called default      Yes
+
+Static methods          Yes                     Yes
+
+Private methods         Yes                     Yes (Java 9+)
+
+Object creation         No                      No
+
+Primary purpose         Shared state/behavior   Contract/capability
+
+Polymorphism             Yes                     Yes
+
+Loose coupling          Good                    Excellent
+
+================================================================================
+20. IS INTERFACE ONLY FOR ABSTRACTION?
+================================================================================
+
+No.
+
+Interfaces are used for:
+
+    - Abstraction
+    - Polymorphism
+    - Loose coupling
+    - Multiple inheritance of type
+    - Dependency Injection
+    - Functional programming
+    - API design
+    - Contract-based programming
+
+
+Example from real-world backend development:
+
+interface PaymentService {
+    void pay();
+}
+
+
+class RazorpayPayment implements PaymentService {
+
+    public void pay() {
+        System.out.println("Razorpay payment");
+    }
+}
+
+
+class StripePayment implements PaymentService {
+
+    public void pay() {
+        System.out.println("Stripe payment");
+    }
+}
+
+
+Now other code depends on:
+
+    PaymentService
+
+rather than:
+
+    RazorpayPayment
+
+
+This makes the system loosely coupled and easier to change.
+
+
+================================================================================
+21. MOST IMPORTANT INTERFACE RULES — CHEAT SHEET
+================================================================================
+
+1. Interface is declared using:
+
+       interface
+
+
+2. Class implements interface:
+
+       class A implements B
+
+
+3. Interface extends interface:
+
+       interface A extends B
+
+
+4. Interface variables are automatically:
+
+       public static final
+
+
+5. Normal interface methods are automatically:
+
+       public abstract
+
+
+6. Java 8 introduced:
+
+       default methods
+       static methods
+
+
+7. Java 9 introduced:
+
+       private interface methods
+
+
+8. Interface supports multiple inheritance:
+
+       interface C extends A, B
+
+
+9. Class can implement multiple interfaces:
+
+       class C implements A, B
+
+
+10. If two interfaces have conflicting default methods:
+
+       implementing class must override the method.
+
+
+11. Class method has priority over interface default method.
+
+       class method > interface default method
+
+
+12. Functional Interface:
+
+       exactly ONE abstract method
+
+
+13. @FunctionalInterface helps compiler enforce the rule.
+
+
+14. Marker Interface:
+
+       interface with no methods/fields
+
+
+15. Common marker interfaces:
+
+       Cloneable
+       Serializable
+       RandomAccess
+
+
+16. Interface cannot be instantiated:
+
+       new Animal();       // ERROR
+
+
+17. Interface can be used as a reference type:
+
+       Animal a = new Dog();
+
+
+18. Interface names often describe capabilities:
+
+       Runnable
+       Comparable
+       Cloneable
+
+    But "able" is NOT compulsory.
+
+
+================================================================================
+22. MEMORY TRICK
+================================================================================
+
+                INTERFACE
+                    |
+        ---------------------------
+        |            |            |
+      Contract    Capability    Polymorphism
+        |
+   ----------------
+   |              |
+ extends       implements
+   |              |
+Interface         Class
+
+
+Java 8:
+    default + static
+
+Java 9:
+    private
+
+Variables:
+    public static final
+
+Normal methods:
+    public abstract
+
+Functional Interface:
+    ONE abstract method
+
+Marker Interface:
+    ZERO methods
+
+Multiple inheritance:
+    Interface + Interface
+    Class implements Interface1, Interface2
+
+
+================================================================================
+23. FINAL CONCEPT
+================================================================================
+
+Think of an interface as a CONTRACT.
+
+Example:
+
+interface Payment {
+
+    void pay();
+}
+
+
+This does NOT say HOW payment happens.
+
+It only says:
+
+    "Any payment system MUST provide pay()."
+
+
+Then:
+
+class UPI implements Payment { ... }
+
+class Card implements Payment { ... }
+
+class Cash implements Payment { ... }
+
+
+All three follow the same contract but can have completely different
+implementations.
+
+That is the real power of interfaces:
+
+    SAME CONTRACT
+         +
+    DIFFERENT IMPLEMENTATIONS
+         =
+    POLYMORPHISM + LOOSE COUPLING
+
+================================================================================
+*/
+```
