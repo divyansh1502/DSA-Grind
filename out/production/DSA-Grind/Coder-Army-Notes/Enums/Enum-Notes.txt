@@ -1,0 +1,3601 @@
+/*
+ * ============================================================================
+ *                         ENUMS IN JAVA
+ *                    JAVA + DSA + INTERVIEW NOTES
+ * ============================================================================
+ *
+ * Main Example:
+ *
+ *      enum Direction {
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH
+ *      }
+ *
+ *
+ * CORE IDEA:
+ *
+ *      enum = a special Java type used to represent a FIXED SET of constants.
+ *
+ *
+ * The most important thing to remember:
+ *
+ *      NORTH, EAST, WEST and SOUTH are NOT strings.
+ *
+ *      They are OBJECTS of type Direction.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 1. WHAT IS AN ENUM?
+ * ============================================================================
+ *
+ * enum stands for ENUMERATION.
+ *
+ * Enumeration means:
+ *
+ *      A fixed collection of predefined values.
+ *
+ *
+ * Example:
+ *
+ *      enum Direction {
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH
+ *      }
+ *
+ *
+ * Direction can have only these predefined constants:
+ *
+ *      Direction.NORTH
+ *      Direction.EAST
+ *      Direction.WEST
+ *      Direction.SOUTH
+ *
+ *
+ * We cannot create another Direction value such as:
+ *
+ *      Direction.NORTHWEST
+ *
+ * unless NORTHWEST is explicitly declared in the enum.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 2. WHY DO WE NEED ENUMS?
+ * ============================================================================
+ *
+ * Suppose we want to represent directions.
+ *
+ * Without enum:
+ *
+ *      String direction = "NORTH";
+ *
+ *
+ * Problem:
+ *
+ *      direction = "HELLO";
+ *
+ * is also valid Java.
+ *
+ *
+ * We can also use integers:
+ *
+ *      int NORTH = 0;
+ *      int EAST  = 1;
+ *      int WEST  = 2;
+ *      int SOUTH = 3;
+ *
+ *
+ * But this is possible:
+ *
+ *      int direction = 100;
+ *
+ * Java cannot understand that 100 is an invalid direction.
+ *
+ *
+ * With enum:
+ *
+ *      Direction direction = Direction.NORTH;
+ *
+ *
+ * Java now knows:
+ *
+ *      direction MUST be a Direction.
+ *
+ *
+ * Therefore enum gives:
+ *
+ *      ✔ Type safety
+ *      ✔ Fixed set of values
+ *      ✔ Better readability
+ *      ✔ No magic numbers
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 3. BASIC ENUM DECLARATION
+ * ============================================================================
+ *
+ * Syntax:
+ *
+ *      enum EnumName {
+ *          CONSTANT1,
+ *          CONSTANT2,
+ *          CONSTANT3
+ *      }
+ *
+ *
+ * Example:
+ *
+ *      enum Direction {
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH
+ *      }
+ *
+ *
+ * Using it:
+ *
+ *      Direction d = Direction.NORTH;
+ *
+ *
+ * Here:
+ *
+ *      Direction
+ *          ↓
+ *      data type
+ *
+ *
+ *      Direction.NORTH
+ *          ↓
+ *      enum constant / object
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 4. ENUM CONSTANTS ARE OBJECTS
+ * ============================================================================
+ *
+ * This is the MOST IMPORTANT concept.
+ *
+ *
+ * In:
+ *
+ *      enum Direction {
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH
+ *      }
+ *
+ *
+ * NORTH, EAST, WEST and SOUTH are enum CONSTANTS.
+ *
+ *
+ * But internally, each constant represents an OBJECT of Direction.
+ *
+ *
+ * Conceptually:
+ *
+ *
+ *                  Direction
+ *                      |
+ *          ---------------------------
+ *          |          |       |      |
+ *        NORTH       EAST    WEST   SOUTH
+ *          ↓          ↓       ↓      ↓
+ *        object     object  object  object
+ *
+ *
+ * Therefore:
+ *
+ *      Direction.NORTH
+ *
+ * is an object/reference of type Direction.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 5. HOW MANY OBJECTS ARE CREATED?
+ * ============================================================================
+ *
+ * For:
+ *
+ *      enum Direction {
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH
+ *      }
+ *
+ *
+ * There are four enum constants.
+ *
+ * Therefore there are four predefined enum objects:
+ *
+ *      NORTH → one object
+ *      EAST  → one object
+ *      WEST  → one object
+ *      SOUTH → one object
+ *
+ *
+ * We do NOT manually create these objects.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 6. CAN WE CREATE AN ENUM OBJECT USING new?
+ * ============================================================================
+ *
+ * NO.
+ *
+ *
+ * This is NOT allowed:
+ *
+ *      Direction d = new Direction();
+ *
+ *
+ * Why?
+ *
+ * Because enum controls its own object creation.
+ *
+ *
+ * The whole purpose of enum is:
+ *
+ *      FIXED + PREDEFINED INSTANCES
+ *
+ *
+ * If anyone could write:
+ *
+ *      new Direction(...)
+ *
+ * then arbitrary Direction objects could be created.
+ *
+ *
+ * That would violate the purpose of enum.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 7. WHY IS THE ENUM CONSTRUCTOR PRIVATE?
+ * ============================================================================
+ *
+ * Enum can have a constructor.
+ *
+ *
+ * Example:
+ *
+ *      enum Direction {
+ *
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH;
+ *
+ *          private Direction() {
+ *
+ *          }
+ *      }
+ *
+ *
+ * The constructor is not available for external object creation.
+ *
+ *
+ * Why?
+ *
+ *      Because only the enum itself should control the creation of its
+ *      predefined constants.
+ *
+ *
+ * Normal class:
+ *
+ *
+ *      class Student {
+ *
+ *          public Student() {
+ *          }
+ *      }
+ *
+ *
+ *      Student s = new Student();
+ *
+ *
+ * Anyone can create objects.
+ *
+ *
+ * Enum:
+ *
+ *
+ *      enum Direction {
+ *
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH;
+ *
+ *          Direction() {
+ *          }
+ *      }
+ *
+ *
+ * We cannot do:
+ *
+ *      new Direction();
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 8. ENUM CONSTRUCTOR IS CALLED AUTOMATICALLY
+ * ============================================================================
+ *
+ * Example:
+ *
+ *      enum Direction {
+ *
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH;
+ *
+ *          Direction() {
+ *              System.out.println("Constructor called");
+ *          }
+ *      }
+ *
+ *
+ * When the enum constants are initialized, their constructor is invoked.
+ *
+ *
+ * Conceptually:
+ *
+ *      NORTH → constructor
+ *      EAST  → constructor
+ *      WEST  → constructor
+ *      SOUTH → constructor
+ *
+ *
+ * We don't write:
+ *
+ *      new Direction();
+ *
+ *
+ * The enum mechanism creates the predefined constants.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 9. PARAMETERIZED ENUM CONSTRUCTOR
+ * ============================================================================
+ *
+ * Enum constants can pass values to the constructor.
+ *
+ *
+ * Example:
+ *
+ *      enum Direction {
+ *
+ *          NORTH(-1, 0),
+ *          EAST(0, 1),
+ *          WEST(0, -1),
+ *          SOUTH(1, 0);
+ *
+ *          private int rowChange;
+ *          private int colChange;
+ *
+ *          Direction(int rowChange, int colChange) {
+ *              this.rowChange = rowChange;
+ *              this.colChange = colChange;
+ *          }
+ *      }
+ *
+ *
+ * Now every enum object stores its own values.
+ *
+ *
+ * NORTH:
+ *
+ *      rowChange = -1
+ *      colChange = 0
+ *
+ *
+ * EAST:
+ *
+ *      rowChange = 0
+ *      colChange = 1
+ *
+ *
+ * WEST:
+ *
+ *      rowChange = 0
+ *      colChange = -1
+ *
+ *
+ * SOUTH:
+ *
+ *      rowChange = 1
+ *      colChange = 0
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 10. WHY PARAMETERIZED ENUMS ARE VERY USEFUL IN DSA
+ * ============================================================================
+ *
+ * This is one of the BEST enum use cases in DSA.
+ *
+ *
+ * In grid problems we repeatedly use:
+ *
+ *      UP
+ *      RIGHT
+ *      LEFT
+ *      DOWN
+ *
+ *
+ * Normally:
+ *
+ *      int[][] directions = {
+ *          {-1, 0},
+ *          {0, 1},
+ *          {0, -1},
+ *          {1, 0}
+ *      };
+ *
+ *
+ * But what does:
+ *
+ *      {-1, 0}
+ *
+ * mean?
+ *
+ * We need to remember it represents UP.
+ *
+ *
+ * Enum makes it self-explanatory:
+ *
+ *
+ *      NORTH(-1, 0)
+ *      EAST(0, 1)
+ *      WEST(0, -1)
+ *      SOUTH(1, 0)
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 11. ENUM FIELDS
+ * ============================================================================
+ *
+ * Enum can contain fields just like a normal class.
+ *
+ *
+ * Example:
+ *
+ *      enum Direction {
+ *
+ *          NORTH(-1, 0),
+ *          EAST(0, 1),
+ *          WEST(0, -1),
+ *          SOUTH(1, 0);
+ *
+ *          private int dr;
+ *          private int dc;
+ *
+ *          Direction(int dr, int dc) {
+ *              this.dr = dr;
+ *              this.dc = dc;
+ *          }
+ *      }
+ *
+ *
+ * Here:
+ *
+ *      dr = row change
+ *      dc = column change
+ *
+ *
+ * Each enum object has its own values.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 12. ENUM GETTERS
+ * ============================================================================
+ *
+ * Since fields are usually private, we can provide getters.
+ *
+ *
+ *      enum Direction {
+ *
+ *          NORTH(-1, 0),
+ *          EAST(0, 1),
+ *          WEST(0, -1),
+ *          SOUTH(1, 0);
+ *
+ *          private int dr;
+ *          private int dc;
+ *
+ *          Direction(int dr, int dc) {
+ *              this.dr = dr;
+ *              this.dc = dc;
+ *          }
+ *
+ *          public int getDr() {
+ *              return dr;
+ *          }
+ *
+ *          public int getDc() {
+ *              return dc;
+ *          }
+ *      }
+ *
+ *
+ * Usage:
+ *
+ *      Direction.NORTH.getDr();
+ *
+ *      → -1
+ *
+ *
+ *      Direction.EAST.getDc();
+ *
+ *      → 1
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 13. THE SEMICOLON IN ENUM
+ * ============================================================================
+ *
+ * If enum contains only constants:
+ *
+ *      enum Direction {
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH
+ *      }
+ *
+ *
+ * No semicolon is required.
+ *
+ *
+ * But if we add fields/methods/constructor:
+ *
+ *      enum Direction {
+ *
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH;
+ *
+ *          private int dr;
+ *      }
+ *
+ *
+ * The semicolon separates:
+ *
+ *      enum constants
+ *
+ * from:
+ *
+ *      fields / constructors / methods
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 14. name()
+ * ============================================================================
+ *
+ * Every enum has a name() method.
+ *
+ *
+ * Example:
+ *
+ *      Direction.NORTH.name()
+ *
+ *
+ * returns:
+ *
+ *      "NORTH"
+ *
+ *
+ * Similarly:
+ *
+ *      Direction.EAST.name()
+ *      → "EAST"
+ *
+ *
+ *      Direction.WEST.name()
+ *      → "WEST"
+ *
+ *
+ *      Direction.SOUTH.name()
+ *      → "SOUTH"
+ *
+ *
+ * name() gives the exact declared name of the constant.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 15. toString()
+ * ============================================================================
+ *
+ * Enum also has toString().
+ *
+ *
+ * By default:
+ *
+ *      Direction.NORTH.toString()
+ *
+ * returns:
+ *
+ *      "NORTH"
+ *
+ *
+ * So initially:
+ *
+ *      name()      → "NORTH"
+ *      toString()  → "NORTH"
+ *
+ *
+ * But there is an important difference.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 16. name() VS toString()
+ * ============================================================================
+ *
+ *
+ * name()
+ * -------
+ *
+ *      Gives the exact declared enum constant name.
+ *
+ *      It is not intended to be customized.
+ *
+ *
+ * toString()
+ * ----------
+ *
+ *      Gives the string representation of the object.
+ *
+ *      It CAN be overridden.
+ *
+ *
+ * Example:
+ *
+ *
+ *      enum Direction {
+ *
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH;
+ *
+ *          @Override
+ *          public String toString() {
+ *              return "Direction -> " + name();
+ *          }
+ *      }
+ *
+ *
+ * Now:
+ *
+ *      Direction.NORTH.name()
+ *
+ *      → "NORTH"
+ *
+ *
+ * But:
+ *
+ *      Direction.NORTH.toString()
+ *
+ *      → "Direction -> NORTH"
+ *
+ *
+ * MEMORY:
+ *
+ *      name()     = actual declared name
+ *
+ *      toString() = display representation
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 17. ordinal()
+ * ============================================================================
+ *
+ * Enum provides:
+ *
+ *      ordinal()
+ *
+ *
+ * It returns the POSITION of the enum constant.
+ *
+ *
+ * Example:
+ *
+ *      enum Direction {
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH
+ *      }
+ *
+ *
+ * Positions:
+ *
+ *      NORTH → 0
+ *      EAST  → 1
+ *      WEST  → 2
+ *      SOUTH → 3
+ *
+ *
+ * Therefore:
+ *
+ *      Direction.NORTH.ordinal() → 0
+ *      Direction.EAST.ordinal()  → 1
+ *      Direction.WEST.ordinal()  → 2
+ *      Direction.SOUTH.ordinal() → 3
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 18. IMPORTANT WARNING ABOUT ordinal()
+ * ============================================================================
+ *
+ * ordinal() represents DECLARATION ORDER.
+ *
+ *
+ * If we change:
+ *
+ *      enum Direction {
+ *          NORTH,
+ *          WEST,
+ *          EAST,
+ *          SOUTH
+ *      }
+ *
+ *
+ * Then:
+ *
+ *      NORTH → 0
+ *      WEST  → 1
+ *      EAST  → 2
+ *      SOUTH → 3
+ *
+ *
+ * Therefore:
+ *
+ *      ordinal() is NOT a good permanent ID.
+ *
+ *
+ * In DSA, it can be useful for:
+ *
+ *      ✔ indexing small fixed sets
+ *      ✔ mapping enum values to arrays
+ *
+ *
+ * But don't use it when the numeric value has actual business meaning.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 19. values()
+ * ============================================================================
+ *
+ * values() returns all enum constants.
+ *
+ *
+ * Example:
+ *
+ *      Direction[] directions = Direction.values();
+ *
+ *
+ * Result conceptually:
+ *
+ *
+ *      +-------+-------+-------+-------+
+ *      | NORTH | EAST  | WEST  | SOUTH |
+ *      +-------+-------+-------+-------+
+ *          0       1       2       3
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 20. USING values() IN A LOOP
+ * ============================================================================
+ *
+ * Example:
+ *
+ *      for (Direction direction : Direction.values()) {
+ *
+ *          System.out.println(direction);
+ *      }
+ *
+ *
+ * Output:
+ *
+ *      NORTH
+ *      EAST
+ *      WEST
+ *      SOUTH
+ *
+ *
+ * This is very useful in DSA when we need to process EVERY possible state.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 21. HOW DOES values() EXIST?
+ * ============================================================================
+ *
+ * We never explicitly write:
+ *
+ *      values()
+ *
+ * inside our enum.
+ *
+ *
+ * Yet this works:
+ *
+ *      Direction.values();
+ *
+ *
+ * Why?
+ *
+ * Because enum receives special compiler-generated support.
+ *
+ *
+ * Conceptually, the compiler generates enum infrastructure equivalent in
+ * behavior to:
+ *
+ *
+ *      public static Direction[] values() {
+ *          return internalArray.clone();
+ *      }
+ *
+ *
+ * This is a CONCEPTUAL representation, not the exact source code generated.
+ *
+ *
+ * The important idea:
+ *
+ *
+ *      enum source code
+ *              ↓
+ *      Java compiler
+ *              ↓
+ *      compiler-generated enum infrastructure
+ *              ↓
+ *      compiled Direction.class
+ *
+ *
+ * Therefore values() is available when the program runs.
+ *
+ *
+ * It is NOT that the compiler is executing some special method every time
+ * we write:
+ *
+ *      Direction.values()
+ *
+ *
+ * The compiler has already generated the required bytecode during compilation.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 22. valueOf()
+ * ============================================================================
+ *
+ * valueOf(String) converts a string into an enum constant.
+ *
+ *
+ * Example:
+ *
+ *      Direction direction = Direction.valueOf("NORTH");
+ *
+ *
+ * Result:
+ *
+ *      direction == Direction.NORTH
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 23. valueOf() IS CASE-SENSITIVE
+ * ============================================================================
+ *
+ * This works:
+ *
+ *      Direction.valueOf("NORTH");
+ *
+ *
+ * This does NOT work:
+ *
+ *      Direction.valueOf("north");
+ *
+ *
+ * because:
+ *
+ *      NORTH != north
+ *
+ *
+ * Invalid input causes:
+ *
+ *      IllegalArgumentException
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 24. values() VS valueOf()
+ * ============================================================================
+ *
+ *
+ * values()
+ * --------
+ *
+ * Gives ALL constants.
+ *
+ *
+ *      Direction.values()
+ *
+ *      → NORTH, EAST, WEST, SOUTH
+ *
+ *
+ *
+ * valueOf()
+ * ---------
+ *
+ * Gives ONE constant based on its name.
+ *
+ *
+ *      Direction.valueOf("NORTH")
+ *
+ *      → Direction.NORTH
+ *
+ *
+ * MEMORY TRICK:
+ *
+ *      values()   → MANY
+ *
+ *      valueOf()  → ONE
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 25. ENUM METHODS — QUICK LIST
+ * ============================================================================
+ *
+ * Important built-in enum methods:
+ *
+ *
+ *      name()
+ *          → exact declared name
+ *
+ *
+ *      ordinal()
+ *          → zero-based declaration position
+ *
+ *
+ *      values()
+ *          → all constants
+ *
+ *
+ *      valueOf(String)
+ *          → constant matching the given name
+ *
+ *
+ *      toString()
+ *          → string representation; can be overridden
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 26. ENUM CAN HAVE NORMAL METHODS
+ * ============================================================================
+ *
+ * Example:
+ *
+ *      enum Direction {
+ *
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH;
+ *
+ *          public boolean isHorizontal() {
+ *
+ *              return this == EAST || this == WEST;
+ *          }
+ *      }
+ *
+ *
+ * Usage:
+ *
+ *      Direction.EAST.isHorizontal()
+ *
+ *      → true
+ *
+ *
+ *      Direction.NORTH.isHorizontal()
+ *
+ *      → false
+ *
+ *
+ * `this` represents the current enum object.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 27. ENUM CAN HAVE STATIC METHODS
+ * ============================================================================
+ *
+ * Example:
+ *
+ *      enum Direction {
+ *
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH;
+ *
+ *          static void printAllDirections() {
+ *
+ *              for (Direction d : Direction.values()) {
+ *                  System.out.println(d);
+ *              }
+ *          }
+ *      }
+ *
+ *
+ * Call:
+ *
+ *      Direction.printAllDirections();
+ *
+ *
+ * Static method belongs to the enum type itself.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 28. STATIC METHOD CANNOT BE OVERRIDDEN
+ * ============================================================================
+ *
+ * Important interview point:
+ *
+ *      STATIC METHODS ARE NOT OVERRIDDEN.
+ *
+ *
+ * They belong to the class/type rather than individual objects.
+ *
+ *
+ * Therefore this idea is WRONG:
+ *
+ *
+ *      "NORTH overrides a static method,
+ *       EAST overrides the same static method..."
+ *
+ *
+ * If every enum constant needs different behavior,
+ * use an INSTANCE method instead.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 29. CONSTANT-SPECIFIC CLASS BODY
+ * ============================================================================
+ *
+ * Enum constants can have their own implementation.
+ *
+ *
+ * Example:
+ *
+ *
+ *      enum Direction {
+ *
+ *          NORTH {
+ *              @Override
+ *              void move() {
+ *                  System.out.println("Moving North");
+ *              }
+ *          },
+ *
+ *          EAST {
+ *              @Override
+ *              void move() {
+ *                  System.out.println("Moving East");
+ *              }
+ *          },
+ *
+ *          WEST {
+ *              @Override
+ *              void move() {
+ *                  System.out.println("Moving West");
+ *              }
+ *          },
+ *
+ *          SOUTH {
+ *              @Override
+ *              void move() {
+ *                  System.out.println("Moving South");
+ *              }
+ *          };
+ *
+ *          abstract void move();
+ *      }
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 30. WHAT IS HAPPENING HERE?
+ * ============================================================================
+ *
+ * Every constant provides its own implementation of move().
+ *
+ *
+ *      NORTH → move() → "Moving North"
+ *
+ *      EAST  → move() → "Moving East"
+ *
+ *      WEST  → move() → "Moving West"
+ *
+ *      SOUTH → move() → "Moving South"
+ *
+ *
+ * Then:
+ *
+ *      Direction d = Direction.NORTH;
+ *
+ *      d.move();
+ *
+ *
+ * prints:
+ *
+ *      Moving North
+ *
+ *
+ * If:
+ *
+ *      d = Direction.SOUTH;
+ *
+ *
+ * then:
+ *
+ *      d.move();
+ *
+ *
+ * prints:
+ *
+ *      Moving South
+ *
+ *
+ * This is POLYMORPHISM.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 31. WHY IS THIS CALLED CONSTANT-SPECIFIC CLASS BODY?
+ * ============================================================================
+ *
+ * Because:
+ *
+ *      NORTH { ... }
+ *
+ * is giving NORTH its own class-specific implementation.
+ *
+ *
+ * Same for:
+ *
+ *      EAST { ... }
+ *      WEST { ... }
+ *      SOUTH { ... }
+ *
+ *
+ * This allows different enum constants to behave differently.
+ *
+ *
+ * This is much more useful than trying to override a static method.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 32. ENUM + ABSTRACT METHOD
+ * ============================================================================
+ *
+ * Example:
+ *
+ *      enum Direction {
+ *
+ *          NORTH {
+ *              @Override
+ *              void move() {
+ *                  System.out.println("Moving North");
+ *              }
+ *          },
+ *
+ *          EAST {
+ *              @Override
+ *              void move() {
+ *                  System.out.println("Moving East");
+ *              }
+ *          },
+ *
+ *          WEST {
+ *              @Override
+ *              void move() {
+ *                  System.out.println("Moving West");
+ *              }
+ *          },
+ *
+ *          SOUTH {
+ *              @Override
+ *              void move() {
+ *                  System.out.println("Moving South");
+ *              }
+ *          };
+ *
+ *          abstract void move();
+ *      }
+ *
+ *
+ * The abstract method forces every constant to define its behavior.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 33. ANONYMOUS-CLASS IDEA IN ENUMS
+ * ============================================================================
+ *
+ * Constant-specific class bodies are closely related to the idea of
+ * specialized anonymous-class-like implementations.
+ *
+ *
+ * Example:
+ *
+ *      NORTH {
+ *
+ *          @Override
+ *          void move() {
+ *              System.out.println("North");
+ *          }
+ *      }
+ *
+ *
+ * Think:
+ *
+ *      Direction
+ *          |
+ *          +--- NORTH → special implementation
+ *          |
+ *          +--- EAST  → special implementation
+ *          |
+ *          +--- WEST  → special implementation
+ *          |
+ *          +--- SOUTH → special implementation
+ *
+ *
+ * This is the enum feature to remember when you need different behavior
+ * for different constants.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 34. ENUM CAN IMPLEMENT AN INTERFACE
+ * ============================================================================
+ *
+ * Enum cannot extend an arbitrary class.
+ *
+ * But enum CAN implement interfaces.
+ *
+ *
+ * Example:
+ *
+ *      interface Movable {
+ *
+ *          void move();
+ *      }
+ *
+ *
+ *      enum Direction implements Movable {
+ *
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH;
+ *
+ *          @Override
+ *          public void move() {
+ *
+ *              System.out.println("Moving " + name());
+ *          }
+ *      }
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 35. ENUM AND INHERITANCE
+ * ============================================================================
+ *
+ * You cannot create:
+ *
+ *      class MyDirection extends Direction
+ *
+ *
+ * Enum types have a special inheritance structure.
+ *
+ *
+ * Conceptually:
+ *
+ *
+ *      Object
+ *         ↑
+ *       Enum
+ *         ↑
+ *      Direction
+ *
+ *
+ * You cannot extend an enum to add more enum constants.
+ *
+ *
+ * Why?
+ *
+ * Because the enum's set of instances must remain fixed.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 36. ENUM AND == COMPARISON
+ * ============================================================================
+ *
+ * Since each enum constant is a unique predefined object:
+ *
+ *
+ *      Direction.NORTH == Direction.NORTH
+ *
+ *
+ * is:
+ *
+ *      true
+ *
+ *
+ * Therefore enum comparison commonly uses:
+ *
+ *      ==
+ *
+ *
+ * Example:
+ *
+ *      if (direction == Direction.NORTH) {
+ *          System.out.println("North");
+ *      }
+ *
+ *
+ * This is preferred and very readable.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 37. ENUM WITH SWITCH
+ * ============================================================================
+ *
+ * Enums work naturally with switch.
+ *
+ *
+ * Example:
+ *
+ *      Direction direction = Direction.NORTH;
+ *
+ *      switch (direction) {
+ *
+ *          case NORTH:
+ *              System.out.println("Move Up");
+ *              break;
+ *
+ *          case EAST:
+ *              System.out.println("Move Right");
+ *              break;
+ *
+ *          case WEST:
+ *              System.out.println("Move Left");
+ *              break;
+ *
+ *          case SOUTH:
+ *              System.out.println("Move Down");
+ *              break;
+ *      }
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 38. ENUM IN DSA — GRID TRAVERSAL
+ * ============================================================================
+ *
+ * One of the most useful applications.
+ *
+ *
+ * Example:
+ *
+ *      enum Direction {
+ *
+ *          NORTH(-1, 0),
+ *          EAST(0, 1),
+ *          WEST(0, -1),
+ *          SOUTH(1, 0);
+ *
+ *          final int dr;
+ *          final int dc;
+ *
+ *          Direction(int dr, int dc) {
+ *              this.dr = dr;
+ *              this.dc = dc;
+ *          }
+ *      }
+ *
+ *
+ * Meaning:
+ *
+ *
+ *      NORTH → (-1,  0)
+ *      EAST  → ( 0,  1)
+ *      WEST  → ( 0, -1)
+ *      SOUTH → ( 1,  0)
+ *
+ *
+ * Where:
+ *
+ *      dr = change in row
+ *      dc = change in column
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 39. USING DIRECTION ENUM IN A GRID
+ * ============================================================================
+ *
+ * Suppose:
+ *
+ *      int row = 2;
+ *      int col = 3;
+ *
+ *
+ * We can calculate a neighbour:
+ *
+ *
+ *      for (Direction d : Direction.values()) {
+ *
+ *          int newRow = row + d.dr;
+ *          int newCol = col + d.dc;
+ *
+ *          // process newRow, newCol
+ *      }
+ *
+ *
+ * This automatically checks all four directions.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 40. WHY THIS IS USEFUL IN BFS / DFS
+ * ============================================================================
+ *
+ * Grid problems commonly need:
+ *
+ *      UP
+ *      RIGHT
+ *      DOWN
+ *      LEFT
+ *
+ *
+ * Examples:
+ *
+ *      ✔ Number of Islands
+ *      ✔ Flood Fill
+ *      ✔ Maze
+ *      ✔ Rotting Oranges
+ *      ✔ Shortest Path in Grid
+ *      ✔ BFS on Matrix
+ *      ✔ DFS on Matrix
+ *
+ *
+ * Instead of repeatedly writing:
+ *
+ *      row - 1
+ *      col + 1
+ *      row + 1
+ *      col - 1
+ *
+ *
+ * we can represent each movement as a Direction.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 41. ENUM IN DSA — GRAPH STATES
+ * ============================================================================
+ *
+ * Another useful application:
+ *
+ *      enum State {
+ *          UNVISITED,
+ *          VISITING,
+ *          VISITED
+ *      }
+ *
+ *
+ * Instead of:
+ *
+ *      0 = unvisited
+ *      1 = visiting
+ *      2 = visited
+ *
+ *
+ * We can write:
+ *
+ *      if (state[node] == State.VISITING) {
+ *
+ *          // cycle detected
+ *      }
+ *
+ *
+ * This removes MAGIC NUMBERS.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 42. ENUM IN DFS CYCLE DETECTION
+ * ============================================================================
+ *
+ * Directed graph cycle detection often uses three states:
+ *
+ *
+ *      UNVISITED
+ *          ↓
+ *      VISITING
+ *          ↓
+ *      VISITED
+ *
+ *
+ * If during DFS we reach a node whose state is:
+ *
+ *      VISITING
+ *
+ *
+ * then we found a back edge → cycle.
+ *
+ *
+ * Enum makes the algorithm easier to read:
+ *
+ *
+ *      if (state[node] == State.VISITING) {
+ *          return true;
+ *      }
+ *
+ *
+ * rather than:
+ *
+ *
+ *      if (state[node] == 1) {
+ *          return true;
+ *      }
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 43. ENUM IN STATE-MACHINE PROBLEMS
+ * ============================================================================
+ *
+ * Many algorithms have a finite number of states.
+ *
+ *
+ * Example:
+ *
+ *      enum State {
+ *          START,
+ *          PROCESSING,
+ *          COMPLETED,
+ *          FAILED
+ *      }
+ *
+ *
+ * Then:
+ *
+ *      State currentState = State.START;
+ *
+ *
+ * This is much clearer than:
+ *
+ *      int currentState = 0;
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 44. ENUM + ARRAY
+ * ============================================================================
+ *
+ * Since:
+ *
+ *      Direction.values()
+ *
+ * returns an array:
+ *
+ *
+ *      Direction[] directions = Direction.values();
+ *
+ *
+ * we can iterate over all directions.
+ *
+ *
+ * Example:
+ *
+ *      for (Direction d : Direction.values()) {
+ *
+ *          System.out.println(d);
+ *      }
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 45. ENUM + ordinal() + ARRAY
+ * ============================================================================
+ *
+ * Because ordinal() gives a zero-based index:
+ *
+ *
+ *      Direction.NORTH.ordinal()
+ *      → 0
+ *
+ *
+ *      Direction.EAST.ordinal()
+ *      → 1
+ *
+ *
+ * we can conceptually map enum constants to array positions.
+ *
+ *
+ * Example:
+ *
+ *      int[] values = new int[Direction.values().length];
+ *
+ *
+ * Then:
+ *
+ *      values[Direction.NORTH.ordinal()]
+ *
+ * refers to the NORTH position.
+ *
+ *
+ * BUT:
+ *
+ * Don't use ordinal as a permanent ID.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 46. ENUMSET — DSA CONNECTION
+ * ============================================================================
+ *
+ * Java provides:
+ *
+ *      EnumSet
+ *
+ * for storing a set of enum constants.
+ *
+ *
+ * Example:
+ *
+ *      EnumSet<Direction> directions =
+ *          EnumSet.of(
+ *              Direction.NORTH,
+ *              Direction.EAST
+ *          );
+ *
+ *
+ * It represents:
+ *
+ *      { NORTH, EAST }
+ *
+ *
+ * EnumSet is optimized specifically for enum values.
+ *
+ *
+ * DSA connection:
+ *
+ *      EnumSet internally uses compact bit-oriented representations for
+ *      enum sets.
+ *
+ *
+ * This is closely related to the BITMASK idea used in DSA.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 47. ENUMMAP — DSA CONNECTION
+ * ============================================================================
+ *
+ * Java also provides:
+ *
+ *      EnumMap
+ *
+ * for maps whose keys are enum values.
+ *
+ *
+ * Example:
+ *
+ *      EnumMap<Direction, Integer> distance =
+ *          new EnumMap<>(Direction.class);
+ *
+ *
+ *      distance.put(Direction.NORTH, 10);
+ *      distance.put(Direction.EAST, 20);
+ *
+ *
+ * This is useful when the possible keys are a fixed enum set.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 48. ENUM AS A HASHMAP KEY
+ * ============================================================================
+ *
+ * Enum constants work very well as map keys.
+ *
+ *
+ * Example:
+ *
+ *      HashMap<Direction, Integer> map = new HashMap<>();
+ *
+ *      map.put(Direction.NORTH, 10);
+ *      map.put(Direction.EAST, 20);
+ *
+ *
+ * Then:
+ *
+ *      map.get(Direction.NORTH)
+ *
+ * gives:
+ *
+ *      10
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 49. ENUMS AND TYPE SAFETY
+ * ============================================================================
+ *
+ * Suppose:
+ *
+ *      enum Direction {
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH
+ *      }
+ *
+ *
+ * This is valid:
+ *
+ *      Direction d = Direction.NORTH;
+ *
+ *
+ * This is invalid:
+ *
+ *      Direction d = "NORTH";
+ *
+ *
+ * This is also invalid:
+ *
+ *      Direction d = 0;
+ *
+ *
+ * The compiler protects us from using the wrong type.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 50. ENUMS REMOVE MAGIC NUMBERS
+ * ============================================================================
+ *
+ * Bad:
+ *
+ *      if (state == 1) {
+ *          ...
+ *      }
+ *
+ *
+ * What is 1?
+ *
+ *      VISITING?
+ *      ERROR?
+ *      PROCESSING?
+ *
+ *
+ * Better:
+ *
+ *      if (state == State.VISITING) {
+ *          ...
+ *      }
+ *
+ *
+ * This is especially useful in DSA because algorithms often use integer
+ * states such as:
+ *
+ *      0
+ *      1
+ *      2
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 51. ENUM OBJECTS HAVE IDENTITY
+ * ============================================================================
+ *
+ * Example:
+ *
+ *      Direction d1 = Direction.NORTH;
+ *      Direction d2 = Direction.NORTH;
+ *
+ *
+ * Both refer to the same enum constant.
+ *
+ *
+ * Therefore:
+ *
+ *      d1 == d2
+ *
+ *
+ * is:
+ *
+ *      true
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 52. ENUMS ARE IMMUTABLE IN THEIR IDENTITY
+ * ============================================================================
+ *
+ * You cannot replace:
+ *
+ *      Direction.NORTH
+ *
+ * with another object.
+ *
+ *
+ * The enum constants themselves are fixed.
+ *
+ *
+ * However, if you add mutable fields to an enum, those fields can potentially
+ * be changed unless you design them as immutable/final.
+ *
+ *
+ * Therefore:
+ *
+ *      enum constant identity = fixed
+ *
+ *      custom mutable state = depends on how you implement it
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 53. IMPORTANT: FINAL FIELD IN ENUM
+ * ============================================================================
+ *
+ * For DSA-related direction information, a good design is:
+ *
+ *
+ *      enum Direction {
+ *
+ *          NORTH(-1, 0),
+ *          EAST(0, 1),
+ *          WEST(0, -1),
+ *          SOUTH(1, 0);
+ *
+ *          final int dr;
+ *          final int dc;
+ *
+ *          Direction(int dr, int dc) {
+ *              this.dr = dr;
+ *              this.dc = dc;
+ *          }
+ *      }
+ *
+ *
+ * Why final?
+ *
+ * Because direction offsets should not change.
+ *
+ *
+ * NORTH should always mean:
+ *
+ *      (-1, 0)
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 54. COMPLETE DSA-STYLE DIRECTION ENUM
+ * ============================================================================
+ *
+ * A clean reusable version:
+ *
+ *
+ *      enum Direction {
+ *
+ *          NORTH(-1, 0),
+ *          EAST(0, 1),
+ *          SOUTH(1, 0),
+ *          WEST(0, -1);
+ *
+ *          final int dr;
+ *          final int dc;
+ *
+ *          Direction(int dr, int dc) {
+ *              this.dr = dr;
+ *              this.dc = dc;
+ *          }
+ *      }
+ *
+ *
+ * Usage:
+ *
+ *
+ *      for (Direction direction : Direction.values()) {
+ *
+ *          int newRow = row + direction.dr;
+ *          int newCol = col + direction.dc;
+ *
+ *          // check boundary
+ *          // check visited
+ *          // process cell
+ *      }
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 55. ENUM + BFS MENTAL MODEL
+ * ============================================================================
+ *
+ *
+ * Current cell:
+ *
+ *              (row, col)
+ *
+ *
+ *                     NORTH
+ *                    (-1,0)
+ *                       ↑
+ *
+ *      WEST (0,-1) ← (row,col) → EAST (0,1)
+ *
+ *                       ↓
+ *                    SOUTH
+ *                    (1,0)
+ *
+ *
+ * Code:
+ *
+ *      for (Direction d : Direction.values()) {
+ *
+ *          int nr = row + d.dr;
+ *          int nc = col + d.dc;
+ *
+ *      }
+ *
+ *
+ * This is one of the most practical enum patterns for grid DSA.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 56. ENUM + SWITCH IN DSA
+ * ============================================================================
+ *
+ * Suppose:
+ *
+ *      Direction direction = Direction.NORTH;
+ *
+ *
+ * We can write:
+ *
+ *
+ *      switch (direction) {
+ *
+ *          case NORTH:
+ *              row--;
+ *              break;
+ *
+ *          case EAST:
+ *              col++;
+ *              break;
+ *
+ *          case WEST:
+ *              col--;
+ *              break;
+ *
+ *          case SOUTH:
+ *              row++;
+ *              break;
+ *      }
+ *
+ *
+ * Useful when different states require completely different logic.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 57. ENUM + POLYMORPHISM
+ * ============================================================================
+ *
+ * Instead of:
+ *
+ *      switch(direction)
+ *
+ *
+ * we can sometimes put behavior inside the enum.
+ *
+ *
+ * Example:
+ *
+ *
+ *      enum Direction {
+ *
+ *          NORTH {
+ *              int[] move() {
+ *                  return new int[]{-1, 0};
+ *              }
+ *          },
+ *
+ *          EAST {
+ *              int[] move() {
+ *                  return new int[]{0, 1};
+ *              }
+ *          },
+ *
+ *          WEST {
+ *              int[] move() {
+ *                  return new int[]{0, -1};
+ *              }
+ *          },
+ *
+ *          SOUTH {
+ *              int[] move() {
+ *                  return new int[]{1, 0};
+ *              }
+ *          };
+ *
+ *          abstract int[] move();
+ *      }
+ *
+ *
+ * Now:
+ *
+ *      Direction.NORTH.move()
+ *
+ * directly gives NORTH's behavior.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 58. IMPORTANT COMPILER POINT
+ * ============================================================================
+ *
+ * When Java sees:
+ *
+ *      enum Direction {
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH
+ *      }
+ *
+ *
+ * the compiler knows that Direction is an enum type.
+ *
+ *
+ * During compilation, Java creates the required enum infrastructure.
+ *
+ *
+ * This includes support for operations such as:
+ *
+ *      values()
+ *      valueOf()
+ *
+ *
+ * It also creates the enum constant instances as part of the generated
+ * class initialization mechanism.
+ *
+ *
+ * Therefore:
+ *
+ *      NORTH
+ *      EAST
+ *      WEST
+ *      SOUTH
+ *
+ * become actual runtime objects.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 59. CONCEPTUAL INTERNAL REPRESENTATION
+ * ============================================================================
+ *
+ * Do NOT treat this as the exact source code generated by javac.
+ *
+ * It is a mental model.
+ *
+ *
+ * Our enum:
+ *
+ *
+ *      enum Direction {
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH
+ *      }
+ *
+ *
+ * can conceptually be imagined as something like:
+ *
+ *
+ *      final class Direction extends Enum<Direction> {
+ *
+ *          public static final Direction NORTH;
+ *          public static final Direction EAST;
+ *          public static final Direction WEST;
+ *          public static final Direction SOUTH;
+ *
+ *          private static final Direction[] VALUES;
+ *
+ *          private Direction(String name, int ordinal) {
+ *              // enum initialization
+ *          }
+ *
+ *          public static Direction[] values() {
+ *              return VALUES.clone();
+ *          }
+ *
+ *          public static Direction valueOf(String name) {
+ *              // find matching constant
+ *          }
+ *      }
+ *
+ *
+ * IMPORTANT:
+ *
+ * This is only a simplified conceptual model.
+ *
+ * The actual compiler-generated bytecode/details are more complicated.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 60. WHY IS VALUES() RETURNING AN ARRAY IMPORTANT?
+ * ============================================================================
+ *
+ * Suppose:
+ *
+ *      Direction[] directions = Direction.values();
+ *
+ *
+ * Then we can:
+ *
+ *      for (Direction d : directions) {
+ *          ...
+ *      }
+ *
+ *
+ * This makes enum extremely convenient for algorithms where we need to
+ * iterate through every possible state.
+ *
+ *
+ * Example:
+ *
+ *      for (Direction d : Direction.values()) {
+ *
+ *          // try this direction
+ *      }
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 61. ENUM AND NULL
+ * ============================================================================
+ *
+ * An enum reference can be null:
+ *
+ *
+ *      Direction direction = null;
+ *
+ *
+ * But:
+ *
+ *      Direction.NORTH
+ *
+ * itself is never null once the enum class has been properly initialized.
+ *
+ *
+ * Be careful:
+ *
+ *
+ *      if (direction == Direction.NORTH)
+ *
+ * is safe even when direction is null.
+ *
+ *
+ * But:
+ *
+ *      direction.equals(Direction.NORTH)
+ *
+ * causes NullPointerException if direction is null.
+ *
+ *
+ * Therefore:
+ *
+ *      direction == Direction.NORTH
+ *
+ * is often safer.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 62. ENUM WITH USER INPUT
+ * ============================================================================
+ *
+ * Suppose user enters:
+ *
+ *      NORTH
+ *
+ *
+ * We can convert:
+ *
+ *
+ *      Direction direction =
+ *          Direction.valueOf(input);
+ *
+ *
+ * But remember:
+ *
+ *      valueOf()
+ *
+ * is case-sensitive.
+ *
+ *
+ * If input can be:
+ *
+ *      north
+ *
+ *
+ * we can normalize:
+ *
+ *
+ *      Direction direction =
+ *          Direction.valueOf(input.toUpperCase());
+ *
+ *
+ * Invalid input should be handled appropriately because valueOf() throws
+ * IllegalArgumentException when no matching constant exists.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 63. ENUM IN DSA — FIXED STATE SPACE
+ * ============================================================================
+ *
+ * The biggest DSA reason to use enum:
+ *
+ *
+ *      ENUM = FIXED STATE SPACE
+ *
+ *
+ * Examples:
+ *
+ *
+ *      Direction:
+ *
+ *          NORTH
+ *          EAST
+ *          SOUTH
+ *          WEST
+ *
+ *
+ *      GraphState:
+ *
+ *          UNVISITED
+ *          VISITING
+ *          VISITED
+ *
+ *
+ *      CellState:
+ *
+ *          EMPTY
+ *          BLOCKED
+ *          VISITED
+ *
+ *
+ *      GameState:
+ *
+ *          PLAYING
+ *          WON
+ *          LOST
+ *
+ *
+ * Whenever the possible states are finite and known,
+ * enum can represent them cleanly.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 64. ENUM IN DSA — MAIN USE CASES
+ * ============================================================================
+ *
+ * Remember these:
+ *
+ *
+ *      1. GRID DIRECTIONS
+ *
+ *          NORTH
+ *          EAST
+ *          SOUTH
+ *          WEST
+ *
+ *
+ *      2. GRAPH STATES
+ *
+ *          UNVISITED
+ *          VISITING
+ *          VISITED
+ *
+ *
+ *      3. STATE MACHINES
+ *
+ *          START
+ *          RUNNING
+ *          COMPLETED
+ *
+ *
+ *      4. FIXED CATEGORIES
+ *
+ *          RED
+ *          GREEN
+ *          BLUE
+ *
+ *
+ *      5. ALGORITHM MODES
+ *
+ *          ASCENDING
+ *          DESCENDING
+ *
+ *
+ *      6. FIXED OPERATIONS/STATES
+ *
+ *          INSERT
+ *          DELETE
+ *          UPDATE
+ *          SEARCH
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 65. ENUM VS int IN DSA
+ * ============================================================================
+ *
+ * Integer approach:
+ *
+ *
+ *      int UNVISITED = 0;
+ *      int VISITING = 1;
+ *      int VISITED = 2;
+ *
+ *
+ * Code:
+ *
+ *      if (state[node] == 1)
+ *
+ *
+ * Problem:
+ *
+ *      What does 1 mean?
+ *
+ *
+ * Enum approach:
+ *
+ *
+ *      enum State {
+ *          UNVISITED,
+ *          VISITING,
+ *          VISITED
+ *      }
+ *
+ *
+ * Code:
+ *
+ *      if (state[node] == State.VISITING)
+ *
+ *
+ * Much easier to understand.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 66. ENUM VS int[][] DIRECTIONS IN COMPETITIVE PROGRAMMING
+ * ============================================================================
+ *
+ * Traditional:
+ *
+ *
+ *      int[][] directions = {
+ *          {-1, 0},
+ *          {0, 1},
+ *          {1, 0},
+ *          {0, -1}
+ *      };
+ *
+ *
+ * Advantages:
+ *
+ *      ✔ shorter
+ *      ✔ fast to write
+ *      ✔ common in competitive programming
+ *
+ *
+ * Enum:
+ *
+ *
+ *      NORTH(-1, 0)
+ *      EAST(0, 1)
+ *      SOUTH(1, 0)
+ *      WEST(0, -1)
+ *
+ *
+ * Advantages:
+ *
+ *      ✔ readable
+ *      ✔ self-documenting
+ *      ✔ type-safe
+ *      ✔ behavior/data can be attached to each direction
+ *
+ *
+ * For LeetCode/competitive programming:
+ *
+ *      int[][] directions
+ *
+ * is often simpler.
+ *
+ *
+ * For larger Java projects:
+ *
+ *      enum
+ *
+ * can provide cleaner design.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 67. ENUM PERFORMANCE IN DSA
+ * ============================================================================
+ *
+ * Enum itself is not a magic performance optimization.
+ *
+ *
+ * In competitive programming:
+ *
+ *      simple arrays + integers
+ *
+ * are often preferred because they have very low overhead and are concise.
+ *
+ *
+ * Enum is primarily valuable for:
+ *
+ *      readability
+ *      type safety
+ *      modeling finite states
+ *      clean object-oriented design
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 68. IMPORTANT ENUM CHARACTERISTICS
+ * ============================================================================
+ *
+ * Remember:
+ *
+ *      ✔ enum represents a fixed set of constants
+ *
+ *      ✔ enum constants are objects
+ *
+ *      ✔ enum constants are predefined
+ *
+ *      ✔ cannot create enum objects using new
+ *
+ *      ✔ enum constructors cannot be used for external object creation
+ *
+ *      ✔ enum can have fields
+ *
+ *      ✔ enum can have constructors
+ *
+ *      ✔ enum can have methods
+ *
+ *      ✔ enum can have static methods
+ *
+ *      ✔ enum can implement interfaces
+ *
+ *      ✔ enum supports switch
+ *
+ *      ✔ enum provides name()
+ *
+ *      ✔ enum provides ordinal()
+ *
+ *      ✔ enum provides values()
+ *
+ *      ✔ enum provides valueOf()
+ *
+ *      ✔ toString() can be overridden
+ *
+ *      ✔ each constant has unique identity
+ *
+ *      ✔ constant-specific class bodies are possible
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 69. MOST IMPORTANT INTERVIEW DIFFERENCES
+ * ============================================================================
+ *
+ *
+ * name()
+ *      → exact declared constant name
+ *
+ *
+ * toString()
+ *      → string representation
+ *      → can be overridden
+ *
+ *
+ * ordinal()
+ *      → zero-based declaration position
+ *
+ *
+ * values()
+ *      → returns all constants
+ *
+ *
+ * valueOf()
+ *      → converts exact name into enum constant
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 70. COMMON ENUM MISTAKES
+ * ============================================================================
+ *
+ *
+ * MISTAKE 1:
+ *
+ *      Direction d = new Direction();
+ *
+ * WRONG.
+ *
+ *
+ * MISTAKE 2:
+ *
+ *      Direction.valueOf("north");
+ *
+ * WRONG unless the enum actually contains lowercase "north".
+ *
+ *
+ * MISTAKE 3:
+ *
+ * Using ordinal() as a permanent database ID.
+ *
+ * BAD DESIGN.
+ *
+ *
+ * MISTAKE 4:
+ *
+ * Thinking enum constants are strings.
+ *
+ * WRONG.
+ *
+ * They are enum objects.
+ *
+ *
+ * MISTAKE 5:
+ *
+ * Thinking static methods can be overridden by individual enum constants.
+ *
+ * WRONG.
+ *
+ *
+ * MISTAKE 6:
+ *
+ * Forgetting the semicolon before fields/methods:
+ *
+ *
+ *      enum Direction {
+ *          NORTH,
+ *          EAST;
+ *
+ *          int value;
+ *      }
+ *
+ *
+ * The semicolon separates constants from the rest of the enum body.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 71. ENUM INTERVIEW QUESTION:
+ *
+ *      "Can we create an object of enum?"
+ * ============================================================================
+ *
+ * Answer:
+ *
+ *      No.
+ *
+ *
+ * Enum instances are predefined by the enum declaration.
+ *
+ *
+ * We access them using:
+ *
+ *      Direction.NORTH
+ *
+ *      Direction.EAST
+ *
+ *      Direction.WEST
+ *
+ *      Direction.SOUTH
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 72. INTERVIEW QUESTION:
+ *
+ *      "Why is enum constructor private?"
+ * ============================================================================
+ *
+ * Answer:
+ *
+ *      To prevent external code from creating arbitrary enum instances.
+ *
+ *
+ * The enum itself controls creation of its fixed predefined constants.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 73. INTERVIEW QUESTION:
+ *
+ *      "Are enum constants objects?"
+ * ============================================================================
+ *
+ * YES.
+ *
+ *
+ *      Direction.NORTH
+ *
+ * is an object/reference representing one enum instance.
+ *
+ *
+ * Each constant has its own identity and can have its own field values.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 74. INTERVIEW QUESTION:
+ *
+ *      "Where does values() come from?"
+ * ============================================================================
+ *
+ * Answer:
+ *
+ *      values() is provided through compiler-generated enum infrastructure.
+ *
+ *
+ * We don't manually write it.
+ *
+ *
+ * During compilation, the compiler generates the required enum machinery
+ * so that:
+ *
+ *      Direction.values()
+ *
+ * works at runtime.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 75. INTERVIEW QUESTION:
+ *
+ *      "What is the difference between values() and valueOf()?"
+ * ============================================================================
+ *
+ *      values()
+ *
+ *          → returns all enum constants.
+ *
+ *
+ *      valueOf("NORTH")
+ *
+ *          → returns the NORTH enum constant.
+ *
+ *
+ * MEMORY:
+ *
+ *      values() = MANY
+ *
+ *      valueOf() = ONE
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 76. INTERVIEW QUESTION:
+ *
+ *      "What is ordinal()?"
+ * ============================================================================
+ *
+ * Answer:
+ *
+ *      ordinal() returns the zero-based position of the enum constant
+ *      according to its declaration order.
+ *
+ *
+ * Example:
+ *
+ *      NORTH → 0
+ *      EAST  → 1
+ *      WEST  → 2
+ *      SOUTH → 3
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 77. INTERVIEW QUESTION:
+ *
+ *      "Can enum implement an interface?"
+ * ============================================================================
+ *
+ * YES.
+ *
+ *
+ * Example:
+ *
+ *      enum Direction implements Movable {
+ *
+ *          NORTH,
+ *          EAST,
+ *          WEST,
+ *          SOUTH;
+ *
+ *          @Override
+ *          public void move() {
+ *              ...
+ *          }
+ *      }
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 78. INTERVIEW QUESTION:
+ *
+ *      "Can enum extend a class?"
+ * ============================================================================
+ *
+ * An enum cannot extend an arbitrary class.
+ *
+ *
+ * Java's enum mechanism already gives enum types their special superclass
+ * relationship through java.lang.Enum.
+ *
+ *
+ * But enum CAN implement interfaces.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 79. INTERVIEW QUESTION:
+ *
+ *      "Can enum have constructors?"
+ * ============================================================================
+ *
+ * YES.
+ *
+ *
+ * Example:
+ *
+ *
+ *      enum Direction {
+ *
+ *          NORTH(-1, 0),
+ *          EAST(0, 1),
+ *          WEST(0, -1),
+ *          SOUTH(1, 0);
+ *
+ *          int dr;
+ *          int dc;
+ *
+ *          Direction(int dr, int dc) {
+ *              this.dr = dr;
+ *              this.dc = dc;
+ *          }
+ *      }
+ *
+ *
+ * Constructor is used to initialize each enum constant.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 80. INTERVIEW QUESTION:
+ *
+ *      "Can enum have methods?"
+ * ============================================================================
+ *
+ * YES.
+ *
+ *
+ * Enum can contain:
+ *
+ *      instance methods
+ *      static methods
+ *      abstract methods
+ *
+ *
+ * This is why enum should be thought of as a SPECIALIZED CLASS,
+ * not simply as a list of strings.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 81. ENUM COMPLETE EXAMPLE
+ * ============================================================================
+ *
+ *
+ *      enum Direction {
+ *
+ *          NORTH(-1, 0),
+ *          EAST(0, 1),
+ *          SOUTH(1, 0),
+ *          WEST(0, -1);
+ *
+ *          private final int dr;
+ *          private final int dc;
+ *
+ *          Direction(int dr, int dc) {
+ *              this.dr = dr;
+ *              this.dc = dc;
+ *          }
+ *
+ *          public int getDr() {
+ *              return dr;
+ *          }
+ *
+ *          public int getDc() {
+ *              return dc;
+ *          }
+ *
+ *          public boolean isHorizontal() {
+ *              return this == EAST || this == WEST;
+ *          }
+ *      }
+ *
+ *
+ * Example:
+ *
+ *
+ *      Direction direction = Direction.NORTH;
+ *
+ *
+ *      System.out.println(direction.name());
+ *      System.out.println(direction.ordinal());
+ *      System.out.println(direction.getDr());
+ *      System.out.println(direction.getDc());
+ *
+ *
+ * Output:
+ *
+ *      NORTH
+ *      0
+ *      -1
+ *      0
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 82. COMPLETE DSA GRID PATTERN
+ * ============================================================================
+ *
+ *
+ *      enum Direction {
+ *
+ *          NORTH(-1, 0),
+ *          EAST(0, 1),
+ *          SOUTH(1, 0),
+ *          WEST(0, -1);
+ *
+ *          final int dr;
+ *          final int dc;
+ *
+ *          Direction(int dr, int dc) {
+ *              this.dr = dr;
+ *              this.dc = dc;
+ *          }
+ *      }
+ *
+ *
+ * Then inside BFS/DFS:
+ *
+ *
+ *      for (Direction d : Direction.values()) {
+ *
+ *          int nr = row + d.dr;
+ *          int nc = col + d.dc;
+ *
+ *          if (nr < 0 || nr >= rows ||
+ *              nc < 0 || nc >= cols) {
+ *
+ *              continue;
+ *          }
+ *
+ *          // process neighbour
+ *      }
+ *
+ *
+ * This is the main DSA pattern to remember.
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 83. ENUM MIND MAP
+ * ============================================================================
+ *
+ *
+ *                              ENUM
+ *                                |
+ *          ------------------------------------------------
+ *          |                    |                         |
+ *       FIXED SET          SPECIAL CLASS             OBJECTS
+ *          |                    |                         |
+ *     NORTH/EAST          fields/methods          each constant
+ *     WEST/SOUTH           constructor               is object
+ *                              |
+ *                 -----------------------------
+ *                 |       |       |      |     |
+ *              name() ordinal() values() valueOf() toString()
+ *
+ *
+ *                                |
+ *                                ↓
+ *                           DSA USE CASES
+ *                                |
+ *              ------------------------------------
+ *              |                  |               |
+ *           Grid             Graph State      State Machine
+ *              |                  |               |
+ *       NORTH/EAST/SOUTH/WEST   DFS/BFS       finite states
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 84. ENUM MEMORY TRICK
+ * ============================================================================
+ *
+ *
+ *      ENUM
+ *        ↓
+ *      FIXED VALUES
+ *        ↓
+ *      VALUES ARE OBJECTS
+ *        ↓
+ *      OBJECTS CREATED BY ENUM MECHANISM
+ *        ↓
+ *      NO new FROM OUTSIDE
+ *        ↓
+ *      PRIVATE CONSTRUCTOR
+ *        ↓
+ *      CAN HAVE FIELDS + METHODS
+ *        ↓
+ *      values() = ALL
+ *      valueOf() = ONE
+ *      name() = NAME
+ *      ordinal() = POSITION
+ *      toString() = DISPLAY
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 85. ONE-LINE MEMORY SHEET
+ * ============================================================================
+ *
+ *
+ *      enum
+ *      ↓
+ *      fixed set of predefined objects
+ *
+ *
+ *      Direction.NORTH
+ *      ↓
+ *      enum object
+ *
+ *
+ *      constructor
+ *      ↓
+ *      initializes each predefined enum object
+ *
+ *
+ *      private constructor
+ *      ↓
+ *      prevents external object creation
+ *
+ *
+ *      fields
+ *      ↓
+ *      store data for each enum constant
+ *
+ *
+ *      methods
+ *      ↓
+ *      give behavior to enum objects
+ *
+ *
+ *      values()
+ *      ↓
+ *      all enum constants
+ *
+ *
+ *      valueOf("NORTH")
+ *      ↓
+ *      Direction.NORTH
+ *
+ *
+ *      name()
+ *      ↓
+ *      exact declared name
+ *
+ *
+ *      toString()
+ *      ↓
+ *      string representation / customizable
+ *
+ *
+ *      ordinal()
+ *      ↓
+ *      declaration position
+ *
+ *
+ *      constant-specific class body
+ *      ↓
+ *      different behavior for different constants
+ *
+ *
+ *      DSA
+ *      ↓
+ *      fixed states + grid directions + graph states
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ * 86. FINAL DSA SUMMARY
+ * ============================================================================
+ *
+ * If you remember only ONE thing:
+ *
+ *
+ *      ENUM = FIXED SET OF NAMED OBJECTS.
+ *
+ *
+ * For DSA:
+ *
+ *
+ *      enum Direction {
+ *          NORTH(-1, 0),
+ *          EAST(0, 1),
+ *          SOUTH(1, 0),
+ *          WEST(0, -1);
+ *      }
+ *
+ *
+ * Then:
+ *
+ *
+ *      for (Direction d : Direction.values()) {
+ *
+ *          int nr = row + d.dr;
+ *          int nc = col + d.dc;
+ *
+ *      }
+ *
+ *
+ * This lets us represent:
+ *
+ *      UP
+ *      RIGHT
+ *      DOWN
+ *      LEFT
+ *
+ * cleanly.
+ *
+ *
+ * For graph states:
+ *
+ *
+ *      enum State {
+ *          UNVISITED,
+ *          VISITING,
+ *          VISITED
+ *      }
+ *
+ *
+ * Instead of:
+ *
+ *      0
+ *      1
+ *      2
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ *                         ENUM CHEAT SHEET
+ * ============================================================================
+ *
+ *
+ * WHAT?
+ *      enum = fixed set of named constants/objects.
+ *
+ *
+ * OBJECT?
+ *      Every enum constant is an object of the enum type.
+ *
+ *
+ * CREATE OBJECT?
+ *      Cannot use new to create arbitrary enum instances.
+ *
+ *
+ * CONSTRUCTOR?
+ *      Enum can have constructors; they initialize enum constants and are
+ *      not available for external instance creation.
+ *
+ *
+ * FIELDS?
+ *      YES.
+ *
+ *
+ * METHODS?
+ *      YES.
+ *
+ *
+ * STATIC METHODS?
+ *      YES.
+ *
+ *
+ * INTERFACE?
+ *      YES, enum can implement interfaces.
+ *
+ *
+ * INHERITANCE?
+ *      Cannot extend an arbitrary class or another enum.
+ *
+ *
+ * name()
+ *      Exact declared constant name.
+ *
+ *
+ * toString()
+ *      String representation; can be overridden.
+ *
+ *
+ * ordinal()
+ *      Zero-based declaration position.
+ *
+ *
+ * values()
+ *      Returns all enum constants.
+ *
+ *
+ * valueOf()
+ *      Returns the enum constant matching an exact name.
+ *
+ *
+ * CONSTANT-SPECIFIC CLASS BODY?
+ *      Allows individual constants to have different implementations.
+ *
+ *
+ * DSA?
+ *      Excellent for finite states and readable state representation.
+ *
+ *
+ * MOST IMPORTANT DSA USE:
+ *
+ *      Direction.NORTH
+ *      Direction.EAST
+ *      Direction.SOUTH
+ *      Direction.WEST
+ *
+ *
+ *      + Grid BFS/DFS
+ *      + Graph states
+ *      + State machines
+ *      + Fixed categories
+ *      + Removing magic numbers
+ *
+ *
+ * ============================================================================
+ */
+
+
+/*
+ * ============================================================================
+ *                         FINAL ONE-LINE REVISION
+ * ============================================================================
+ *
+ * ENUM
+ *
+ *      "A special Java type that represents a fixed set of predefined,
+ *       unique objects; its constants are created by the enum mechanism,
+ *       constructors cannot be used for external object creation, it can
+ *       contain fields and methods, values() gives all constants,
+ *       valueOf() finds one by name, name() gives its declared name,
+ *       ordinal() gives its position, and in DSA it is especially useful
+ *       for representing fixed states such as NORTH/EAST/SOUTH/WEST or
+ *       UNVISITED/VISITING/VISITED."
+ *
+ *
+ * ============================================================================
+ */

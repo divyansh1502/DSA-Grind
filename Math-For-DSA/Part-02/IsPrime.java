@@ -1,8 +1,10 @@
 
 public class IsPrime {
     public static void main(String[] args) {
-        
-        System.out.println(isprime(26));
+        int n = 100;
+        for (int i = 1; i <= n; i++) {
+            System.out.println(i + " is prime: " + isprime(i));
+        }
     }
     static boolean isprime(int n) {
         if(n <= 1) {

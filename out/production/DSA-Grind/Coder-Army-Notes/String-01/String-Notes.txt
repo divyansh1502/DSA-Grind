@@ -1,0 +1,2335 @@
+```java
+/*
+================================================================================
+                              JAVA STRING
+================================================================================
+
+TOPICS COVERED
+--------------------------------------------------------------------------------
+1. Character
+2. String
+3. Why String is non-primitive
+4. java.lang.String
+5. String as an immutable class
+6. String declaration
+7. String literal
+8. String Pool
+9. String using new keyword
+10. String comparison (==)
+11. Compile-time constant vs runtime-created String
+12. Memory management diagrams
+13. String object creation using new
+14. Internal structure of String
+15. char[] before Java 9
+16. byte[] from Java 9
+17. Unicode
+18. UTF-16
+19. coder
+20. hash / cached hash value
+21. Why byte[] replaced char[]
+22. String optimizations
+23. Important rules / cheat sheet
+
+
+================================================================================
+1. CHARACTER
+================================================================================
+
+A character represents a single character.
+
+In Java, char is a primitive data type.
+
+Example:
+
+char ch = 'A';
+
+Here:
+
+    ch
+    |
+    v
+   'A'
+
+
+A char occupies 16 bits (2 bytes).
+
+Why?
+
+Because Java's char is based on UTF-16 representation.
+
+Example:
+
+char ch1 = 'A';
+char ch2 = '₹';
+char ch3 = '中';
+
+
+IMPORTANT:
+--------------------------------------------------------------------------------
+
+char is PRIMITIVE.
+
+String is NOT primitive.
+
+
+================================================================================
+2. WHAT IS STRING?
+================================================================================
+
+String represents a sequence of characters.
+
+Example:
+
+String name = "Divyansh";
+
+Here:
+
+    "Divyansh"
+
+is a sequence of characters:
+
+    D i v y a n s h
+
+
+Unlike char:
+
+char ch = 'D';
+
+String:
+
+String name = "Divyansh";
+
+
+Therefore:
+
+    char   -> one character
+    String -> sequence of characters
+
+
+================================================================================
+3. WHY IS STRING NON-PRIMITIVE?
+================================================================================
+
+String is non-primitive because String is a CLASS.
+
+Java provides:
+
+java.lang.String
+
+
+Therefore:
+
+String s = "Hello";
+
+
+String is actually a reference type.
+
+Conceptually:
+
+    s
+    |
+    v
+  String Object
+  "Hello"
+
+
+Primitive examples:
+
+    int
+    byte
+    short
+    long
+    float
+    double
+    char
+    boolean
+
+
+Non-primitive/reference types:
+
+    String
+    Arrays
+    Classes
+    Interfaces
+    Objects
+    etc.
+
+
+================================================================================
+4. java.lang.String
+================================================================================
+
+String belongs to:
+
+    java.lang
+
+Fully qualified name:
+
+    java.lang.String
+
+
+Example:
+
+String s = "Hello";
+
+
+We don't normally write:
+
+java.lang.String s = "Hello";
+
+
+because java.lang is automatically imported by Java.
+
+Java automatically makes classes from java.lang available.
+
+Examples:
+
+    String
+    System
+    Math
+    Object
+    Integer
+    Double
+    Thread
+
+
+Therefore:
+
+String s = "Hello";
+
+is equivalent to:
+
+java.lang.String s = "Hello";
+
+
+================================================================================
+5. STRING IS A CLASS
+================================================================================
+
+String is a predefined class provided by Java.
+
+Example:
+
+String s = "Hello";
+
+
+You can call methods on String:
+
+s.length();
+s.charAt(0);
+s.toUpperCase();
+
+
+This is possible because String is an object/reference type.
+
+Example:
+
+String s = "Hello";
+
+System.out.println(s.length());
+
+Output:
+
+5
+
+
+================================================================================
+6. STRING IS IMMUTABLE
+================================================================================
+
+String is an IMMUTABLE class.
+
+Immutable means:
+
+    Once a String object is created,
+    its content cannot be changed.
+
+
+Example:
+
+String s = "Hello";
+
+s = "World";
+
+
+IMPORTANT:
+
+We did NOT change:
+
+    "Hello"
+
+We changed what the reference variable:
+
+    s
+
+is pointing to.
+
+
+Memory:
+
+Before:
+
+        s
+        |
+        v
+   +-----------+
+   |  "Hello"  |
+   +-----------+
+
+
+After:
+
+        s
+        |
+        v
+   +-----------+
+   |  "World"  |
+   +-----------+
+
+The original "Hello" String object itself was never modified.
+
+
+This is the fundamental concept of String immutability.
+
+
+================================================================================
+7. WHY IS STRING IMMUTABLE?
+================================================================================
+
+String immutability provides several benefits:
+
+    1. String Pool optimization
+    2. Security
+    3. Thread safety
+    4. Hash-code caching
+    5. Predictable behavior
+
+
+For example:
+
+String username = "admin";
+
+If Strings could be changed, different parts of a program sharing the
+same String could unexpectedly see its contents changed.
+
+Because Strings are immutable, sharing is safe.
+
+
+================================================================================
+8. TWO MAIN WAYS TO CREATE STRING
+================================================================================
+
+There are two common ways:
+
+    1. String literal
+    2. new keyword
+
+
+Example:
+
+String s1 = "Hello";
+
+String s2 = new String("Hello");
+
+
+They look similar but their memory behavior is different.
+
+
+================================================================================
+9. STRING LITERAL
+================================================================================
+
+Example:
+
+String s1 = "Hello";
+
+
+"Hello" is a STRING LITERAL.
+
+
+String literals are managed using the:
+
+    STRING POOL
+
+
+The String Pool is located inside the JVM heap in modern Java.
+
+
+Memory:
+
+             HEAP
+    +-------------------------+
+    |                         |
+    |      STRING POOL        |
+    |                         |
+    |   +---------------+     |
+    |   |    "Hello"    |     |
+    |   +---------------+     |
+    |          ^              |
+    |          |              |
+    +----------|--------------+
+               |
+              s1
+
+
+The reference variable s1 points to the String Pool object.
+
+
+================================================================================
+10. WHAT IS STRING POOL?
+================================================================================
+
+String Pool is a special area maintained by the JVM for String literals.
+
+Its main purpose is:
+
+    REUSE existing String objects
+
+
+Example:
+
+String s1 = "Hello";
+String s2 = "Hello";
+
+
+Instead of creating two separate String objects:
+
+    "Hello"
+    "Hello"
+
+
+JVM reuses the same pooled object.
+
+
+Memory:
+
+             HEAP
+    +-------------------------+
+    |     STRING POOL         |
+    |                         |
+    |    +-------------+      |
+    |    |   "Hello"   |      |
+    |    +-------------+      |
+    |       ^       ^         |
+    +-------|-------|---------+
+            |       |
+           s1      s2
+
+
+Therefore:
+
+System.out.println(s1 == s2);
+
+Output:
+
+true
+
+
+Because == compares references for objects.
+
+
+================================================================================
+11. STRING POOL AND PERMGEN
+================================================================================
+
+IMPORTANT HISTORICAL POINT
+--------------------------------------------------------------------------------
+
+Older Java versions stored the String Pool in:
+
+    PermGen (Permanent Generation)
+
+
+Starting from Java 7:
+
+    String Pool was moved to the regular JVM heap.
+
+
+Therefore:
+
+Old Java:
+
+    Heap
+    |
+    +-- String Pool was associated with PermGen
+
+
+Modern Java:
+
+    Heap
+    |
+    +-- String Pool
+
+
+IMPORTANT:
+
+Do NOT say:
+
+"String Pool was always in PermGen."
+
+It was moved to the heap in Java 7.
+
+
+================================================================================
+12. GOLDEN RULE — COMPILE-TIME CONSTANT
+================================================================================
+
+This is one of the MOST IMPORTANT rules.
+
+If a String is a:
+
+    COMPILE-TIME CONSTANT
+
+the compiler can resolve it during compilation and it is treated as a
+String literal and placed/reused in the String Pool.
+
+
+Example:
+
+String s1 = "Hello";
+String s2 = "Hel" + "lo";
+
+
+The compiler can calculate:
+
+    "Hel" + "lo"
+
+during compilation.
+
+Therefore it effectively becomes:
+
+    "Hello"
+
+
+So both references point to the same pooled object.
+
+
+Memory:
+
+             HEAP
+    +-------------------------+
+    |      STRING POOL        |
+    |                         |
+    |    +-------------+      |
+    |    |   "Hello"   |      |
+    |    +-------------+      |
+    |       ^       ^         |
+    +-------|-------|---------+
+            |       |
+           s1      s2
+
+
+System.out.println(s1 == s2);
+
+Output:
+
+true
+
+
+================================================================================
+13. YOUR EXAMPLE — COMPILE-TIME CONCATENATION
+================================================================================
+
+public class Demo2 {
+
+    public static void main(String[] args) {
+
+        String str1 = "ja" + "va";
+        String str2 = "java";
+
+        System.out.println(str1 == str2);
+    }
+}
+
+
+Output:
+
+true
+
+
+WHY?
+
+Because:
+
+    "ja" + "va"
+
+contains only String literals.
+
+Compiler can calculate it at compile time:
+
+    "ja" + "va"
+          |
+          v
+       "java"
+
+
+Therefore:
+
+str1 ---> "java" <--- str2
+           |
+      STRING POOL
+
+
+So:
+
+str1 == str2
+
+is true.
+
+
+================================================================================
+14. RUNTIME STRING CREATION
+================================================================================
+
+Now consider:
+
+String s1 = "ja";
+
+String s2 = s1 + "va";
+
+
+Here:
+
+    s1
+
+is a variable.
+
+The compiler cannot simply treat the complete expression as the literal
+"java" in the same way as:
+
+    "ja" + "va"
+
+
+The concatenation happens at runtime.
+
+Therefore a new String result is created at runtime.
+
+
+Memory conceptually:
+
+             HEAP
+    +---------------------------+
+    |       STRING POOL         |
+    |                           |
+    |   +-------+    +------+   |
+    |   |  "ja" |    | "va" |   |
+    |   +-------+    +------+   |
+    |      ^                      |
+    |      |                      |
+    |     s1                      |
+    |                           |
+    |   +---------------------+ |
+    |   | runtime "java"      | |
+    |   +---------------------+ |
+    |             ^             |
+    +-------------|-------------+
+                  |
+                 s2
+
+
+Therefore:
+
+String s3 = "java";
+
+
+s3 points to the pooled "java".
+
+Conceptually:
+
+             HEAP
+    +--------------------------------+
+    |          STRING POOL           |
+    |                                |
+    |  "ja"         "va"             |
+    |    ^                            |
+    |    |                            |
+    |   s1                            |
+    |                                |
+    |  "java" <----------- s3         |
+    |                                |
+    +--------------------------------+
+
+    Separate runtime-created "java"
+                     ^
+                     |
+                    s2
+
+
+Therefore:
+
+System.out.println(s2 == s3);
+
+false
+
+
+IMPORTANT:
+--------------------------------------------------------------------------------
+
+The exact internal implementation of runtime concatenation has evolved
+across Java versions, but the important beginner-level rule is:
+
+    Compile-time constant String
+            -> pooled literal
+
+    Runtime-generated String
+            -> a distinct String object/result, normally on heap
+
+A runtime-created String can later be interned using intern(),
+but that is a separate concept.
+
+
+================================================================================
+15. YOUR COMPLETE EXAMPLE — PART 1
+================================================================================
+
+String str1 = "ja" + "va";
+String str2 = "java";
+
+System.out.println(str1 == str2);
+
+
+COMPILER EFFECTIVELY SEES:
+
+String str1 = "java";
+String str2 = "java";
+
+
+Memory:
+
+        str1 --------\
+                      \
+                       ---> "java" [STRING POOL]
+                      /
+        str2 --------/
+
+
+Output:
+
+true
+
+
+================================================================================
+16. YOUR COMPLETE EXAMPLE — PART 2
+================================================================================
+
+String s1 = "ja";
+
+String s2 = s1 + "va";
+
+String s3 = "java";
+
+
+Memory:
+
+             HEAP
+    +--------------------------------+
+    |         STRING POOL            |
+    |                                |
+    |    +------+     +------+       |
+    |    | "ja" |     | "va" |       |
+    |    +------+     +------+       |
+    |       ^                          |
+    |       |                          |
+    |      s1                          |
+    |                                |
+    |    +--------+                   |
+    |    | "java" | <-------- s3      |
+    |    +--------+                   |
+    |                                |
+    +--------------------------------+
+
+    Runtime-generated:
+    
+    +--------+
+    | "java" | <-------- s2
+    +--------+
+
+
+Therefore:
+
+s2 == s3
+
+is:
+
+false
+
+
+Because they are different String objects/references.
+
+
+================================================================================
+17. SIMPLE ASSIGNMENT DOES NOT CREATE A NEW STRING
+================================================================================
+
+Example:
+
+String str3 = "Divyansh";
+
+String str4 = str3;
+
+
+There is no String operation here.
+
+str4 simply receives the same reference.
+
+
+Memory:
+
+             STRING POOL
+          +---------------+
+          |  "Divyansh"   |
+          +---------------+
+             ^         ^
+             |         |
+            str3      str4
+
+
+Therefore:
+
+str3 == str4
+
+Output:
+
+true
+
+
+IMPORTANT:
+
+str4 does NOT create another String.
+
+Both variables point to the same object.
+
+
+================================================================================
+18. YOUR EXAMPLE — REASSIGNMENT
+================================================================================
+
+String a = "Hello";
+
+a = "World";
+
+
+Initially:
+
+    a ---> "Hello"
+
+
+After:
+
+    a ---> "World"
+
+
+The "Hello" object was NOT modified.
+
+String is immutable.
+
+The reference was simply changed.
+
+
+Memory:
+
+             STRING POOL
+    +----------------------------+
+    | "Hello"                    |
+    |                            |
+    | "World" <----------- a     |
+    +----------------------------+
+
+
+If "Hello" has no other references, it may eventually become eligible
+for garbage collection.
+
+
+================================================================================
+19. new String()
+================================================================================
+
+Now:
+
+String b = new String("Singh");
+
+
+This is different from:
+
+String c = "Singh";
+
+
+When:
+
+new String("Singh")
+
+is executed, a new String object is explicitly created.
+
+The literal:
+
+    "Singh"
+
+is also a String literal and therefore belongs to the String Pool.
+
+
+Conceptually:
+
+             HEAP
+    +--------------------------------+
+    |          STRING POOL           |
+    |                                |
+    |    +-------------+             |
+    |    |   "Singh"   | <--- c      |
+    |    +-------------+             |
+    |                                |
+    |    +-------------+             |
+    |    |   "Singh"   | <--- b      |
+    |    +-------------+             |
+    |       normal heap object       |
+    +--------------------------------+
+
+
+Therefore b and c point to DIFFERENT objects.
+
+
+System.out.println(b == c);
+
+Output:
+
+false
+
+
+================================================================================
+20. IMPORTANT new String() RULE
+================================================================================
+
+String b = new String("Singh");
+
+
+The literal:
+
+    "Singh"
+
+is pooled.
+
+And:
+
+    new String(...)
+
+creates a separate String object.
+
+
+Therefore there can be two objects:
+
+    1. "Singh" in String Pool
+    2. new String("Singh") as separate heap object
+
+
+The reference b points to the second object.
+
+The reference c points to the pooled object.
+
+
+Therefore:
+
+b == c
+
+false
+
+
+But:
+
+b.equals(c)
+
+true
+
+
+because both objects contain the same characters.
+
+
+================================================================================
+21. STRING COMPARISON
+================================================================================
+
+There are two different concepts:
+
+    1. Reference comparison
+    2. Content comparison
+
+
+---------------------- == -----------------------------------------------
+
+For objects:
+
+    ==
+
+checks whether both references point to the SAME object.
+
+
+Example:
+
+String a = "Hello";
+String b = "Hello";
+
+System.out.println(a == b);
+
+
+true
+
+
+Because both point to the same pooled object.
+
+
+---------------------- equals() -----------------------------------------
+
+equals() checks String CONTENT.
+
+Example:
+
+String a = new String("Hello");
+String b = new String("Hello");
+
+System.out.println(a == b);
+
+false
+
+
+But:
+
+System.out.println(a.equals(b));
+
+true
+
+
+Because:
+
+    content(a) = "Hello"
+    content(b) = "Hello"
+
+
+IMPORTANT:
+--------------------------------------------------------------------------------
+
+    ==       -> same reference/object?
+    equals() -> same content?
+
+
+For Strings, use:
+
+    equals()
+
+when you want to compare text.
+
+
+================================================================================
+22. INTERNAL STRUCTURE OF STRING
+================================================================================
+
+This is where Java 9 introduced an important optimization.
+
+Older Java implementations stored String characters internally using:
+
+    char[]
+
+
+Conceptually:
+
+class String {
+
+    private final char[] value;
+
+}
+
+
+Example:
+
+String s = "Hello";
+
+
+Internally, conceptually:
+
+String object
+     |
+     v
++----------------------+
+| value -> char[]      |
++----------------------+
+          |
+          v
+    +-------------------+
+    | H | e | l | l | o |
+    +-------------------+
+
+
+But from Java 9, String uses:
+
+    byte[]
+
+
+along with:
+
+    coder
+
+
+Conceptually:
+
+class String {
+
+    private final byte[] value;
+
+    private final byte coder;
+
+    // cached hash-related information
+}
+
+
+This is called:
+
+    COMPACT STRINGS
+
+
+================================================================================
+23. WHY byte[] INSTEAD OF char[]?
+================================================================================
+
+Most Strings used by applications contain characters from Latin-1.
+
+For example:
+
+    "Hello"
+    "Java"
+    "India"
+    "Divyansh"
+
+
+A Java char traditionally occupies:
+
+    2 bytes
+
+
+But Latin-1 characters can be represented using:
+
+    1 byte
+
+
+Therefore Java 9 introduced Compact Strings.
+
+Instead of always using 2 bytes per character:
+
+    char[] -> 2 bytes per character
+
+
+Java can use:
+
+    byte[] -> 1 byte per character
+
+when the String can be represented using Latin-1.
+
+
+This saves memory.
+
+
+================================================================================
+24. WHAT IS LATIN-1?
+================================================================================
+
+Latin-1 is also called:
+
+    ISO-8859-1
+
+
+It represents 256 possible values.
+
+Each character requires:
+
+    1 byte
+
+
+Examples include many common English/Western characters:
+
+    A
+    B
+    C
+    a
+    b
+    1
+    !
+    etc.
+
+
+If the entire String can be represented using Latin-1,
+Java can use the compact representation.
+
+
+================================================================================
+25. WHAT IS UNICODE?
+================================================================================
+
+Unicode is a universal character encoding system/standard designed to
+represent characters from languages around the world.
+
+
+Examples:
+
+    English      -> A
+    Hindi        -> अ
+    Chinese      -> 中
+    Japanese     -> あ
+    Emoji        -> 😀
+
+
+Unicode gives characters/code points standardized numerical identities.
+
+
+For example:
+
+    A -> Unicode code point U+0041
+
+
+Java's String must be capable of representing much more than English.
+
+
+================================================================================
+26. WHAT IS UTF-16?
+================================================================================
+
+UTF-16 is a Unicode encoding.
+
+Java historically used UTF-16 code units for char/String representation.
+
+
+A Java:
+
+    char
+
+is a 16-bit UTF-16 code unit.
+
+
+For many common characters:
+
+    1 character -> 1 UTF-16 code unit
+
+
+But some Unicode characters, especially many supplementary characters,
+require TWO UTF-16 code units.
+
+These are called:
+
+    surrogate pairs
+
+
+IMPORTANT:
+
+Do NOT assume:
+
+    one Unicode character = one Java char
+
+That is not always true.
+
+
+================================================================================
+27. coder IN STRING
+================================================================================
+
+Java 9 Compact Strings use a field called:
+
+    coder
+
+
+Conceptually:
+
+private final byte coder;
+
+
+The coder tells Java how the bytes in the byte[] should be interpreted.
+
+
+There are two important modes:
+
+    coder = 0
+        -> LATIN-1
+
+    coder = 1
+        -> UTF-16
+
+
+So conceptually:
+
+        String
+          |
+       byte[] + coder
+          |
+      ----------------
+      |              |
+   coder = 0       coder = 1
+      |              |
+   Latin-1         UTF-16
+
+
+================================================================================
+28. EXAMPLE OF coder = 0
+================================================================================
+
+String s = "Hello";
+
+
+"Hello" can be represented using Latin-1.
+
+Conceptually:
+
+    coder = 0
+
+
+Memory:
+
+String object
++-----------------------+
+| value -> byte[]       |
+| coder = 0             |
++-----------------------+
+           |
+           v
+      +-------------+
+      | H e l l o   |
+      | 1 byte each |
+      +-------------+
+
+
+This is compact.
+
+
+================================================================================
+29. EXAMPLE OF coder = 1
+================================================================================
+
+Suppose:
+
+String s = "नमस्ते";
+
+
+These characters cannot all be represented using Latin-1.
+
+Therefore Java needs the UTF-16 representation.
+
+Conceptually:
+
+    coder = 1
+
+
+Memory:
+
+String object
++-----------------------+
+| value -> byte[]       |
+| coder = 1             |
++-----------------------+
+           |
+           v
+      UTF-16 encoded
+      byte representation
+
+
+So Java can store the String appropriately.
+
+
+================================================================================
+30. WHAT IS byte[] HERE?
+================================================================================
+
+Don't misunderstand:
+
+    byte[]
+
+does NOT mean Java suddenly stopped supporting Unicode.
+
+The byte array is simply the internal storage representation.
+
+The:
+
+    coder
+
+tells Java whether those bytes represent:
+
+    Latin-1
+or
+    UTF-16
+
+
+So:
+
+        byte[] + coder
+
+together represent the String's characters.
+
+
+================================================================================
+31. WHY NOT ALWAYS USE byte[]?
+================================================================================
+
+Because not every character can be represented in one byte.
+
+Example:
+
+"Hello"
+
+can use Latin-1.
+
+But:
+
+"नमस्ते"
+
+requires Unicode representation beyond Latin-1.
+
+Therefore Java dynamically chooses:
+
+    Latin-1 -> compact 1-byte representation
+
+    UTF-16 -> 2-byte-based representation
+
+
+This is why it is called:
+
+    COMPACT STRINGS
+
+
+================================================================================
+32. HASH VALUE INSIDE STRING
+================================================================================
+
+String also caches its hash code.
+
+Conceptually, String has fields related to:
+
+    hash
+
+
+Why cache the hash?
+
+Because Strings are immutable.
+
+If the String content never changes, its hash code never changes.
+
+So Java can calculate the hash once and reuse it.
+
+
+Example:
+
+String s = "Hello";
+
+When:
+
+s.hashCode();
+
+is called, Java calculates the hash.
+
+Conceptually:
+
+String object
++------------------------+
+| value                  |
+| coder                  |
+| hash                   |
++------------------------+
+
+
+Later, if hashCode() is called again:
+
+s.hashCode();
+
+
+Java can reuse the cached result instead of repeatedly calculating it.
+
+
+================================================================================
+33. WHY HASH CACHING IS POSSIBLE
+================================================================================
+
+This is strongly connected to immutability.
+
+Suppose String were mutable:
+
+String s = "Hello";
+
+
+If the contents could change:
+
+"Hello" -> "World"
+
+
+then its hash would also need to change.
+
+That would make caching complicated and dangerous.
+
+
+But String is immutable:
+
+    content never changes
+
+Therefore:
+
+    content -> hash
+
+remains stable.
+
+
+This makes String very suitable as a key in:
+
+    HashMap
+    HashSet
+    Hashtable
+    etc.
+
+
+================================================================================
+34. INTERNAL STRING STRUCTURE — SIMPLIFIED
+================================================================================
+
+For modern Java, think conceptually:
+
+String
++------------------------------------------------+
+| private final byte[] value;                    |
+|                                                |
+| private final byte coder;                      |
+|                                                |
+| cached hash information                        |
++------------------------------------------------+
+
+
+The exact JDK source contains additional implementation details and has
+changed between Java versions, so this diagram is a simplified learning model.
+
+
+================================================================================
+35. IMPORTANT — STRING OBJECT vs STRING DATA
+================================================================================
+
+This distinction is VERY important.
+
+Suppose:
+
+String s = "Hello";
+
+
+There is:
+
+    String reference
+        |
+        v
+    String object
+        |
+        v
+    internal byte[]
+
+
+Conceptually:
+
+s
+|
+v
++----------------------+
+| String Object        |
+|                      |
+| value --------------+----> byte[]
+| coder                |
+| hash                 |
++----------------------+
+
+
+So don't imagine that:
+
+    s directly points to a byte[]
+
+
+More accurately:
+
+    s -> String object -> internal representation
+
+
+================================================================================
+36. STRING POOL + new STRING — COMPLETE DIAGRAM
+================================================================================
+
+Code:
+
+String b = new String("Singh");
+
+String c = "Singh";
+
+
+Conceptually:
+
+                         HEAP
+    +--------------------------------------------------+
+    |                                                  |
+    |              STRING POOL                        |
+    |                                                  |
+    |       +---------------------+                    |
+    |       | String "Singh"      | <---------- c      |
+    |       +---------------------+                    |
+    |                                                  |
+    |       NORMAL HEAP OBJECT                        |
+    |       +---------------------+                    |
+    |       | String "Singh"      | <---------- b      |
+    |       +---------------------+                    |
+    |                                                  |
+    +--------------------------------------------------+
+
+
+Therefore:
+
+b == c
+
+false
+
+
+But:
+
+b.equals(c)
+
+true
+
+
+================================================================================
+37. STRING OPTIMIZATION #1 — STRING POOL
+================================================================================
+
+Without String Pool:
+
+String a = "Java";
+String b = "Java";
+String c = "Java";
+
+
+Could create three objects.
+
+With String Pool:
+
+             "Java"
+            /  |  \
+           /   |   \
+          a    b    c
+
+
+One object can be shared.
+
+Benefits:
+
+    - Less memory
+    - Object reuse
+    - Faster reference comparison in some cases
+
+
+================================================================================
+38. STRING OPTIMIZATION #2 — COMPACT STRINGS
+================================================================================
+
+Before Java 9:
+
+    char[]
+
+
+Generally:
+
+    2 bytes per char
+
+
+Java 9+:
+
+    byte[] + coder
+
+
+If Latin-1:
+
+    1 byte per character
+
+
+If UTF-16 is required:
+
+    UTF-16 representation
+
+
+Benefit:
+
+    Reduced memory consumption for common Latin-1 Strings.
+
+
+================================================================================
+39. STRING OPTIMIZATION #3 — HASH CACHING
+================================================================================
+
+String is immutable.
+
+Therefore hash code doesn't change.
+
+So Java can cache the hash value.
+
+Benefit:
+
+    Avoid repeated hash calculation.
+
+
+This is especially useful when Strings are frequently used in hash-based
+collections.
+
+
+================================================================================
+40. YOUR COMPLETE DEMO — EXPLAINED
+================================================================================
+
+public class Demo2 {
+
+    public static void main(String[] args) {
+
+        String str1 = "ja" + "va";
+        String str2 = "java";
+
+        System.out.println(str1 == str2);
+
+
+        String s1 = "ja";
+        String s2 = s1 + "va";
+        String s3 = "java";
+
+        System.out.println(str1 == s2);
+        System.out.println(s2 == s3);
+
+
+        String str3 = "Divyansh";
+        String str4 = str3;
+
+        System.out.println(str3 == str4);
+
+
+        String a = "Hello";
+        a = "World";
+
+
+        String b = new String("Singh");
+        String c = "Singh";
+
+        System.out.println(b == c);
+    }
+}
+
+
+OUTPUT:
+
+true
+false
+false
+true
+false
+
+
+================================================================================
+41. WHY EACH OUTPUT?
+================================================================================
+
+1.
+
+String str1 = "ja" + "va";
+String str2 = "java";
+
+str1 == str2
+
+true
+
+Because "ja" + "va" is a compile-time constant and becomes "java".
+
+
+--------------------------------------------------------------------------------
+
+2.
+
+String s1 = "ja";
+String s2 = s1 + "va";
+String s3 = "java";
+
+str1 == s2
+
+false
+
+Because s2 is runtime-generated while str1 points to the pooled "java".
+
+
+--------------------------------------------------------------------------------
+
+3.
+
+s2 == s3
+
+false
+
+s2 -> runtime-generated String
+s3 -> pooled "java"
+
+
+--------------------------------------------------------------------------------
+
+4.
+
+String str3 = "Divyansh";
+String str4 = str3;
+
+str3 == str4
+
+true
+
+Both references point to exactly the same object.
+
+
+--------------------------------------------------------------------------------
+
+5.
+
+String b = new String("Singh");
+String c = "Singh";
+
+b == c
+
+false
+
+b -> separate object created using new
+c -> pooled literal
+
+
+================================================================================
+42. VERY IMPORTANT CORRECTION ABOUT "RUNTIME = HEAP"
+================================================================================
+
+For beginner understanding, remember:
+
+    Compile-time literal/constant
+             -> String Pool
+
+    Runtime-created String
+             -> separate heap object
+
+
+But technically, don't turn this into an absolute JVM law:
+
+    "EVERY runtime String MUST be a separate heap object."
+
+Modern JVMs can perform optimizations, and String creation/concatenation
+implementation has changed over Java versions.
+
+For your current Java learning:
+
+    Compile-time constant -> pooled
+    new String()           -> new object
+    runtime concatenation -> runtime result, distinct from pooled literal
+
+
+This model is the most useful.
+
+
+================================================================================
+43. COMPILE-TIME CONSTANT vs RUNTIME VALUE
+================================================================================
+
+Compile-time:
+
+String a = "Ja" + "va";
+
+Compiler can calculate it.
+
+
+Runtime:
+
+String x = "Ja";
+
+String b = x + "va";
+
+The value depends on x at runtime.
+
+
+Compare:
+
+"Ja" + "va"
+
+vs
+
+x + "va"
+
+
+First:
+
+    compile-time constant
+
+
+Second:
+
+    runtime expression
+
+
+Therefore their String creation behavior can differ.
+
+
+================================================================================
+44. INTERVIEW-LEVEL GOLDEN RULE
+================================================================================
+
+                    STRING CREATION
+                           |
+             ----------------------------
+             |                          |
+       Compile-time                 Runtime
+       constant                     creation
+             |                          |
+             v                          v
+       String Pool              runtime String object
+             |
+       reused if same
+       pooled literal
+
+
+And:
+
+    new String("Java")
+
+explicitly creates a NEW String object.
+
+
+================================================================================
+45. STRING COMPARISON — GOLDEN RULE
+================================================================================
+
+Remember this forever:
+
+    ==
+
+means:
+
+    "Are both references pointing to the SAME object?"
+
+
+While:
+
+    equals()
+
+means:
+
+    "Do both Strings contain the SAME characters?"
+
+
+Example:
+
+String a = new String("Java");
+String b = new String("Java");
+
+
+a == b
+
+false
+
+
+a.equals(b)
+
+true
+
+
+================================================================================
+46. WHY STRING POOL IS POSSIBLE
+================================================================================
+
+String Pool works extremely well because String is immutable.
+
+Imagine:
+
+String a = "Java";
+String b = "Java";
+
+
+Both share:
+
+    "Java"
+
+
+If Strings were mutable:
+
+a changes "Java" -> "Python"
+
+
+Then b could unexpectedly become:
+
+    "Python"
+
+
+That would be disastrous.
+
+
+Because String is immutable:
+
+    shared object cannot be modified.
+
+
+Therefore String Pool is safe and efficient.
+
+
+================================================================================
+47. COMPLETE MEMORY MODEL
+================================================================================
+
+Example:
+
+String a = "Java";
+String b = "Java";
+String c = new String("Java");
+
+
+Conceptually:
+
+                         HEAP
+    +------------------------------------------------+
+    |                                                |
+    |                 STRING POOL                    |
+    |                                                |
+    |              +-------------+                   |
+    |       a ---->|   "Java"    |<---- b            |
+    |              +-------------+                   |
+    |                                                |
+    |              +-------------+                   |
+    |       c ---->|   "Java"    |                   |
+    |              +-------------+                   |
+    |                new object                       |
+    |                                                |
+    +------------------------------------------------+
+
+
+Therefore:
+
+a == b        -> true
+a == c        -> false
+b == c        -> false
+
+But:
+
+a.equals(c)   -> true
+b.equals(c)   -> true
+
+
+================================================================================
+48. CHARACTER vs STRING
+================================================================================
+
+char:
+
+    primitive
+    single character
+    16-bit UTF-16 code unit
+
+
+String:
+
+    class
+    reference type
+    sequence of characters
+    immutable
+    managed by JVM
+    supports String Pool
+
+
+Example:
+
+char ch = 'A';
+
+String s = "A";
+
+
+Even though both represent "A":
+
+    ch -> primitive value
+
+    s  -> reference to String object
+
+
+================================================================================
+49. WHY STRING IS ONE OF THE MOST IMPORTANT CLASSES
+================================================================================
+
+String appears everywhere:
+
+    User input
+    File paths
+    URLs
+    JSON
+    Database data
+    HTTP requests
+    API responses
+    Authentication
+    Names
+    Messages
+    Logging
+    DSA problems
+
+
+Understanding String properly is therefore extremely important for:
+
+    Java
+    DSA
+    Spring Boot
+    Backend development
+    System design
+
+
+================================================================================
+50. FINAL CHEAT SHEET
+================================================================================
+
+CHAR
+--------------------------------------------------------------------------------
+    char = primitive
+    16-bit UTF-16 code unit
+
+
+STRING
+--------------------------------------------------------------------------------
+    String = class
+    package = java.lang
+    String = reference type
+    String = immutable
+
+
+STRING LITERAL
+--------------------------------------------------------------------------------
+
+    String s = "Java";
+
+    "Java" -> String Pool
+
+
+STRING POOL
+--------------------------------------------------------------------------------
+
+    Special JVM-managed area inside heap in modern Java.
+
+    Same literals can share the same String object.
+
+
+HISTORICAL
+--------------------------------------------------------------------------------
+
+    Older Java -> String Pool associated with PermGen
+
+    Java 7+  -> String Pool moved to heap
+
+
+new STRING
+--------------------------------------------------------------------------------
+
+    String s = new String("Java");
+
+    "Java" literal -> pooled
+    new String(...) -> separate String object
+
+
+COMPILE-TIME CONSTANT
+--------------------------------------------------------------------------------
+
+    "Ja" + "va"
+
+    compiler can calculate it
+
+    -> "Java"
+    -> pooled
+
+
+RUNTIME CREATION
+--------------------------------------------------------------------------------
+
+    String x = "Ja";
+    String y = x + "va";
+
+    concatenation happens at runtime
+
+    -> runtime String result
+
+
+COMPARISON
+--------------------------------------------------------------------------------
+
+    ==
+
+    checks reference identity
+
+
+    equals()
+
+    checks content
+
+
+JAVA 9 STRING INTERNAL REPRESENTATION
+--------------------------------------------------------------------------------
+
+    byte[] + coder
+
+
+    coder = 0
+        -> Latin-1
+
+
+    coder = 1
+        -> UTF-16
+
+
+UNICODE
+--------------------------------------------------------------------------------
+
+    Universal character standard for representing characters.
+
+
+UTF-16
+--------------------------------------------------------------------------------
+
+    Unicode encoding.
+    Java char is a 16-bit UTF-16 code unit.
+
+
+HASH
+--------------------------------------------------------------------------------
+
+    String caches hash-related information.
+
+    Why?
+
+    String is immutable
+        ->
+    content doesn't change
+        ->
+    hash doesn't change
+        ->
+    hash can be reused
+
+
+COMPACT STRINGS
+--------------------------------------------------------------------------------
+
+    Before Java 9:
+        char[]
+
+
+    Java 9+:
+        byte[] + coder
+
+
+    Latin-1:
+        more compact
+
+
+    UTF-16:
+        used when Latin-1 cannot represent the String
+
+
+================================================================================
+                         ONE-LINE MEMORY TRICKS
+================================================================================
+
+String Literal:
+
+    "Java"
+      |
+      v
+    String Pool
+
+
+new String():
+
+    new String("Java")
+          |
+          +----> pooled "Java" literal
+          |
+          +----> NEW String object
+
+
+== :
+
+    SAME OBJECT?
+
+
+equals():
+
+    SAME CONTENT?
+
+
+Compile-time:
+
+    compiler knows the value
+          |
+          v
+    String literal / pool
+
+
+Runtime:
+
+    value generated during execution
+          |
+          v
+    runtime String result
+
+
+Java 9:
+
+    char[]  ->  byte[] + coder
+
+
+coder:
+
+    0 -> Latin-1
+    1 -> UTF-16
+
+
+String:
+
+    IMMUTABLE
+       |
+       +----> String Pool possible
+       |
+       +----> Hash caching possible
+       |
+       +----> Thread-safe sharing
+       |
+       +----> Memory optimization
+
+
+================================================================================
+                             FINAL GOLDEN RULE
+================================================================================
+
+                  STRING
+                    |
+       ----------------------------
+       |            |             |
+    Immutable    String Pool   byte[] + coder
+       |            |             |
+       |            |        Compact Strings
+       |            |
+       |       Object Reuse
+       |
+       +------> Hash Caching
+
+
+Remember:
+
+    String literal
+        -> pool
+
+    compile-time constant
+        -> pool/reusable literal
+
+    new String()
+        -> new object
+
+    == 
+        -> reference comparison
+
+    equals()
+        -> content comparison
+
+    Java 9+
+        -> byte[] + coder
+
+    coder 0
+        -> Latin-1
+
+    coder 1
+        -> UTF-16
+
+================================================================================
+*/
+```
