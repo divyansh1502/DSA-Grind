@@ -8,6 +8,8 @@ public class QRder {
     static ArrayList<Integer> cart = new ArrayList<>();
     static double total = 0;
     static String orderID = "1001";
+    static String gmail = "a";
+    static String password = "a";
     public static void main(String[] args) {
         System.out.println("====================QRder===================");
         System.out.println();
@@ -78,10 +80,28 @@ public class QRder {
                     System.out.println("7. You choose View Order");
                     viewOrder();
                     break;
+                case 8:
+                    System.out.println("Thanks for Visting!");
+                    break;
                 default:
                     System.out.println("Invalid Input!");
             }
         }    
+    }
+    // Accesing Food items by ID
+    static int foodbyID(int inp){
+        if(inp == 1) {
+            return 120;
+        } if (inp == 2) {
+            return 180;
+        } if (inp == 3) {
+            return 240;
+        } if (inp == 4) {
+            return 40;
+        } if (inp == 5) {
+            return 80;
+        } 
+        return 1;
     }
     //Food Menu
     static void foodMenu() {
@@ -138,40 +158,50 @@ public class QRder {
     }
     // Add to Cart
     static void addToCart() {
-        String ch = "y";
-        char a = 'y';
-        while(a == 'y') {
+        char ch = 'y';
+        while(ch == 'y') {
             System.out.println();
             System.out.println("==================Add to Cart================");
             System.out.print("Enter Food ID: ");
             int id = sc.nextInt();
             System.out.print("Enter Quantity: ");
             int quantity = sc.nextInt();
+            cart.add(id);
+            cart.add(quantity);
             switch (id) {
                 case 1:
                     System.out.println("Burger * " + quantity + " added to Cart.");
+                    int burgerIndex = cart.indexOf(1);
+                    total += 120 * cart.get(burgerIndex + 1);
                     break;
                 case 2:
                     System.out.println("Pizza * " + quantity + " added to Cart.");
+                    int pizzaIndex = cart.indexOf(2);
+                    total += 180 * cart.get(pizzaIndex + 1);
                     break;
                 case 3:
                     System.out.println("Biryani * " + quantity + " added to Cart.");
+                    int biryaniIndex = cart.indexOf(3);
+                    total += 240 * cart.get(biryaniIndex + 1);
                     break;
                 case 4:
                     System.out.println("Coke * " + quantity + " added to Cart.");
+                    int cokeIndex = cart.indexOf(4);
+                    total += 40 * cart.get(cokeIndex + 1);
                     break;
                 case 5:
                     System.out.println("Pasta * " + quantity + " added to Cart.");
+                    int patsaIndex = cart.indexOf(5);
+                    total += 80 * cart.get(patsaIndex + 1);
                     break;    
                 default:
                     System.out.println("Oops! You entered wrong ID");
                 }
-                cart.add(id);
-                cart.add(quantity);
+                
                 System.out.println();
                 System.out.print("Do you want to add more items (y/n): ");
-                ch = sc.next();
-                a = ch.charAt(0);
+                ch = sc.next().toLowerCase().charAt(0);
+                
             }
             System.out.println("Order added to your cart.");
         
@@ -186,30 +216,23 @@ public class QRder {
             System.out.println("=================Your Cart==================");
         System.out.println("Food        Quantity        Price       Total");
         
+        double price = total;
         for (int i = 0; i < cart.size(); i++) {
             if(i % 2 == 0) {
                 if(cart.get(i) == 1) {
                     System.out.println("Burger         " + cart.get(i + 1) + "            120 Rs      " + 120 * cart.get(i + 1) + " Rs");
-                    total += 120 * cart.get(i + 1);
                 }
                 else if(cart.get(i) == 2) {
                     System.out.println("Pizza          " + cart.get(i + 1) + "            180 Rs      " + 180 * cart.get(i + 1) + " Rs");
-                    total += 180 * cart.get(i + 1);
                 }
                 else if(cart.get(i) == 3) {
                     System.out.println("Biryani        " + cart.get(i + 1) + "            240 Rs      " + 240 * cart.get(i + 1) + " Rs");
-                    total += 240 * cart.get(i + 1);
                 }
                 else if(cart.get(i) == 4) {
                     System.out.println("Coke           " + cart.get(i + 1) + "             40 Rs      " + 40 * cart.get(i + 1) + " Rs");
-                    total += 40 * cart.get(i + 1);
                 }
                 else if(cart.get(i) == 5) {
                     System.out.println("Pasta          " + cart.get(i + 1) + "             80 Rs      " + 80 * cart.get(i + 1) + " Rs");
-                    total += 80 * cart.get(i + 1);
-                }
-                else {
-                    System.out.println("No item in Cart");
                 }
             }
         }
@@ -225,6 +248,8 @@ public class QRder {
         for (int i = 0; i < cart.size(); i++) {
             if(i % 2 == 0) {
                 if(inp == cart.get(i)) {
+                    int price = foodbyID(cart.get(i));
+                    total = total - (price * cart.get(i + 1));
                     cart.remove(cart.get(i));//Remove Food
                     cart.remove(cart.get(i));//Remove Quantity
                     System.out.println("Item Removed Successfully");
@@ -265,19 +290,19 @@ public class QRder {
         for (int i = 0; i < cart.size(); i++) {
             if(i % 2 == 0) {
                 if(cart.get(i) == 1) {
-                    System.out.println("Burger         x" + cart.get(i + 1));
+                    System.out.println("Burger         x" + cart.get(i + 1) + "             Rs. " + 120*cart.get(i + 1));
                 }
                 else if(cart.get(i) == 2) {
-                    System.out.println("Pizza          x" + cart.get(i + 1));
+                    System.out.println("Pizza          x" + cart.get(i + 1) + "             Rs. " + 180*cart.get(i + 1));
                 }
                 else if(cart.get(i) == 3) {
-                    System.out.println("Biryani        x" + cart.get(i + 1));
+                    System.out.println("Biryani        x" + cart.get(i + 1) + "             Rs. " + 240*cart.get(i + 1));
                 }
                 else if(cart.get(i) == 4) {
-                    System.out.println("Coke           x" + cart.get(i + 1));
+                    System.out.println("Coke           x" + cart.get(i + 1) + "             Rs. " + 40*cart.get(i + 1));
                 }
                 else if(cart.get(i) == 5) {
-                    System.out.println("Pasta          x" + cart.get(i + 1));
+                    System.out.println("Pasta          x" + cart.get(i + 1) + "             Rs. " + 80*cart.get(i + 1));
                 }
                 else {
                     System.out.println("No item in Cart");
@@ -290,6 +315,60 @@ public class QRder {
     }
 
     static void admin() {
-        System.out.println("Admin fn");
+        System.out.print("Enter your gmail: ");
+        String mail = sc.next();
+        System.out.print("Enter your password: ");
+        String pass = sc.next();
+        System.out.println();
+        if(gmail.equals(mail) && password.equals(pass)) {
+            System.out.println("Admin logged in successfully!");
+        } else {
+            System.out.println("Wrong gmail or password");
+        }
+        System.out.println();
+        System.out.println("=============================================");
+        System.out.println("                  ADMIN PANNEL               ");
+        System.out.println("=============================================");
+        System.out.println();
+        System.out.println("Welcome, Admin");
+        System.out.println();
+        System.out.println("1. Food Management");
+        System.out.println("2. Order Management");
+        System.out.println("3. Outlet Management");
+        System.out.println("4. View Statsistics");
+        System.out.println("5. Logout");
+        System.out.print("Enter choice: ");
+        int inp = sc.nextInt();
+        FoodManager fm = new FoodManager();
+        switch(inp) {
+            case 1:
+                fm.addFood();
+                break;
+            
+
+        }
     }
+}
+class FoodManager {
+    static Scanner sc = new Scanner(System.in);
+    static ArrayList foodList = new ArrayList<>();
+        void addFood() {
+            System.out.println();
+            System.out.println("=============================================");
+            System.out.println("                    ADD FOOD                 ");
+            System.out.println("=============================================");
+            System.out.println();
+            System.out.print("Food ID       : ");
+            int id = sc.nextInt();
+            sc.nextLine();
+            System.out.print("Food Name     : ");
+            String food = sc.next();
+            sc.nextLine();
+            System.out.print("Category      : ");
+            String category = sc.nextLine();
+            System.out.print("Price         : ");
+            double price = sc.nextDouble();
+            System.out.println(); 
+            System.out.print("Food added successfylly!");
+        }
 }
