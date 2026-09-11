@@ -325,6 +325,8 @@ public class QRder {
         } else {
             System.out.println("Wrong gmail or password");
         }
+        int inp = 0;
+        while(inp != 5) {
         System.out.println();
         System.out.println("=============================================");
         System.out.println("                  ADMIN PANNEL               ");
@@ -338,20 +340,55 @@ public class QRder {
         System.out.println("4. View Statsistics");
         System.out.println("5. Logout");
         System.out.print("Enter choice: ");
-        int inp = sc.nextInt();
+        inp = sc.nextInt();
         FoodManager fm = new FoodManager();
         switch(inp) {
             case 1:
-                fm.addFood();
+                fm.foodOperationMenu();;
                 break;
+            case 2:
+            
             
 
         }
     }
+    }
 }
 class FoodManager {
     static Scanner sc = new Scanner(System.in);
-    static ArrayList foodList = new ArrayList<>();
+    static ArrayList<Food> foodList = new ArrayList<>();
+    
+    void foodOperationMenu() {
+        int inp = 0;
+        while(inp != 6) {
+        System.out.println();
+        System.out.println("=============================================");
+        System.out.println("                FOOD SECTION                 ");
+        System.out.println("=============================================");
+        System.out.println();
+        System.out.println("1. Add Food");
+        System.out.println("2. View Food");
+        System.out.println("3. Search Food");
+        System.out.println("4. Update Food");
+        System.out.println("5. Delete Food");
+        System.out.println("6. Back");
+        System.out.println();
+        System.out.print("Enter choice: ");
+        inp = sc.nextInt();
+        switch (inp) {
+            case 1:
+                addFood();
+                break;
+            case 2:
+                viewFood();
+                break;
+            case 3:
+                searchFood();
+                break;
+             
+        }
+    }
+    }
         void addFood() {
             System.out.println();
             System.out.println("=============================================");
@@ -359,16 +396,50 @@ class FoodManager {
             System.out.println("=============================================");
             System.out.println();
             System.out.print("Food ID       : ");
+            Food f = new Food();
             int id = sc.nextInt();
+            f.setId(id);;
             sc.nextLine();
             System.out.print("Food Name     : ");
             String food = sc.next();
+            f.setFood(food);
             sc.nextLine();
             System.out.print("Category      : ");
             String category = sc.nextLine();
+            f.setCategory(category);
             System.out.print("Price         : ");
             double price = sc.nextDouble();
+            f.setPrice(price);
+            foodList.add(f);
             System.out.println(); 
             System.out.print("Food added successfylly!");
+            System.out.println();
+        }
+        void viewFood() {
+            System.out.println();
+            System.out.println("ID      Name         Category        Price");
+            System.out.println("------------------------------------------------");
+            for (int i = 0; i < foodList.size(); i++) {
+                Food f = foodList.get(i);
+                System.out.println(f.getId() + "     " + f.getFood() + "         " + f.getCategory() + "        " + f.getPrice());
+            }
+        }
+        void searchFood() {
+            System.out.println();
+            System.out.print("Enter Food ID: ");
+            int inp = sc.nextInt();
+            System.out.println();
+            for (int i = 0; i < foodList.size(); i++) {
+                Food f = foodList.get(i);
+                if(inp == f.getId()) {
+                    System.out.println();
+                    System.out.println("Food Found");
+                    System.out.println("Food ID: " + f.getId());
+                    System.out.println("Food Name: " + f.getFood());
+                    System.out.println("Food Category: " + f.getCategory());
+                    System.out.println("Food Price: " + f.getPrice());
+                }
+            }
+            
         }
 }
