@@ -138,34 +138,44 @@ public class QRder {
     }
     // Add to Cart
     static void addToCart() {
-        System.out.println();
-        System.out.println("==================Add to Cart================");
-        System.out.print("Enter Food ID: ");
-        int id = sc.nextInt();
-        System.out.print("Enter Quantity: ");
-        int quantity = sc.nextInt();
-        switch (id) {
-            case 1:
-                System.out.println("Burger * " + quantity + " added to Cart.");
-                break;
-            case 2:
-                System.out.println("Pizza * " + quantity + " added to Cart.");
-                break;
-            case 3:
-                System.out.println("Biryani * " + quantity + " added to Cart.");
-                break;
-            case 4:
-                System.out.println("Coke * " + quantity + " added to Cart.");
-                break;
-            case 5:
-                System.out.println("Pasta * " + quantity + " added to Cart.");
-                break;    
-            default:
-                System.out.println("Oops! You entered wrong ID");
+        String ch = "y";
+        char a = 'y';
+        while(a == 'y') {
+            System.out.println();
+            System.out.println("==================Add to Cart================");
+            System.out.print("Enter Food ID: ");
+            int id = sc.nextInt();
+            System.out.print("Enter Quantity: ");
+            int quantity = sc.nextInt();
+            switch (id) {
+                case 1:
+                    System.out.println("Burger * " + quantity + " added to Cart.");
+                    break;
+                case 2:
+                    System.out.println("Pizza * " + quantity + " added to Cart.");
+                    break;
+                case 3:
+                    System.out.println("Biryani * " + quantity + " added to Cart.");
+                    break;
+                case 4:
+                    System.out.println("Coke * " + quantity + " added to Cart.");
+                    break;
+                case 5:
+                    System.out.println("Pasta * " + quantity + " added to Cart.");
+                    break;    
+                default:
+                    System.out.println("Oops! You entered wrong ID");
+                }
+                cart.add(id);
+                cart.add(quantity);
+                System.out.println();
+                System.out.print("Do you want to add more items (y/n): ");
+                ch = sc.next();
+                a = ch.charAt(0);
             }
-            cart.add(id);
-            cart.add(quantity);
-    }
+            System.out.println("Order added to your cart.");
+        
+        }
     // View Cart
     static void viewCart() {
         System.out.println();
