@@ -4,8 +4,8 @@ public class SumOfDigits {
         System.out.println(sum(12456));
     }
     static int sum(int n) {
-        if(n == 0) {
-            return 0;
+        if(n <= 1) {
+            return 1;
         }
         return n%10 + sum(n/10);
     }
