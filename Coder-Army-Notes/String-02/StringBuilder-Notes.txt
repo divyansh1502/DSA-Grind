@@ -1,0 +1,1287 @@
+/*
+===========================================================
+                    JAVA STRINGS
+===========================================================
+
+String
+String Methods
+StringBuffer
+StringBuilder
+String vs StringBuffer vs StringBuilder
+===========================================================
+*/
+
+
+/*
+===========================================================
+1. WHAT IS A STRING?
+===========================================================
+
+String is a sequence of characters.
+
+Example:
+*/
+
+String name = "Divyansh";
+
+
+// String is a class in Java:
+String s = new String("Hello");
+
+
+/*
+IMPORTANT:
+
+String is NOT a primitive data type.
+
+It is a class present in:
+java.lang.String
+
+Java automatically imports java.lang.*
+
+
+Example:
+*/
+
+String city = "Lucknow";
+
+
+/*
+===========================================================
+2. STRING IMMUTABILITY
+===========================================================
+
+String objects are IMMUTABLE.
+
+Immutable means:
+Once a String object is created, its actual content
+cannot be changed.
+
+Example:
+*/
+
+String s1 = "Hello";
+
+s1.concat(" World");
+
+System.out.println(s1);
+
+// Output:
+// Hello
+
+
+/*
+Why?
+
+concat() creates a NEW String object.
+
+The original "Hello" remains unchanged.
+
+
+If we want to store the new String:
+*/
+
+String s2 = "Hello";
+
+s2 = s2.concat(" World");
+
+System.out.println(s2);
+
+// Output:
+// Hello World
+
+
+/*
+===========================================================
+3. STRING POOL
+===========================================================
+
+Java maintains a special memory area called:
+
+String Constant Pool (SCP)
+
+String literals are generally stored in the String Pool.
+
+Example:
+*/
+
+String a = "Hello";
+String b = "Hello";
+
+
+/*
+Both can refer to the same String object in the
+String Constant Pool.
+
+Therefore:
+*/
+
+System.out.println(a == b);
+
+// Output:
+// true
+
+
+/*
+But when using new:
+
+*/
+
+String c = new String("Hello");
+String d = new String("Hello");
+
+
+/*
+Two different objects are created in Heap memory.
+
+Therefore:
+*/
+
+System.out.println(c == d);
+
+// Output:
+// false
+
+
+/*
+To compare String CONTENT, use equals():
+
+*/
+
+System.out.println(c.equals(d));
+
+// Output:
+// true
+
+
+/*
+===========================================================
+4. IMPORTANT STRING METHODS
+===========================================================
+
+1. length()
+2. charAt()
+3. substring()
+4. concat()
+5. equals()
+6. equalsIgnoreCase()
+7. compareTo()
+8. compareToIgnoreCase()
+9. toUpperCase()
+10. toLowerCase()
+11. trim()
+12. isEmpty()
+13. isBlank()
+14. contains()
+15. startsWith()
+16. endsWith()
+17. indexOf()
+18. lastIndexOf()
+19. replace()
+20. replaceAll()
+21. split()
+22. valueOf()
+===========================================================
+*/
+
+
+/*
+===========================================================
+5. length()
+===========================================================
+
+Returns the number of characters.
+*/
+
+String str = "Hello";
+
+System.out.println(str.length());
+
+// Output:
+// 5
+
+
+/*
+===========================================================
+6. charAt()
+===========================================================
+
+Returns the character at a particular index.
+
+Index starts from 0.
+*/
+
+String str = "Java";
+
+System.out.println(str.charAt(0));
+System.out.println(str.charAt(2));
+
+// Output:
+// J
+// v
+
+
+/*
+===========================================================
+7. substring()
+===========================================================
+
+Used to extract a portion of a String.
+
+substring(beginIndex)
+
+substring(beginIndex, endIndex)
+
+IMPORTANT:
+endIndex is EXCLUSIVE.
+*/
+
+String str = "Hello World";
+
+System.out.println(str.substring(6));
+
+// World
+
+System.out.println(str.substring(0, 5));
+
+// Hello
+
+
+/*
+===========================================================
+8. concat()
+===========================================================
+
+Joins two Strings.
+*/
+
+String first = "Hello";
+String second = " World";
+
+String result = first.concat(second);
+
+System.out.println(result);
+
+// Hello World
+
+
+/*
+IMPORTANT:
+String is immutable, so concat() does not modify
+the original String.
+*/
+
+
+/*
+===========================================================
+9. equals()
+===========================================================
+
+Compares the CONTENT of two Strings.
+*/
+
+String a = "Java";
+String b = "Java";
+
+System.out.println(a.equals(b));
+
+// true
+
+
+/*
+===========================================================
+10. equalsIgnoreCase()
+===========================================================
+
+Compares Strings while ignoring uppercase/lowercase.
+*/
+
+String a = "JAVA";
+String b = "java";
+
+System.out.println(a.equalsIgnoreCase(b));
+
+// true
+
+
+/*
+===========================================================
+11. compareTo()
+===========================================================
+
+Compares two Strings lexicographically.
+
+Returns:
+
+0  -> both Strings are equal
+positive -> first String is greater
+negative -> first String is smaller
+*/
+
+String a = "Apple";
+String b = "Banana";
+
+System.out.println(a.compareTo(b));
+
+// Negative value
+
+
+/*
+===========================================================
+12. compareToIgnoreCase()
+===========================================================
+
+Same as compareTo(), but ignores case.
+*/
+
+String a = "JAVA";
+String b = "java";
+
+System.out.println(a.compareToIgnoreCase(b));
+
+// 0
+
+
+/*
+===========================================================
+13. toUpperCase()
+===========================================================
+
+Converts String into uppercase.
+*/
+
+String name = "divyansh";
+
+System.out.println(name.toUpperCase());
+
+// DIVYANSH
+
+
+/*
+===========================================================
+14. toLowerCase()
+===========================================================
+
+Converts String into lowercase.
+*/
+
+String name = "DIVYANSH";
+
+System.out.println(name.toLowerCase());
+
+// divyansh
+
+
+/*
+===========================================================
+15. trim()
+===========================================================
+
+Removes leading and trailing whitespace.
+
+*/
+
+String str = "   Hello World   ";
+
+System.out.println(str.trim());
+
+// Hello World
+
+
+/*
+NOTE:
+trim() removes whitespace from beginning and end,
+not from the middle.
+*/
+
+
+/*
+===========================================================
+16. isEmpty()
+===========================================================
+
+Returns true if length is 0.
+*/
+
+String str = "";
+
+System.out.println(str.isEmpty());
+
+// true
+
+
+/*
+===========================================================
+17. isBlank()
+===========================================================
+
+Returns true if String is empty OR contains only
+whitespace characters.
+
+Available since Java 11.
+*/
+
+String str = "   ";
+
+System.out.println(str.isBlank());
+
+// true
+
+
+/*
+Difference:
+
+isEmpty()
+"   " -> false
+
+isBlank()
+"   " -> true
+*/
+
+
+/*
+===========================================================
+18. contains()
+===========================================================
+
+Checks whether a sequence exists inside the String.
+*/
+
+String str = "Hello Java";
+
+System.out.println(str.contains("Java"));
+
+// true
+
+
+/*
+===========================================================
+19. startsWith()
+===========================================================
+
+Checks whether String starts with a particular value.
+*/
+
+String str = "Hello World";
+
+System.out.println(str.startsWith("Hello"));
+
+// true
+
+
+/*
+===========================================================
+20. endsWith()
+===========================================================
+
+Checks whether String ends with a particular value.
+*/
+
+String str = "Hello World";
+
+System.out.println(str.endsWith("World"));
+
+// true
+
+
+/*
+===========================================================
+21. indexOf()
+===========================================================
+
+Returns the index of the first occurrence.
+
+*/
+
+String str = "Hello Java";
+
+System.out.println(str.indexOf('a'));
+
+// 7
+
+
+/*
+If element is not found:
+
+*/
+
+System.out.println(str.indexOf('z'));
+
+// -1
+
+
+/*
+===========================================================
+22. lastIndexOf()
+===========================================================
+
+Returns the index of the LAST occurrence.
+*/
+
+String str = "Java Programming";
+
+System.out.println(str.lastIndexOf('a'));
+
+
+/*
+===========================================================
+23. replace()
+===========================================================
+
+Replaces characters or sequences.
+
+*/
+
+String str = "Java";
+
+String result = str.replace('a', 'o');
+
+System.out.println(result);
+
+// Jovo
+
+
+/*
+Example with String:
+*/
+
+String str = "I love Java";
+
+System.out.println(str.replace("Java", "Python"));
+
+// I love Python
+
+
+/*
+===========================================================
+24. replaceAll()
+===========================================================
+
+Uses REGULAR EXPRESSION (Regex).
+*/
+
+String str = "Java123";
+
+String result = str.replaceAll("[0-9]", "");
+
+System.out.println(result);
+
+// Java
+
+
+/*
+===========================================================
+25. split()
+===========================================================
+
+Splits a String into an array.
+
+*/
+
+String str = "Java Python C++";
+
+String[] arr = str.split(" ");
+
+for(String x : arr) {
+    System.out.println(x);
+}
+
+/*
+Output:
+
+Java
+Python
+C++
+*/
+
+
+/*
+===========================================================
+26. valueOf()
+===========================================================
+
+Converts primitive values into String.
+*/
+
+int num = 100;
+
+String str = String.valueOf(num);
+
+System.out.println(str);
+
+
+/*
+===========================================================
+                 STRINGBUFFER
+===========================================================
+
+StringBuffer is a mutable sequence of characters.
+
+Unlike String:
+
+String       -> Immutable
+StringBuffer -> Mutable
+
+
+Package:
+java.lang.StringBuffer
+===========================================================
+*/
+
+
+/*
+Example:
+*/
+
+StringBuffer sb = new StringBuffer("Hello");
+
+sb.append(" World");
+
+System.out.println(sb);
+
+// Hello World
+
+
+/*
+Here the SAME StringBuffer object is modified.
+
+No new String object is required for every modification.
+*/
+
+
+/*
+===========================================================
+27. STRINGBUFFER METHODS
+===========================================================
+
+Important methods:
+
+append()
+insert()
+replace()
+delete()
+deleteCharAt()
+reverse()
+capacity()
+length()
+charAt()
+setCharAt()
+substring()
+===========================================================
+*/
+
+
+/*
+===========================================================
+28. append()
+===========================================================
+
+Adds data at the end.
+*/
+
+StringBuffer sb = new StringBuffer("Hello");
+
+sb.append(" Java");
+
+System.out.println(sb);
+
+// Hello Java
+
+
+/*
+Can append different data types:
+*/
+
+sb.append(100);
+sb.append(10.5);
+sb.append(true);
+
+
+/*
+===========================================================
+29. insert()
+===========================================================
+
+Inserts data at a particular index.
+*/
+
+StringBuffer sb = new StringBuffer("Hello");
+
+sb.insert(5, " Java");
+
+System.out.println(sb);
+
+// Hello Java
+
+
+/*
+===========================================================
+30. delete()
+===========================================================
+
+Deletes characters between startIndex and endIndex.
+
+endIndex is EXCLUSIVE.
+*/
+
+StringBuffer sb = new StringBuffer("Hello World");
+
+sb.delete(5, 11);
+
+System.out.println(sb);
+
+// Hello
+
+
+/*
+===========================================================
+31. deleteCharAt()
+===========================================================
+
+Deletes one character.
+*/
+
+StringBuffer sb = new StringBuffer("Hello");
+
+sb.deleteCharAt(1);
+
+System.out.println(sb);
+
+// Hllo
+
+
+/*
+===========================================================
+32. replace()
+===========================================================
+
+Replaces characters from start to end.
+
+*/
+
+StringBuffer sb = new StringBuffer("Hello World");
+
+sb.replace(6, 11, "Java");
+
+System.out.println(sb);
+
+// Hello Java
+
+
+/*
+===========================================================
+33. reverse()
+===========================================================
+
+Reverses the StringBuffer.
+*/
+
+StringBuffer sb = new StringBuffer("Hello");
+
+sb.reverse();
+
+System.out.println(sb);
+
+// olleH
+
+
+/*
+===========================================================
+34. capacity()
+===========================================================
+
+Returns the current capacity of StringBuffer.
+
+Default capacity:
+
+16 characters
+
+If initialized with String of length n:
+
+capacity = n + 16
+*/
+
+StringBuffer sb = new StringBuffer();
+
+System.out.println(sb.capacity());
+
+// 16
+
+
+StringBuffer sb2 = new StringBuffer("Hello");
+
+System.out.println(sb2.capacity());
+
+// 21
+
+
+/*
+===========================================================
+35. length()
+===========================================================
+
+Returns the number of characters currently stored.
+*/
+
+StringBuffer sb = new StringBuffer("Hello");
+
+System.out.println(sb.length());
+
+// 5
+
+
+/*
+IMPORTANT:
+
+length != capacity
+
+length  -> actual characters
+capacity -> available storage capacity
+*/
+
+
+/*
+===========================================================
+                 STRINGBUILDER
+===========================================================
+
+StringBuilder is also a mutable sequence of characters.
+
+It is very similar to StringBuffer.
+
+Package:
+java.lang.StringBuilder
+
+Main difference:
+
+StringBuffer -> Synchronized
+StringBuilder -> Not synchronized
+===========================================================
+*/
+
+
+/*
+Example:
+*/
+
+StringBuilder sb = new StringBuilder("Hello");
+
+sb.append(" Java");
+
+System.out.println(sb);
+
+// Hello Java
+
+
+/*
+StringBuilder supports almost the same methods as
+StringBuffer:
+
+append()
+insert()
+replace()
+delete()
+deleteCharAt()
+reverse()
+capacity()
+length()
+charAt()
+setCharAt()
+substring()
+*/
+
+
+/*
+===========================================================
+36. STRINGBUILDER EXAMPLE
+===========================================================
+*/
+
+StringBuilder builder = new StringBuilder("Java");
+
+builder.append(" Programming");
+
+builder.insert(5, "Core ");
+
+builder.replace(0, 4, "Advanced");
+
+builder.reverse();
+
+System.out.println(builder);
+
+
+/*
+===========================================================
+37. STRINGBUFFER vs STRINGBUILDER
+===========================================================
+
+StringBuffer and StringBuilder are MUTABLE.
+
+Both are used when we need frequent modifications
+to character sequences.
+
+
+MAIN DIFFERENCE:
+
+StringBuffer:
+-> Thread-safe
+-> Methods are synchronized
+-> Slightly slower
+-> Suitable for multiple-thread environments
+
+StringBuilder:
+-> Not thread-safe
+-> Methods are not synchronized
+-> Faster
+-> Suitable for single-threaded environments
+===========================================================
+*/
+
+
+/*
+===========================================================
+38. STRING vs STRINGBUFFER vs STRINGBUILDER
+===========================================================
+*/
+
+/*
+
++------------------+-------------+----------------+----------------+
+| Feature          | String      | StringBuffer   | StringBuilder  |
++------------------+-------------+----------------+----------------+
+| Mutable?         | No          | Yes            | Yes            |
+| Modification     | New object  | Same object    | Same object    |
+| Thread Safe?     | Immutable   | Yes            | No             |
+| Synchronized?    | N/A         | Yes            | No             |
+| Performance      | Slower for  | Slower than    | Faster         |
+|                  | many edits  | Builder        |                |
+| Introduced       | Java 1.0    | Java 1.0      | Java 5         |
+| Best Use         | Fixed text  | Multi-thread   | Single-thread  |
++------------------+-------------+----------------+----------------+
+
+*/
+
+
+/*
+===========================================================
+39. WHEN TO USE WHAT?
+===========================================================
+
+USE STRING WHEN:
+
+-> Text does not change frequently.
+-> You need immutable data.
+-> You are storing names, messages, URLs etc.
+
+Example:
+*/
+
+String name = "Divyansh";
+
+
+/*
+USE STRINGBUFFER WHEN:
+
+-> String content changes frequently.
+-> Multiple threads may access/modify the same object.
+-> Thread safety is required.
+*/
+
+StringBuffer buffer = new StringBuffer("Hello");
+
+
+/*
+USE STRINGBUILDER WHEN:
+
+-> String content changes frequently.
+-> Only one thread is working with the object.
+-> Performance is important.
+*/
+
+StringBuilder builder = new StringBuilder("Hello");
+
+
+/*
+===========================================================
+40. WHY STRINGBUILDER IS FASTER THAN STRING?
+===========================================================
+
+Consider:
+
+*/
+
+String str = "A";
+
+str = str + "B";
+str = str + "C";
+str = str + "D";
+
+
+/*
+Because String is immutable, every modification may
+create a new String object.
+
+Conceptually:
+
+"A"
+"AB"
+"ABC"
+"ABCD"
+
+
+This creates unnecessary objects.
+
+Instead:
+
+*/
+
+StringBuilder sb = new StringBuilder("A");
+
+sb.append("B");
+sb.append("C");
+sb.append("D");
+
+
+/*
+The same mutable object can be modified.
+
+Therefore StringBuilder is generally better for
+repeated String modifications.
+*/
+
+
+/*
+===========================================================
+41. STRING IMMUTABILITY vs STRINGBUFFER/BUILDER
+===========================================================
+
+String:
+
+String s = "Hello";
+
+s = s + " World";
+
+
+/*
+Original "Hello" cannot be changed.
+
+A new String is created.
+
+--------------------------------------------
+
+StringBuffer:
+*/
+
+StringBuffer sb = new StringBuffer("Hello");
+
+sb.append(" World");
+
+
+/*
+Existing StringBuffer object is modified.
+
+--------------------------------------------
+
+StringBuilder:
+*/
+
+StringBuilder builder = new StringBuilder("Hello");
+
+builder.append(" World");
+
+
+/*
+Existing StringBuilder object is modified.
+*/
+
+
+/*
+===========================================================
+42. COMMON INTERVIEW QUESTION
+===========================================================
+
+Q: Difference between == and equals() for String?
+
+==
+
+Checks whether two references point to the same object.
+
+equals()
+
+Checks whether two Strings have the same content.
+
+Example:
+*/
+
+String a = new String("Java");
+String b = new String("Java");
+
+System.out.println(a == b);
+
+// false
+
+System.out.println(a.equals(b));
+
+// true
+
+
+/*
+===========================================================
+43. IMPORTANT MEMORY CONCEPT
+===========================================================
+
+String literals:
+
+*/
+
+String a = "Java";
+String b = "Java";
+
+
+/*
+Usually both refer to the same pooled String object.
+
+          STRING POOL
+
+              "Java"
+              /    \
+             /      \
+            a        b
+
+
+Therefore:
+*/
+
+a == b
+
+// true
+
+
+/*
+Using new:
+
+*/
+
+String c = new String("Java");
+String d = new String("Java");
+
+
+/*
+
+             HEAP
+
+          "Java"       "Java"
+             ↑             ↑
+             c             d
+
+c == d -> false
+
+c.equals(d) -> true
+*/
+
+
+/*
+===========================================================
+44. QUICK CHEAT SHEET
+===========================================================
+*/
+
+/*
+
+STRING
+------
+Immutable
+String Pool
+Safe to share because immutable
+Best for text that doesn't change frequently
+
+Important methods:
+length()
+charAt()
+substring()
+concat()
+equals()
+compareTo()
+contains()
+indexOf()
+replace()
+split()
+trim()
+toUpperCase()
+toLowerCase()
+
+
+STRINGBUFFER
+------------
+Mutable
+Thread-safe
+Synchronized
+Slower than StringBuilder
+Good for multi-threaded modification
+
+
+STRINGBUILDER
+-------------
+Mutable
+Not thread-safe
+Not synchronized
+Faster than StringBuffer
+Good for single-threaded modification
+
+
+===========================================================
+MOST IMPORTANT DIFFERENCE
+===========================================================
+
+String
+   ↓
+Immutable
+
+StringBuffer
+   ↓
+Mutable + Thread Safe
+
+StringBuilder
+   ↓
+Mutable + Not Thread Safe + Faster
+
+
+===========================================================
+MEMORY TRICK
+===========================================================
+
+STRING
+   = "STAYS SAME"
+
+STRINGBUFFER
+   = "SAFE FOR THREADS"
+
+STRINGBUILDER
+   = "BUILDS FAST"
+
+
+===========================================================
+ONE-LINE INTERVIEW ANSWERS
+===========================================================
+
+String:
+"String is an immutable sequence of characters."
+
+StringBuffer:
+"StringBuffer is a mutable and thread-safe sequence
+of characters."
+
+StringBuilder:
+"StringBuilder is a mutable, non-thread-safe sequence
+of characters designed for better performance."
+
+
+StringBuffer vs StringBuilder:
+"StringBuffer is synchronized and thread-safe, whereas
+StringBuilder is non-synchronized and generally faster."
+
+String vs StringBuilder:
+"String is immutable, while StringBuilder is mutable."
+
+===========================================================
+*/
