@@ -7,6 +7,7 @@ public class QRder {
     static Scanner sc = new Scanner(System.in);
     static ArrayList<Integer> cart = new ArrayList<>();
     static double total = 0;
+    static int Uinp = 0;
     static String orderID = "1001";
     static String gmail = "a";
     static String password = "a";
@@ -20,8 +21,8 @@ public class QRder {
         System.out.print("Enter a Input: ");
         int inp = sc.nextInt();
         System.out.println();
-
-        switch (inp) {
+        while(inp != 3) {
+            switch (inp) {
             case 1:
                 user();
                 break;
@@ -34,9 +35,12 @@ public class QRder {
             default:
                 System.out.println("Invalid input");
         }
+        }
+        
     }
     static void user() {
-        while(true) {
+        
+        while(Uinp != 8) {
             System.out.println("===============USER CONSOLE=================");
             System.out.println();
             System.out.println("1. View Food Menu");
@@ -46,12 +50,12 @@ public class QRder {
             System.out.println("5. Remove Food from Cart");
             System.out.println("6. Place Order");
             System.out.println("7. View Order");
-            System.out.println("8. Exit");
+            System.out.println("8. Back");
             System.out.println();
             System.out.print("Enter a Input: ");
-            int inp = sc.nextInt();
+            Uinp = sc.nextInt();
 
-            switch (inp) {
+            switch (Uinp) {
                 case 1:
                     System.out.println("1. You choose View Food Menu");
                     foodMenu();
@@ -81,7 +85,8 @@ public class QRder {
                     viewOrder();
                     break;
                 case 8:
-                    System.out.println("Thanks for Visting!");
+                    System.out.println("Leaving user screen");
+                    QRder.main(null);
                     break;
                 default:
                     System.out.println("Invalid Input!");
@@ -311,7 +316,7 @@ public class QRder {
         }
         System.out.println();
         System.out.println("Total amount: " + total);
-        System.out.println("Status: PLACED");
+        System.out.println("Status: "  + OrderManager.status);
     }
 
     static void admin() {
@@ -342,11 +347,17 @@ public class QRder {
         System.out.print("Enter choice: ");
         inp = sc.nextInt();
         FoodManager fm = new FoodManager();
+        OrderManager om = new OrderManager();
         switch(inp) {
             case 1:
                 fm.foodOperationMenu();;
                 break;
             case 2:
+                om.orderManager();
+                break;
+            case 5:
+                QRder.main(null);
+                break;
             
             
 
@@ -385,7 +396,17 @@ class FoodManager {
             case 3:
                 searchFood();
                 break;
-             
+            case 4:
+                updateFood();
+                break;
+            case 5:
+                deleteFood();
+                break;
+             case 6:
+                System.out.print("Food Section Exited!");
+                break;
+            default:
+                System.out.println("Invalid Button");
         }
     }
     }
@@ -441,5 +462,49 @@ class FoodManager {
                 }
             }
             
+        }
+        void updateFood() {
+            System.out.println();
+            System.out.print("Enter food ID: ");
+            int inp = sc.nextInt();
+            for (int i = 0; i < foodList.size(); i++) {
+                Food f = foodList.get(i);
+                if(f.getId() == inp) {
+                    System.out.println("Food Found");
+                    System.out.println();
+                    System.out.println("Food ID: " + f.getId());
+                    System.out.println("Food Name: " + f.getFood());
+                    System.out.println("Food Category: " + f.getCategory());
+                    System.out.println("Food Price: " + f.getPrice());
+                    System.out.println();
+                    System.out.println("=============Update Food============");
+                    System.out.print("Food ID: ");
+                    f.setId(sc.nextInt());
+                    System.out.print("Food Name: ");
+                    f.setFood(sc.next());
+                    System.out.print("Food Category: ");
+                    f.setCategory(sc.next());
+                    System.out.print("Food Price");
+                    f.setPrice(sc.nextDouble());
+                }
+                else {
+                    System.out.println("Wrong ID");
+                }
+            }
+        }
+        void deleteFood() {
+            System.out.println();
+            System.out.print("Enter food ID: ");
+            int inp = sc.nextInt();
+            for (int i = 0; i < foodList.size(); i++) {
+                Food f = foodList.get(i);
+                if(inp == f.getId()) {
+                    foodList.remove(i);
+                    System.out.print("Food Removed Successfully!");
+                } else {
+                    System.out.println("Wrong ID");
+                }
+                
+            }
         }
 }
