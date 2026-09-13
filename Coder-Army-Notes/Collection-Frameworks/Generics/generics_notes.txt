@@ -1,0 +1,1743 @@
+/*
+============================================================
+                    JAVA GENERICS
+============================================================
+
+Topics Covered:
+1. Upcasting
+2. Downcasting
+3. ClassCastException
+4. Limitation without Generics
+5. What are Generics?
+6. How Generics deal with ClassCastException
+7. Type Inference
+8. Generic Class
+9. Generic Methods
+10. Multiple Type Parameters
+11. Bounds in Generics
+12. Upper Bound
+13. Generic Class with Class + Interface Bound
+
+============================================================
+*/
+
+
+/*
+============================================================
+1. UPCASTING
+============================================================
+
+Upcasting means:
+
+    Converting a child/subclass reference into a
+    parent/superclass reference.
+
+Example:
+
+    String is a subclass of Object.
+
+    String
+       ↓
+    Object
+
+So:
+
+    String s = "Hello";
+    Object obj = s;
+
+This is UPCASTING.
+
+Why is it called upcasting?
+
+Because we move UP the inheritance hierarchy:
+
+        Object
+          ↑
+        String
+
+String → Object
+
+IMPORTANT:
+    Upcasting is generally safe because every String IS-A Object.
+
+Also, Java performs this conversion automatically.
+
+Example:
+*/
+
+String s = "Hello";
+
+Object obj = s;       // Upcasting
+
+System.out.println(obj);
+
+
+/*
+Output:
+
+Hello
+
+
+Think of it like:
+
+    String → Object
+
+No explicit cast is required.
+
+------------------------------------------------------------
+
+WHY IS THIS SAFE?
+
+Because String inherits from Object.
+
+Every String is an Object.
+
+Therefore:
+
+    Object obj = "Hello";
+
+is completely valid.
+
+============================================================
+*/
+
+
+/*
+============================================================
+2. DOWNCASTING
+============================================================
+
+Downcasting means:
+
+    Converting a parent/superclass reference back into
+    a child/subclass reference.
+
+Example:
+
+    Object
+      ↑
+    String
+
+Object → String
+
+Example:
+*/
+
+Object obj2 = "Divyansh";
+
+String s2 = (String) obj2;    // Downcasting
+
+System.out.println(s2);
+
+
+/*
+Here:
+
+    obj2 has reference type Object.
+
+But the actual object stored inside it is a String.
+
+Therefore we can convert it back:
+
+    Object → String
+
+This is called DOWNCASTING.
+
+IMPORTANT:
+
+Downcasting usually requires an explicit cast.
+
+        (String)
+
+------------------------------------------------------------
+
+UPCASTING:
+
+    String s = "Hello";
+    Object obj = s;
+
+    String → Object
+
+    Automatic
+    No explicit cast
+
+------------------------------------------------------------
+
+DOWNCASTING:
+
+    Object obj = "Hello";
+    String s = (String)obj;
+
+    Object → String
+
+    Explicit cast required
+
+============================================================
+*/
+
+
+/*
+============================================================
+3. CLASSCASTEXCEPTION
+============================================================
+
+ClassCastException occurs when we try to downcast an object
+into a type that it is NOT actually an object of.
+
+Example:
+*/
+
+Object obj3 = 10;
+
+String a = (String)obj3;
+
+
+/*
+This causes:
+
+    ClassCastException
+
+Why?
+
+Because:
+
+    obj3 actually contains an Integer.
+
+But we are saying:
+
+    "Treat this Integer as a String."
+
+Java says:
+
+    Integer cannot be converted to String.
+
+------------------------------------------------------------
+
+Visualize it:
+
+    Object obj3 = 10;
+
+Actual object:
+
+    Object
+      ↑
+    Integer
+      ↑
+      10
+
+But we try:
+
+    Object → String
+
+That is invalid.
+
+Therefore:
+
+    ClassCastException
+
+============================================================
+*/
+
+
+/*
+============================================================
+4. DEMO2 — LIMITATION WITHOUT GENERICS
+============================================================
+
+Consider this class:
+
+*/
+
+class Box {
+
+    private Object value;
+
+    Box(Object value) {
+        this.value = value;
+    }
+
+    Object getValue() {
+        return this.value;
+    }
+
+    void setValue(Object value) {
+        this.value = value;
+    }
+}
+
+
+/*
+Because value is declared as Object:
+
+    private Object value;
+
+we can store almost any object inside Box.
+
+Example:
+*/
+
+Box b1 = new Box(10);
+Box b2 = new Box("Hello");
+Box b3 = new Box(true);
+
+
+/*
+Conceptually:
+
+    b1 → Integer
+    b2 → String
+    b3 → Boolean
+
+But getValue() returns:
+
+    Object
+
+because the method is:
+
+    Object getValue()
+
+Therefore we need downcasting when retrieving values.
+
+Example:
+*/
+
+Integer a = (Integer)b1.getValue();
+String b = (String)b2.getValue();
+Boolean c = (Boolean)b3.getValue();
+
+
+/*
+Now:
+
+    b1.getValue() → Object
+    ↓
+    Integer
+
+    b2.getValue() → Object
+    ↓
+    String
+
+    b3.getValue() → Object
+    ↓
+    Boolean
+
+------------------------------------------------------------
+
+THE BIG PROBLEM:
+
+Java does not know what type of value the Box is supposed
+to contain.
+
+For example:
+
+    Box b = new Box(10);
+
+Java only knows:
+
+    b contains an Object.
+
+It does NOT remember:
+
+    "This Box is specifically an Integer Box."
+
+Therefore we have to manually tell Java:
+
+    (Integer)
+    (String)
+    (Boolean)
+
+This is one of the major limitations of using Object.
+
+============================================================
+*/
+
+
+/*
+============================================================
+5. PROBLEM WITH WRONG DOWNCASTING
+============================================================
+
+Suppose we accidentally do this:
+
+*/
+
+Box b = new Box(10);
+
+String x = (String)b.getValue();
+
+
+/*
+The actual value is:
+
+    Integer
+
+But we are casting it to:
+
+    String
+
+Therefore:
+
+    ClassCastException
+
+will occur at RUNTIME.
+
+------------------------------------------------------------
+
+This is dangerous because the compiler cannot know what
+type of Object will actually be inside the Box.
+
+============================================================
+*/
+
+
+/*
+============================================================
+6. WHAT ARE GENERICS?
+============================================================
+
+Generics allow us to specify the TYPE that a class/method
+should work with.
+
+Instead of:
+
+    Box
+
+we can create:
+
+    Box<Integer>
+    Box<String>
+    Box<Boolean>
+
+Here:
+
+    Integer
+    String
+    Boolean
+
+are the actual types supplied to the generic class.
+
+The generic type is represented using:
+
+    T
+
+Example:
+*/
+
+class Box<T> {
+
+    private T value;
+
+    Box(T value) {
+        this.value = value;
+    }
+
+    T getValue() {
+        return this.value;
+    }
+
+    void setValue(T value) {
+        this.value = value;
+    }
+}
+
+
+/*
+Here:
+
+    T
+
+is called a TYPE PARAMETER.
+
+It is like a placeholder for a type.
+
+------------------------------------------------------------
+
+When we write:
+
+    Box<Integer>
+
+T becomes:
+
+    Integer
+
+When we write:
+
+    Box<String>
+
+T becomes:
+
+    String
+
+When we write:
+
+    Box<Boolean>
+
+T becomes:
+
+    Boolean
+
+Think:
+
+    T = "some type that will be decided later"
+
+============================================================
+*/
+
+
+/*
+============================================================
+7. GENERIC CLASS — DEMO3
+============================================================
+*/
+
+Box<Integer> b1 = new Box<>(10);
+Box<String> b2 = new Box<>("Hello");
+Box<Boolean> b3 = new Box<>(false);
+
+
+/*
+Now each Box has a specific type.
+
+    b1 → Box<Integer>
+    b2 → Box<String>
+    b3 → Box<Boolean>
+
+Therefore Java knows exactly what each Box should contain.
+
+------------------------------------------------------------
+
+For b1:
+
+    Box<Integer>
+
+So:
+
+    T = Integer
+
+Therefore:
+
+    getValue() returns Integer
+
+For b2:
+
+    Box<String>
+
+So:
+
+    T = String
+
+Therefore:
+
+    getValue() returns String
+
+For b3:
+
+    Box<Boolean>
+
+So:
+
+    T = Boolean
+
+Therefore:
+
+    getValue() returns Boolean
+
+============================================================
+*/
+
+
+/*
+============================================================
+8. ADVANTAGE OF GENERICS
+============================================================
+
+Without Generics:
+
+    Object getValue()
+
+With Generics:
+
+    T getValue()
+
+Therefore:
+
+    Box<Integer> → Integer getValue()
+    Box<String>  → String getValue()
+    Box<Boolean> → Boolean getValue()
+
+This removes the need for explicit downcasting.
+
+Example:
+*/
+
+System.out.println(b1.getValue() + 5);
+
+System.out.println(b2.getValue() + 5);
+
+System.out.println(b3.getValue());
+
+
+/*
+No:
+
+    (Integer)
+    (String)
+    (Boolean)
+
+is required.
+
+Why?
+
+Because Java already knows the type.
+
+============================================================
+*/
+
+
+/*
+============================================================
+9. HOW GENERICS DEAL WITH CLASSCASTEXCEPTION
+============================================================
+
+This is an important point.
+
+WITHOUT GENERICS:
+
+*/
+
+Box b = new Box(10);
+
+String x = (String)b.getValue();
+
+
+/*
+We can write the wrong cast.
+
+The compiler doesn't know the actual type of Object.
+
+The problem appears when the program runs.
+
+Result:
+
+    ClassCastException
+
+------------------------------------------------------------
+
+WITH GENERICS:
+
+*/
+
+Box<Integer> b1 = new Box<>(10);
+
+
+/*
+Now Java knows:
+
+    b1 can contain only Integer.
+
+So:
+
+*/
+
+Integer x = b1.getValue();     // Correct
+
+
+/*
+And this is not allowed:
+
+*/
+
+String x = b1.getValue();
+
+
+/*
+The compiler catches the type mismatch before the program
+runs.
+
+So Generics provide:
+
+    COMPILE-TIME TYPE SAFETY
+
+------------------------------------------------------------
+
+VERY IMPORTANT:
+
+Generics don't mean that ClassCastException can NEVER exist
+in Java.
+
+The main point at this level is:
+
+    Generics prevent many incorrect casts by checking
+    types at compile time.
+
+Instead of discovering the problem later during runtime,
+the compiler can catch the type mismatch earlier.
+
+============================================================
+*/
+
+
+/*
+============================================================
+10. LIMITATION WITHOUT GENERICS
+============================================================
+
+Without Generics:
+
+    Object is used to store different types.
+
+Example:
+
+    Box b = new Box(10);
+
+Problem:
+
+    getValue() returns Object.
+
+Therefore we need:
+
+    (Integer)
+
+to get Integer.
+
+And if we make a wrong assumption:
+
+    (String)
+
+we get ClassCastException at runtime.
+
+------------------------------------------------------------
+
+With Generics:
+
+    Box<Integer> b = new Box<>(10);
+
+Java knows:
+
+    "This Box is for Integer."
+
+Therefore:
+
+    b.getValue()
+
+already returns Integer.
+
+No manual downcasting is required.
+
+============================================================
+*/
+
+
+/*
+============================================================
+11. TYPE INFERENCE
+============================================================
+
+Type inference means:
+
+    Java automatically figures out the type based on
+    the value/context provided.
+
+Example:
+
+*/
+
+Box<Integer> b1 = new Box<>(10);
+
+
+/*
+Notice:
+
+    Box<Integer>
+
+but:
+
+    new Box<>()
+
+We didn't write:
+
+    new Box<Integer>()
+
+The <> is called the diamond operator.
+
+Java infers:
+
+    T = Integer
+
+because the left side says:
+
+    Box<Integer>
+
+and the constructor receives:
+
+    10
+
+which is compatible with Integer.
+
+------------------------------------------------------------
+
+Another example:
+
+*/
+
+Box<String> b2 = new Box<>("Hello");
+
+
+/*
+Java infers:
+
+    T = String
+
+------------------------------------------------------------
+
+So:
+
+    <> = "Java, figure out the type for me."
+
+============================================================
+*/
+
+
+/*
+============================================================
+12. GENERIC METHODS
+============================================================
+
+Generics are not limited to classes.
+
+We can also create generic methods.
+
+Example from Demo5:
+*/
+
+public static <T> T getResult(T x) {
+    return x;
+}
+
+
+/*
+Here:
+
+    <T>
+
+is the TYPE PARAMETER of the method.
+
+And:
+
+    T
+
+before getResult is the RETURN TYPE.
+
+So:
+
+    public static <T> T getResult(T x)
+
+means:
+
+    "This method works with some type T and returns
+     the same type T."
+
+------------------------------------------------------------
+
+Example:
+*/
+
+String s = "Hello";
+
+System.out.println(getResult(s));
+
+
+/*
+Java sees:
+
+    T = String
+
+Therefore conceptually:
+
+    String getResult(String x)
+
+------------------------------------------------------------
+
+Example:
+*/
+
+Integer i = 101;
+
+System.out.println(getResult(i));
+
+
+/*
+Here:
+
+    T = Integer
+
+Conceptually:
+
+    Integer getResult(Integer x)
+
+============================================================
+*/
+
+
+/*
+============================================================
+13. TYPE INFERENCE IN GENERIC METHODS
+============================================================
+
+Demo5:
+
+*/
+
+print("Divyansh", 22);
+
+
+/*
+Method:
+
+*/
+
+public static <T, U> void print(T name, U age) {
+    System.out.println(name + ": " + age);
+}
+
+
+/*
+Java automatically infers:
+
+    T = String
+    U = Integer
+
+because:
+
+    "Divyansh" → String
+    22          → int → Integer when used as U
+
+So we don't need to write:
+
+    print<String, Integer>("Divyansh", 22);
+
+Java figures it out automatically.
+
+This is TYPE INFERENCE.
+
+============================================================
+*/
+
+
+/*
+============================================================
+14. MULTIPLE TYPE PARAMETERS
+============================================================
+
+A generic class can have more than one type parameter.
+
+Demo4:
+
+*/
+
+class Pair<T, U> {
+
+    T first;
+    U second;
+
+    Pair(T first, U second) {
+        this.first = first;
+        this.second = second;
+    }
+}
+
+
+/*
+Here:
+
+    T = first type
+    U = second type
+
+Example:
+*/
+
+Pair<String, Integer> p =
+        new Pair<>("Divyansh Singh", 21);
+
+
+/*
+Java infers:
+
+    T = String
+    U = Integer
+
+Therefore:
+
+    first  → String
+    second → Integer
+
+So:
+
+*/
+
+System.out.println(p.first + ": " + p.second);
+
+
+/*
+Output:
+
+Divyansh Singh: 21
+
+------------------------------------------------------------
+
+IMPORTANT:
+
+T and U are just names.
+
+They don't have any special meaning.
+
+You could technically use:
+
+    <A, B>
+
+or:
+
+    <X, Y>
+
+But commonly:
+
+    T = Type
+    U = another Type
+
+============================================================
+*/
+
+
+/*
+============================================================
+15. GENERIC CLASS — BASIC STRUCTURE
+============================================================
+
+General form:
+
+    class ClassName<T> {
+
+        T variable;
+
+        ClassName(T variable) {
+            this.variable = variable;
+        }
+
+        T getValue() {
+            return variable;
+        }
+    }
+
+Example:
+*/
+
+class Box<T> {
+
+    T value;
+
+}
+
+
+/*
+T is a placeholder.
+
+When creating the object:
+
+*/
+
+Box<Integer> b1 = new Box<>();
+
+
+/*
+T becomes Integer.
+
+When:
+
+*/
+
+Box<String> b2 = new Box<>();
+
+
+/*
+T becomes String.
+
+============================================================
+*/
+
+
+/*
+============================================================
+16. BOUNDS IN GENERICS
+============================================================
+
+Sometimes we don't want T to be absolutely ANY type.
+
+We can restrict T.
+
+This restriction is called a:
+
+    BOUND
+
+Example from Demo6:
+
+*/
+
+class Box<T extends Number> {
+
+    T value;
+
+    public void printValue() {
+        System.out.println(value.doubleValue());
+    }
+}
+
+
+/*
+Here:
+
+    T extends Number
+
+means:
+
+    T must be Number or a subclass of Number.
+
+Examples:
+
+    Integer   → Number
+    Double    → Number
+    Float     → Number
+
+So these are valid:
+
+*/
+
+Box<Integer> b1 = new Box<>();
+Box<Double> b2 = new Box<>();
+Box<Float> b3 = new Box<>();
+
+
+/*
+But something like:
+
+    Box<String>
+
+is NOT valid because String does not extend Number.
+
+------------------------------------------------------------
+
+WHY USE THIS?
+
+Because now Java knows that T is at least a Number.
+
+Therefore we can use Number methods available through
+the bound.
+
+Example:
+
+    value.doubleValue()
+
+Java knows this method exists because T extends Number.
+
+============================================================
+*/
+
+
+/*
+============================================================
+17. UPPER BOUND
+============================================================
+
+The syntax:
+
+    <T extends Number>
+
+is called an UPPER BOUND.
+
+It means:
+
+    T can be Number OR any subclass of Number.
+
+Visual:
+
+                Number
+               /  |   \
+              /   |    \
+         Integer Double Float
+              ↑
+              |
+              T can be one of these
+
+------------------------------------------------------------
+
+Remember:
+
+    extends
+
+in generic bounds means:
+
+    "T must be this class or a subclass."
+
+============================================================
+*/
+
+
+/*
+============================================================
+18. CLASS + INTERFACE BOUND
+============================================================
+
+You also saw:
+
+    <T extends Animal & Swimmable>
+
+This means:
+
+    T must extend Animal
+    AND
+    T must implement Swimmable.
+
+Example:
+
+*/
+
+class Box<T extends Animal & Swimmable> {
+
+    T value;
+}
+
+
+/*
+Now T must satisfy BOTH conditions.
+
+------------------------------------------------------------
+
+Our classes:
+
+*/
+
+class Animal {
+
+    void Display() {
+        System.out.println("Animal is displaying");
+    }
+}
+
+
+interface Swimmable {
+
+    void swim();
+}
+
+
+class Dog extends Animal {
+
+}
+
+
+class Fish extends Animal implements Swimmable {
+
+    @Override
+    public void swim() {
+        System.out.println("Fish is swimmimg");
+    }
+}
+
+
+/*
+Fish satisfies both:
+
+    Fish extends Animal
+    Fish implements Swimmable
+
+Therefore:
+
+*/
+
+Box<Fish> b1 = new Box<>();
+
+
+/*
+is valid.
+
+------------------------------------------------------------
+
+But:
+
+*/
+
+Box<Dog> b2 = new Box<>();
+
+
+/*
+would NOT be valid because:
+
+    Dog extends Animal
+
+but:
+
+    Dog does NOT implement Swimmable.
+
+------------------------------------------------------------
+
+IMPORTANT RULE:
+
+When using:
+
+    <T extends Class & Interface1 & Interface2>
+
+the CLASS comes first.
+
+Example:
+
+    <T extends Animal & Swimmable>
+
+NOT:
+
+    <T extends Swimmable & Animal>
+
+at this basic level, remember:
+
+    Class → Interface → Interface → ...
+
+============================================================
+*/
+
+
+/*
+============================================================
+19. DEMO7 — WHY THE BOUND IS USEFUL
+============================================================
+
+Suppose:
+
+*/
+
+class Box<T extends Animal & Swimmable> {
+
+    T value;
+}
+
+
+/*
+Now Java knows that T has:
+
+    Animal methods
+          +
+    Swimmable methods
+
+Therefore we can do:
+
+*/
+
+value.Display();
+value.swim();
+
+
+/*
+Because:
+
+    T extends Animal
+        ↓
+    Display() is available
+
+AND
+
+    T implements Swimmable
+        ↓
+    swim() is available
+
+------------------------------------------------------------
+
+With only:
+
+    <T extends Animal>
+
+Java would know about:
+
+    Display()
+
+but NOT:
+
+    swim()
+
+because Animal doesn't contain swim().
+
+============================================================
+*/
+
+
+/*
+============================================================
+20. VERY IMPORTANT COMPARISON
+============================================================
+
+WITHOUT GENERICS:
+
+*/
+
+class Box {
+
+    Object value;
+
+}
+
+
+/*
+Java sees:
+
+    value → Object
+
+So retrieving it gives:
+
+    Object
+
+You often need:
+
+    Downcasting
+
+Example:
+
+    Integer x = (Integer)value;
+
+Problem:
+
+    Wrong casting can cause ClassCastException at runtime.
+
+------------------------------------------------------------
+
+WITH GENERICS:
+
+*/
+
+class Box<T> {
+
+    T value;
+
+}
+
+
+/*
+Example:
+
+    Box<Integer>
+
+Java knows:
+
+    T = Integer
+
+Therefore:
+
+    value → Integer
+
+No explicit downcasting is needed.
+
+Wrong types are generally caught by the compiler.
+
+============================================================
+*/
+
+
+/*
+============================================================
+21. QUICK DIFFERENCE
+============================================================
+
+                WITHOUT GENERICS
+                -----------------
+
+    Box b = new Box(10);
+
+    b.getValue()
+          ↓
+       Object
+          ↓
+    Need casting
+          ↓
+    (Integer)
+          ↓
+    Integer
+
+
+                WITH GENERICS
+                -------------
+
+    Box<Integer> b = new Box<>(10);
+
+    b.getValue()
+          ↓
+       Integer
+
+    No manual casting.
+
+============================================================
+*/
+
+
+/*
+============================================================
+22. UPCASTING vs DOWNCASTING
+============================================================
+
+UPCASTING:
+
+    Child → Parent
+
+Example:
+
+    String → Object
+
+    String s = "Hello";
+    Object obj = s;
+
+    Usually automatic and safe.
+
+
+DOWNCASTING:
+
+    Parent → Child
+
+Example:
+
+    Object → String
+
+    Object obj = "Hello";
+    String s = (String)obj;
+
+    Explicit cast required.
+
+    Can cause ClassCastException if the actual object
+    is not a String.
+
+============================================================
+*/
+
+
+/*
+============================================================
+23. CLASSCASTEXCEPTION — EASY EXAMPLE
+============================================================
+
+Correct:
+
+*/
+
+Object obj = "Hello";
+
+String s = (String)obj;
+
+
+/*
+Actual object = String
+Cast = String
+
+Therefore:
+
+    ✅ Works
+
+
+Incorrect:
+
+*/
+
+Object obj = 10;
+
+String s = (String)obj;
+
+
+/*
+Actual object = Integer
+Cast = String
+
+Therefore:
+
+    ❌ ClassCastException
+
+Memory trick:
+
+    ACTUAL OBJECT TYPE MUST MATCH
+    THE TYPE YOU ARE DOWNCASTING TO.
+
+============================================================
+*/
+
+
+/*
+============================================================
+24. WHY GENERICS ARE IMPORTANT
+============================================================
+
+Generics mainly provide:
+
+    1. Type Safety
+    2. Less explicit casting
+    3. Errors caught earlier
+    4. Reusable classes and methods
+
+The most important idea for now:
+
+    GENERICS ALLOW US TO WRITE CODE THAT WORKS
+    WITH DIFFERENT TYPES WHILE STILL KNOWING
+    WHAT TYPE WE ARE WORKING WITH.
+
+============================================================
+*/
+
+
+/*
+============================================================
+25. GENERICS CHEAT SHEET
+============================================================
+
+<T>
+
+    T is a type parameter.
+
+------------------------------------------------------------
+
+Box<T>
+
+    Generic class.
+
+------------------------------------------------------------
+
+Box<Integer>
+
+    T becomes Integer.
+
+------------------------------------------------------------
+
+Box<String>
+
+    T becomes String.
+
+------------------------------------------------------------
+
+<T, U>
+
+    Multiple type parameters.
+
+------------------------------------------------------------
+
+<T> T method(T x)
+
+    Generic method that accepts and returns type T.
+
+------------------------------------------------------------
+
+< T extends Number >
+
+    Upper bound.
+
+    T must be Number or its subclass.
+
+------------------------------------------------------------
+
+<T extends Animal & Swimmable>
+
+    T must:
+
+        extend Animal
+        AND
+        implement Swimmable
+
+------------------------------------------------------------
+
+<> 
+
+    Diamond operator.
+
+    Allows Java to infer the type.
+
+------------------------------------------------------------
+
+Type Inference
+
+    Java automatically determines the generic type.
+
+------------------------------------------------------------
+
+Upcasting
+
+    Child → Parent
+
+------------------------------------------------------------
+
+Downcasting
+
+    Parent → Child
+
+------------------------------------------------------------
+
+ClassCastException
+
+    Happens when an object is incorrectly downcast.
+
+------------------------------------------------------------
+
+Generics
+
+    Help provide compile-time type safety and reduce
+    the need for explicit casting.
+
+============================================================
+*/
+
+
+/*
+============================================================
+26. ONE FINAL MENTAL MODEL 🧠
+============================================================
+
+WITHOUT GENERICS:
+
+    Box
+     ↓
+   Object
+     ↓
+   "I don't know what is inside."
+     ↓
+   Cast it yourself
+     ↓
+   Possible ClassCastException
+
+
+WITH GENERICS:
+
+    Box<Integer>
+         ↓
+      T = Integer
+         ↓
+    "I know what is inside."
+         ↓
+    getValue() → Integer
+         ↓
+    No manual downcasting
+
+
+BOUNDED GENERICS:
+
+    Box<T extends Number>
+             ↓
+       "T cannot be anything."
+             ↓
+       T must be Number
+       or its subclass.
+             ↓
+       Integer / Double / Float ...
+
+
+CLASS + INTERFACE BOUND:
+
+    Box<T extends Animal & Swimmable>
+             ↓
+       T must satisfy BOTH:
+             ↓
+       Animal
+             +
+       Swimmable
+
+
+============================================================
+                    END OF NOTES
+============================================================
+*/
