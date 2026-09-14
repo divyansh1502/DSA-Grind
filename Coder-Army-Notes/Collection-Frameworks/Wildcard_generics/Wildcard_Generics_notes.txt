@@ -1,0 +1,1859 @@
+/*
+ * ================================================================
+ *                     WILDCARD GENERICS IN JAVA
+ * ================================================================
+ *
+ * Wildcards are represented by:
+ *
+ *                  ?
+ *
+ * A wildcard means:
+ *
+ * "I don't know the exact generic type."
+ *
+ * Example:
+ *
+ *      List<?> list;
+ *
+ * Here, we know that 'list' is a List,
+ * but we don't know whether it is:
+ *
+ *      List<Dog>
+ *      List<Animal>
+ *      List<Integer>
+ *      List<String>
+ *      etc.
+ *
+ *
+ * ================================================================
+ * 1. GENERICS - GENERAL PURPOSE
+ * ================================================================
+ *
+ * Generics allow us to write classes, methods and collections
+ * that can work with different data types while maintaining
+ * TYPE SAFETY.
+ *
+ * Example:
+ *
+ *      List<String> names = new ArrayList<>();
+ *      List<Integer> numbers = new ArrayList<>();
+ *
+ * The same List class can work with different types.
+ *
+ *
+ * Without Generics:
+ *
+ *      List list = new ArrayList();
+ *
+ *      list.add("Hello");
+ *      list.add(10);
+ *      list.add(20.5);
+ *
+ * Anything can be inserted.
+ *
+ * This can lead to ClassCastException when retrieving data.
+ *
+ *
+ * With Generics:
+ *
+ *      List<String> list = new ArrayList<>();
+ *
+ *      list.add("Hello");
+ *      list.add(10);       // Compile-time error
+ *
+ * The compiler protects us from inserting the wrong type.
+ *
+ *
+ * MAIN PURPOSE OF GENERICS:
+ *
+ *      1. Type Safety
+ *      2. Compile-time checking
+ *      3. Less explicit casting
+ *      4. Reusable code
+ *
+ *
+ * ================================================================
+ * 2. GENERIC<T> IS NOT SUBTYPE OF GENERIC<B>
+ * ================================================================
+ *
+ * Suppose:
+ *
+ *      Dog extends Animal
+ *
+ * Therefore:
+ *
+ *      Dog IS-A Animal
+ *
+ * So normal upcasting is possible:
+ *
+ *      Animal a = new Dog();
+ *
+ *
+ * But this does NOT mean:
+ *
+ *      List<Dog> IS-A List<Animal>
+ *
+ *
+ * Therefore:
+ *
+ *      List<Dog> dogs = new ArrayList<>();
+ *
+ *      List<Animal> animals = dogs;     // ERROR
+ *
+ *
+ * Even though:
+ *
+ *      Dog extends Animal
+ *
+ * We cannot say:
+ *
+ *      List<Dog> extends List<Animal>
+ *
+ *
+ * This property is called:
+ *
+ *                      INVARIANCE
+ *
+ *
+ * ================================================================
+ * 3. WHY IS GENERICS INVARIANT?
+ * ================================================================
+ *
+ * The main reason is TYPE SAFETY.
+ *
+ *
+ * Suppose Java allowed:
+ *
+ *      List<Dog> dogs = new ArrayList<>();
+ *
+ *      List<Animal> animals = dogs;
+ *
+ * Now because 'animals' is supposedly List<Animal>,
+ * we could do:
+ *
+ *      animals.add(new Animal());
+ *
+ *
+ * But the original list is actually:
+ *
+ *      List<Dog>
+ *
+ * So now a normal Animal has entered a List<Dog>.
+ *
+ *
+ * Later:
+ *
+ *      Dog dog = dogs.get(0);
+ *
+ * What happens if that element is actually an Animal?
+ *
+ * A Dog reference cannot refer to a normal Animal.
+ *
+ *
+ * Therefore, allowing:
+ *
+ *      List<Dog> -> List<Animal>
+ *
+ * would break type safety.
+ *
+ *
+ * So Java says:
+ *
+ *      List<Dog> != List<Animal>
+ *
+ * even though:
+ *
+ *      Dog extends Animal
+ *
+ *
+ * ================================================================
+ * 4. WHAT WOULD HAPPEN IF IT WAS ALLOWED?
+ * ================================================================
+ *
+ * Imagine this were allowed:
+ *
+ *      List<Dog> dogs = new ArrayList<>();
+ *
+ *      List<Animal> animals = dogs;
+ *
+ *      animals.add(new Animal());
+ *
+ *
+ * Now:
+ *
+ *      dogs
+ *
+ * still thinks it contains only Dog objects.
+ *
+ * But we inserted:
+ *
+ *      Animal
+ *
+ * into it.
+ *
+ *
+ * Later:
+ *
+ *      Dog d = dogs.get(0);
+ *
+ * This can cause a runtime type problem.
+ *
+ *
+ * So GENERIC INVARIANCE prevents this problem at compile time.
+ *
+ *
+ * ================================================================
+ * 5. ARRAY vs GENERICS
+ * ================================================================
+ *
+ * Your Demo1 demonstrates an important difference.
+ *
+ *
+ * ARRAYS ARE COVARIANT:
+ *
+ *      Dog[] dogs = new Dog[10];
+ *      Animal[] animals = dogs;
+ *
+ * This IS allowed.
+ *
+ *
+ * Because Dog extends Animal.
+ *
+ *
+ * But this creates a problem:
+ *
+ *      animals[4] = new Animal();
+ *
+ * This compiles.
+ *
+ * But at runtime:
+ *
+ *      ArrayStoreException
+ *
+ * is thrown.
+ *
+ *
+ * So arrays allow covariance but perform a runtime check.
+ *
+ *
+ * GENERICS ARE INVARIANT:
+ *
+ *      List<Dog> dogs = new ArrayList<>();
+ *
+ *      List<Animal> animals = dogs;
+ *
+ * NOT allowed.
+ *
+ * Java prevents the problem at COMPILE TIME.
+ *
+ *
+ * MEMORY TRICK:
+ *
+ *      Arrays  -> Covariant -> Runtime check
+ *
+ *      Generics -> Invariant -> Compile-time safety
+ *
+ *
+ * ================================================================
+ * 6. PROBLEM CREATED BY INVARIANCE
+ * ================================================================
+ *
+ * Suppose we write:
+ *
+ *      static void fun(List<Animal> animals) {
+ *          ...
+ *      }
+ *
+ *
+ * We can pass:
+ *
+ *      List<Animal>
+ *
+ * But we CANNOT pass:
+ *
+ *      List<Dog>
+ *
+ *
+ * Example:
+ *
+ *      List<Dog> dogs = new ArrayList<>();
+ *
+ *      fun(dogs);       // ERROR
+ *
+ *
+ * Why?
+ *
+ * Because:
+ *
+ *      List<Dog>
+ *
+ * is not:
+ *
+ *      List<Animal>
+ *
+ *
+ * But logically, we might only want to READ Animals from the list.
+ *
+ * This is where WILDCARDS solve the problem.
+ *
+ *
+ * ================================================================
+ * 7. WILDCARD '?'
+ * ================================================================
+ *
+ * Wildcard:
+ *
+ *                      ?
+ *
+ * means:
+ *
+ *      "Some type, but I don't know exactly which type."
+ *
+ *
+ * Example:
+ *
+ *      List<?> values;
+ *
+ *
+ * This can refer to:
+ *
+ *      List<Dog>
+ *      List<Animal>
+ *      List<Integer>
+ *      List<String>
+ *
+ *
+ * Example:
+ *
+ *      List<Dog> dogs = new ArrayList<>();
+ *
+ *      fun(dogs);
+ *
+ *
+ *      List<Animal> animals = new ArrayList<>();
+ *
+ *      fun(animals);
+ *
+ *
+ *      static void fun(List<?> values) {
+ *          ...
+ *      }
+ *
+ *
+ * ================================================================
+ * 8. LIST<?> - WHAT CAN WE READ?
+ * ================================================================
+ *
+ * Example:
+ *
+ *      static void fun(List<?> values) {
+ *
+ *          for (Object obj : values) {
+ *              System.out.println(obj);
+ *          }
+ *      }
+ *
+ *
+ * We can read elements as Object.
+ *
+ *
+ * Why Object?
+ *
+ * Because every class in Java ultimately extends Object.
+ *
+ * Since the actual generic type is unknown,
+ * the safest type we can assume is Object.
+ *
+ *
+ * Example:
+ *
+ *      List<Dog>
+ *      List<Animal>
+ *      List<Integer>
+ *      List<String>
+ *
+ * All can be treated as:
+ *
+ *      List<?>
+ *
+ *
+ * ================================================================
+ * 9. WHAT CAN WE ADD TO List<?>
+ * ================================================================
+ *
+ * Generally, we CANNOT add a specific object.
+ *
+ * Example:
+ *
+ *      static void fun(List<?> values) {
+ *
+ *          values.add(new Dog());      // ERROR
+ *          values.add(new Animal());   // ERROR
+ *          values.add("Hello");        // ERROR
+ *          values.add(10);             // ERROR
+ *      }
+ *
+ *
+ * Why?
+ *
+ * Because we don't know what the actual type is.
+ *
+ *
+ * Suppose:
+ *
+ *      List<?> values
+ *
+ * actually refers to:
+ *
+ *      List<Dog>
+ *
+ * If Java allowed:
+ *
+ *      values.add(new Animal());
+ *
+ * we would be inserting an Animal into List<Dog>.
+ *
+ * Therefore Java does not allow adding a specific value.
+ *
+ *
+ * BUT:
+ *
+ *      values.add(null);
+ *
+ * is allowed because null can be assigned to any reference type.
+ *
+ *
+ * ================================================================
+ * 10. UNBOUNDED WILDCARD
+ * ================================================================
+ *
+ *      List<?>
+ *
+ * is called an:
+ *
+ *              UNBOUNDED WILDCARD
+ *
+ * It means:
+ *
+ *      "Any type, but I don't know which type."
+ *
+ *
+ * Example:
+ *
+ *      List<?> list;
+ *
+ *
+ * It is useful when we don't care about the exact generic type.
+ *
+ *
+ * ================================================================
+ * 11. BOUNDED WILDCARDS
+ * ================================================================
+ *
+ * There are two main bounded wildcards:
+ *
+ *      ? extends T
+ *
+ *      ? super T
+ *
+ *
+ * They provide restrictions on the unknown type.
+ *
+ *
+ * ================================================================
+ * 12. UPPER BOUND - ? extends T
+ * ================================================================
+ *
+ * Syntax:
+ *
+ *      List<? extends Animal>
+ *
+ *
+ * Meaning:
+ *
+ *      "A List of some unknown type that is Animal
+ *       or a subclass of Animal."
+ *
+ *
+ * Therefore it can accept:
+ *
+ *      List<Animal>
+ *      List<Dog>
+ *      List<Cat>
+ *      List<Labrador>
+ *
+ *
+ * Assuming:
+ *
+ *      Dog extends Animal
+ *      Cat extends Animal
+ *      Labrador extends Dog
+ *
+ *
+ * Example:
+ *
+ *      static void fun(List<? extends Animal> values) {
+ *
+ *          ...
+ *      }
+ *
+ *
+ * These are allowed:
+ *
+ *      List<Animal> animals = new ArrayList<>();
+ *      fun(animals);
+ *
+ *
+ *      List<Dog> dogs = new ArrayList<>();
+ *      fun(dogs);
+ *
+ *
+ *      List<Cat> cats = new ArrayList<>();
+ *      fun(cats);
+ *
+ *
+ * But:
+ *
+ *      List<Integer> numbers = new ArrayList<>();
+ *
+ *      fun(numbers);       // ERROR
+ *
+ *
+ * because Integer is not a subclass of Animal.
+ *
+ *
+ * ================================================================
+ * 13. WHY IS ? extends USEFUL?
+ * ================================================================
+ *
+ * Because we can safely READ elements as Animal.
+ *
+ *
+ * Example:
+ *
+ *      static void fun(List<? extends Animal> values) {
+ *
+ *          for (Animal animal : values) {
+ *              animal.eat();
+ *          }
+ *      }
+ *
+ *
+ * The actual list could be:
+ *
+ *      List<Dog>
+ *      List<Cat>
+ *      List<Animal>
+ *
+ *
+ * But every possible type is at least an Animal.
+ *
+ * Therefore:
+ *
+ *      Animal animal
+ *
+ * is safe.
+ *
+ *
+ * ================================================================
+ * 14. WHY CAN'T WE ADD TO ? extends?
+ * ================================================================
+ *
+ * Example:
+ *
+ *      List<? extends Animal> values;
+ *
+ *
+ * We don't know the exact type.
+ *
+ * It could be:
+ *
+ *      List<Dog>
+ *
+ * or:
+ *
+ *      List<Cat>
+ *
+ *
+ * Suppose Java allowed:
+ *
+ *      values.add(new Dog());
+ *
+ *
+ * If the actual list was:
+ *
+ *      List<Cat>
+ *
+ * then a Dog would be inserted into List<Cat>.
+ *
+ * Therefore:
+ *
+ *      values.add(new Dog());      // ERROR
+ *
+ *
+ * So:
+ *
+ *      ? extends
+ *
+ * is mainly used for:
+ *
+ *                      READING
+ *
+ *
+ * ================================================================
+ * 15. LOWER BOUND - ? super T
+ * ================================================================
+ *
+ * Syntax:
+ *
+ *      List<? super Animal>
+ *
+ *
+ * Meaning:
+ *
+ *      "A List of some unknown type that is Animal
+ *       or a superclass of Animal."
+ *
+ *
+ * Possible lists:
+ *
+ *      List<Animal>
+ *      List<Object>
+ *
+ *
+ * Assuming:
+ *
+ *      Animal extends Object
+ *
+ *
+ * IMPORTANT:
+ *
+ *      List<Dog>
+ *
+ * is NOT allowed.
+ *
+ * Because Dog is BELOW Animal.
+ *
+ *
+ * Think:
+ *
+ *      ? extends Animal
+ *
+ *      Animal
+ *       / \
+ *     Dog Cat
+ *
+ *
+ * For extends:
+ *
+ *      Animal and children
+ *
+ *
+ * For super:
+ *
+ *      Animal and parents
+ *
+ *
+ * ================================================================
+ * 16. WHAT CAN WE ADD TO ? super?
+ * ================================================================
+ *
+ * Example:
+ *
+ *      static void fun(List<? super Animal> values) {
+ *
+ *          values.add(new Animal());
+ *          values.add(new Dog());
+ *          values.add(new Cat());
+ *          values.add(new Labrador());
+ *      }
+ *
+ *
+ * All are allowed.
+ *
+ *
+ * Why?
+ *
+ * Because the list is guaranteed to be able to store an Animal.
+ *
+ *
+ * It could be:
+ *
+ *      List<Animal>
+ *
+ * or:
+ *
+ *      List<Object>
+ *
+ *
+ * Both can safely store:
+ *
+ *      Animal
+ *      Dog
+ *      Cat
+ *      Labrador
+ *
+ *
+ * ================================================================
+ * 17. WHAT CAN WE READ FROM ? super?
+ * ================================================================
+ *
+ * This is where it becomes important.
+ *
+ * Example:
+ *
+ *      static void fun(List<? super Animal> values) {
+ *
+ *          for (Object obj : values) {
+ *              ...
+ *          }
+ *      }
+ *
+ *
+ * We can safely read only as Object.
+ *
+ *
+ * Why not Animal?
+ *
+ * Because the actual list could be:
+ *
+ *      List<Object>
+ *
+ * And Object is not necessarily an Animal.
+ *
+ *
+ * Therefore:
+ *
+ *      Object obj = values.get(0);
+ *
+ * is safe.
+ *
+ *
+ * If we know the actual object is Animal, we can cast:
+ *
+ *      Animal a = (Animal) obj;
+ *
+ *
+ * But this cast should only be done when it is actually safe.
+ *
+ *
+ * ================================================================
+ * 18. ? extends vs ? super
+ * ================================================================
+ *
+ *                  ? extends Animal
+ *
+ * Means:
+ *
+ *      Animal or any child of Animal
+ *
+ * Examples:
+ *
+ *      List<Animal>
+ *      List<Dog>
+ *      List<Cat>
+ *
+ *
+ * Main use:
+ *
+ *                      READING
+ *
+ *
+ * ---------------------------------------------------------------
+ *
+ *                  ? super Animal
+ *
+ * Means:
+ *
+ *      Animal or any parent of Animal
+ *
+ * Examples:
+ *
+ *      List<Animal>
+ *      List<Object>
+ *
+ *
+ * Main use:
+ *
+ *                      WRITING
+ *
+ *
+ * MEMORY TRICK:
+ *
+ *
+ *              PECS
+ *
+ *      P -> Producer
+ *      E -> Extends
+ *      C -> Consumer
+ *      S -> Super
+ *
+ *
+ *      Producer -> Extends
+ *      Consumer -> Super
+ *
+ *
+ * ================================================================
+ * 19. PECS - PRODUCER EXTENDS, CONSUMER SUPER
+ * ================================================================
+ *
+ * PECS is an important interview concept.
+ *
+ *
+ * PRODUCER:
+ *
+ * If a collection PRODUCES data for us to READ:
+ *
+ *      ? extends T
+ *
+ *
+ * Example:
+ *
+ *      List<? extends Animal>
+ *
+ * We take Animals from the list.
+ *
+ * The list is producing Animals for us.
+ *
+ *
+ * ---------------------------------------------------------------
+ *
+ * CONSUMER:
+ *
+ * If a collection CONSUMES data that we want to ADD:
+ *
+ *      ? super T
+ *
+ *
+ * Example:
+ *
+ *      List<? super Animal>
+ *
+ * We put Animals into the list.
+ *
+ * The list is consuming Animals.
+ *
+ *
+ * MEMORY:
+ *
+ *      Producer -> Extends -> READ
+ *
+ *      Consumer -> Super   -> WRITE
+ *
+ *
+ * ================================================================
+ * 20. DIFFERENCE BETWEEN T AND ?
+ * ================================================================
+ *
+ * T and ? are NOT the same thing.
+ *
+ *
+ * T:
+ *
+ *      Represents a TYPE PARAMETER.
+ *
+ * Example:
+ *
+ *      class Box<T> {
+ *
+ *          T value;
+ *      }
+ *
+ *
+ * Here T represents an actual type.
+ *
+ *
+ * Example:
+ *
+ *      Box<String>
+ *
+ * means:
+ *
+ *      T = String
+ *
+ *
+ *      Box<Integer>
+ *
+ * means:
+ *
+ *      T = Integer
+ *
+ *
+ * ---------------------------------------------------------------
+ *
+ * ?:
+ *
+ *      Represents an UNKNOWN TYPE.
+ *
+ *
+ * Example:
+ *
+ *      List<?> list;
+ *
+ *
+ * We don't know what the actual type is.
+ *
+ *
+ * ================================================================
+ * 21. SIMPLE DIFFERENCE BETWEEN T AND ?
+ * ================================================================
+ *
+ *
+ * T:
+ *
+ *      "I am defining a type and I want to use that
+ *       same type in multiple places."
+ *
+ *
+ * ?:
+ *
+ *      "I don't care / don't know what the exact type is."
+ *
+ *
+ * Example:
+ *
+ *      static <T> void copy(T a, T b) {
+ *          ...
+ *      }
+ *
+ *
+ * T represents a type parameter.
+ *
+ *
+ * Whereas:
+ *
+ *      static void print(List<?> list) {
+ *          ...
+ *      }
+ *
+ * means:
+ *
+ *      Any List type is acceptable.
+ *
+ *
+ * ================================================================
+ * 22. T CAN BE USED TO MAINTAIN A RELATIONSHIP
+ * ================================================================
+ *
+ * Example:
+ *
+ *      static <T> T getValue(T value) {
+ *          return value;
+ *      }
+ *
+ *
+ * If:
+ *
+ *      String s = getValue("Hello");
+ *
+ * T becomes String.
+ *
+ *
+ * If:
+ *
+ *      Integer i = getValue(10);
+ *
+ * T becomes Integer.
+ *
+ *
+ * The same T represents the type consistently.
+ *
+ *
+ * With wildcard:
+ *
+ *      List<?> list
+ *
+ * we don't establish such a type relationship.
+ *
+ *
+ * ================================================================
+ * 23. ? extends T vs ? super T
+ * ================================================================
+ *
+ *
+ * ? extends T:
+ *
+ *      Unknown type that is T or child of T.
+ *
+ *      READ -> T
+ *      WRITE -> generally NO specific value
+ *
+ *
+ * ? super T:
+ *
+ *      Unknown type that is T or parent of T.
+ *
+ *      WRITE -> T and children of T
+ *      READ -> Object
+ *
+ *
+ * Example:
+ *
+ *      List<? extends Animal>
+ *
+ *      Animal a = list.get(0);       // OK
+ *
+ *      list.add(new Dog());          // ERROR
+ *
+ *
+ * ---------------------------------------------------------------
+ *
+ *      List<? super Animal>
+ *
+ *      list.add(new Animal());       // OK
+ *      list.add(new Dog());          // OK
+ *
+ *      Object obj = list.get(0);     // OK
+ *
+ *
+ * ================================================================
+ * 24. TYPE ERASURE
+ * ================================================================
+ *
+ * Type Erasure is the mechanism Java uses to implement Generics
+ * while maintaining compatibility with older Java code.
+ *
+ *
+ * The important idea:
+ *
+ *      Generic type information is mainly used by the compiler.
+ *
+ * At runtime, generic type parameters are generally erased.
+ *
+ *
+ * Example:
+ *
+ *      List<String> names = new ArrayList<>();
+ *
+ *      List<Integer> numbers = new ArrayList<>();
+ *
+ *
+ * At runtime, both are essentially:
+ *
+ *      List
+ *
+ *
+ * The JVM does not normally distinguish:
+ *
+ *      List<String>
+ *
+ * from:
+ *
+ *      List<Integer>
+ *
+ * in the same way the compiler does.
+ *
+ *
+ * ================================================================
+ * 25. WHAT DOES THE COMPILER DO DURING TYPE ERASURE?
+ * ================================================================
+ *
+ * There are three important things to understand:
+ *
+ *
+ *      1. Replace type parameters
+ *      2. Insert casts where required
+ *      3. Generate bridge methods when required
+ *
+ *
+ * ================================================================
+ * 26. TYPE ERASURE - UNBOUNDED TYPE
+ * ================================================================
+ *
+ * Suppose:
+ *
+ *      class Box<T> {
+ *
+ *          T value;
+ *
+ *          T getValue() {
+ *              return value;
+ *          }
+ *      }
+ *
+ *
+ * If T has no bound:
+ *
+ *      T
+ *
+ * is erased/replaced by:
+ *
+ *      Object
+ *
+ *
+ * Conceptually:
+ *
+ *      class Box {
+ *
+ *          Object value;
+ *
+ *          Object getValue() {
+ *              return value;
+ *          }
+ *      }
+ *
+ *
+ * This is why:
+ *
+ *      No bound -> Object
+ *
+ *
+ * ================================================================
+ * 27. TYPE ERASURE - BOUNDED TYPE
+ * ================================================================
+ *
+ * Suppose:
+ *
+ *      class Box<T extends Animal> {
+ *
+ *          T value;
+ *      }
+ *
+ *
+ * T has a bound:
+ *
+ *      T extends Animal
+ *
+ *
+ * During erasure, T is replaced by its bound:
+ *
+ *      Animal
+ *
+ *
+ * Conceptually:
+ *
+ *      class Box {
+ *
+ *          Animal value;
+ *      }
+ *
+ *
+ * Therefore:
+ *
+ *      No bound
+ *          -> Object
+ *
+ *      Bound
+ *          -> The bound
+ *
+ *
+ * ================================================================
+ * 28. COMPILER INSERTS CASTING AUTOMATICALLY
+ * ================================================================
+ *
+ * Example:
+ *
+ *      List<String> names = new ArrayList<>();
+ *
+ *      names.add("Divyansh");
+ *
+ *      String name = names.get(0);
+ *
+ *
+ * We write:
+ *
+ *      String name = names.get(0);
+ *
+ *
+ * But after type erasure, get() essentially works with Object.
+ *
+ * Conceptually, the compiler performs something similar to:
+ *
+ *      String name = (String) names.get(0);
+ *
+ *
+ * We don't have to write the cast ourselves.
+ *
+ *
+ * This is one of the reasons Generics make code cleaner.
+ *
+ *
+ * ================================================================
+ * 29. WHY DOES THE COMPILER INSERT THE CAST?
+ * ================================================================
+ *
+ * Because after type erasure, the JVM works with erased types.
+ *
+ * But our source code expects:
+ *
+ *      String
+ *
+ * Therefore the compiler adds the required cast.
+ *
+ *
+ * Programmer writes:
+ *
+ *      String name = names.get(0);
+ *
+ *
+ * Compiler conceptually handles:
+ *
+ *      String name = (String) names.get(0);
+ *
+ *
+ * So Generics provide compile-time type safety
+ * while the JVM works with erased types.
+ *
+ *
+ * ================================================================
+ * 30. BRIDGE METHODS
+ * ================================================================
+ *
+ * Bridge methods are compiler-generated methods.
+ *
+ * They are mainly required when Generics and inheritance
+ * are combined.
+ *
+ *
+ * Example:
+ *
+ *      class Parent<T> {
+ *
+ *          T get() {
+ *              return null;
+ *          }
+ *      }
+ *
+ *
+ *      class Child extends Parent<String> {
+ *
+ *          @Override
+ *          String get() {
+ *              return "Hello";
+ *          }
+ *      }
+ *
+ *
+ * After type erasure, Parent's method can effectively become:
+ *
+ *      Object get()
+ *
+ *
+ * But Child has:
+ *
+ *      String get()
+ *
+ *
+ * For polymorphism to continue working correctly,
+ * the compiler can generate a bridge method in Child.
+ *
+ *
+ * Conceptually:
+ *
+ *      Object get() {
+ *          return get();
+ *      }
+ *
+ *
+ * The exact compiler-generated bytecode is more complicated,
+ * but the main idea is:
+ *
+ *      Bridge method = compiler-generated method that preserves
+ *      polymorphism after generic type erasure.
+ *
+ *
+ * INTERVIEW DEFINITION:
+ *
+ *      A bridge method is a compiler-generated synthetic method
+ *      created to preserve polymorphism when type erasure changes
+ *      method signatures involving generics.
+ *
+ *
+ * ================================================================
+ * 31. WHY DOES JAVA USE TYPE ERASURE?
+ * ================================================================
+ *
+ * The major reason is:
+ *
+ *              BACKWARD COMPATIBILITY
+ *
+ *
+ * Generics were introduced in Java 5.
+ *
+ * Java already had a huge amount of code written before Generics.
+ *
+ * Java wanted old code and new generic code to work together.
+ *
+ *
+ * Type erasure allowed Generics to be added mainly at the
+ * compiler level without requiring a completely new JVM type
+ * system.
+ *
+ *
+ * Important benefits:
+ *
+ *      1. Backward compatibility
+ *      2. Existing Java bytecode can continue to work
+ *      3. No need for separate runtime classes for
+ *         List<String>, List<Integer>, etc.
+ *
+ *
+ * ================================================================
+ * 32. WHY DON'T GENERICS SUPPORT PRIMITIVE TYPES?
+ * ================================================================
+ *
+ * Generics work with REFERENCE TYPES.
+ *
+ * They do not directly accept primitive types.
+ *
+ *
+ * This is INVALID:
+ *
+ *      List<int> list;       // ERROR
+ *
+ *
+ * This is VALID:
+ *
+ *      List<Integer> list;
+ *
+ *
+ * Why?
+ *
+ * Because Java Generics were designed around reference types
+ * and type erasure.
+ *
+ *
+ * Primitive types:
+ *
+ *      int
+ *      char
+ *      double
+ *      boolean
+ *      float
+ *      long
+ *      short
+ *      byte
+ *
+ * are not objects/reference types.
+ *
+ *
+ * Wrapper classes are used instead:
+ *
+ *      int      -> Integer
+ *      char     -> Character
+ *      double   -> Double
+ *      boolean  -> Boolean
+ *      float    -> Float
+ *      long     -> Long
+ *      short    -> Short
+ *      byte     -> Byte
+ *
+ *
+ * Example:
+ *
+ *      List<Integer> numbers = new ArrayList<>();
+ *
+ *      numbers.add(10);
+ *
+ *
+ * Here Java performs:
+ *
+ *      int -> Integer
+ *
+ * automatically.
+ *
+ * This is called AUTOBOXING.
+ *
+ *
+ * ================================================================
+ * 33. QUICK COMPARISON
+ * ================================================================
+ *
+ *
+ * List<Animal>
+ *
+ *      EXACT TYPE
+ *
+ *      Only List<Animal>
+ *
+ *
+ * ---------------------------------------------------------------
+ *
+ * List<?>
+ *
+ *      UNKNOWN TYPE
+ *
+ *      List<Animal>
+ *      List<Dog>
+ *      List<Integer>
+ *      List<String>
+ *      ...
+ *
+ *      Read -> Object
+ *      Write -> No specific object
+ *
+ *
+ * ---------------------------------------------------------------
+ *
+ * List<? extends Animal>
+ *
+ *      UNKNOWN TYPE
+ *      but Animal or child of Animal
+ *
+ *      List<Animal>
+ *      List<Dog>
+ *      List<Cat>
+ *
+ *      Read -> Animal
+ *      Write -> No specific object
+ *
+ *
+ * ---------------------------------------------------------------
+ *
+ * List<? super Animal>
+ *
+ *      UNKNOWN TYPE
+ *      but Animal or parent of Animal
+ *
+ *      List<Animal>
+ *      List<Object>
+ *
+ *      Write -> Animal and its children
+ *      Read -> Object
+ *
+ *
+ * ================================================================
+ * 34. MOST IMPORTANT TABLE
+ * ================================================================
+ *
+ *
+ * +----------------------+----------------+----------------------+
+ * | Type                 | Reading        | Writing             |
+ * +----------------------+----------------+----------------------+
+ * | List<T>              | T              | T                   |
+ * | List<?>              | Object         | No specific type    |
+ * | List<? extends T>    | T              | No specific type    |
+ * | List<? super T>      | Object         | T + children        |
+ * +----------------------+----------------+----------------------+
+ *
+ *
+ * ================================================================
+ * 35. YOUR Demo2 - List<?>
+ * ================================================================
+ *
+ * You wrote:
+ *
+ *      static void fun(List<?> values) {
+ *
+ *          for (Object obj : values) {
+ *              System.out.println(obj.getClass().getName());
+ *          }
+ *      }
+ *
+ *
+ * This method can accept:
+ *
+ *      List<Dog>
+ *      List<Animal>
+ *      List<Integer>
+ *      List<String>
+ *
+ *
+ * because we don't care about the exact type.
+ *
+ *
+ * But:
+ *
+ *      values.add(new Dog());
+ *
+ * is not allowed.
+ *
+ *
+ * because Java doesn't know whether the actual list is:
+ *
+ *      List<Dog>
+ *
+ * or:
+ *
+ *      List<Animal>
+ *
+ * or:
+ *
+ *      List<String>
+ *
+ *
+ * ================================================================
+ * 36. YOUR Demo3 - ? extends Animal
+ * ================================================================
+ *
+ *      static void fun(List<? extends Animal> values) {
+ *
+ *          for (Animal animal : values) {
+ *              animal.eat();
+ *          }
+ *      }
+ *
+ *
+ * This accepts:
+ *
+ *      List<Animal>
+ *      List<Dog>
+ *      List<Cat>
+ *
+ *
+ * But not:
+ *
+ *      List<Integer>
+ *
+ *
+ * because Integer does not extend Animal.
+ *
+ *
+ * We can read:
+ *
+ *      Animal animal = values.get(0);
+ *
+ *
+ * But cannot safely do:
+ *
+ *      values.add(new Dog());
+ *
+ *
+ * Therefore:
+ *
+ *      ? extends -> Producer -> Reading
+ *
+ *
+ * ================================================================
+ * 37. YOUR Demo4 - ? super Animal
+ * ================================================================
+ *
+ *      static void fun(List<? super Animal> values) {
+ *
+ *          values.add(new Animal());
+ *          values.add(new Dog());
+ *          values.add(new Cat());
+ *          values.add(new Labrador());
+ *      }
+ *
+ *
+ * This works because the list is guaranteed to accept
+ * an Animal.
+ *
+ *
+ * It can be:
+ *
+ *      List<Animal>
+ *
+ * or:
+ *
+ *      List<Object>
+ *
+ *
+ * We can add:
+ *
+ *      Animal
+ *      Dog
+ *      Cat
+ *      Labrador
+ *
+ *
+ * But when reading:
+ *
+ *      Object obj = values.get(0);
+ *
+ * is the safe type.
+ *
+ *
+ * Therefore:
+ *
+ *      ? super -> Consumer -> Writing
+ *
+ *
+ * ================================================================
+ * 38. IMPORTANT: WILDCARD DOES NOT MEAN "ANYTHING EVERYWHERE"
+ * ================================================================
+ *
+ * This:
+ *
+ *      List<?>
+ *
+ * means:
+ *
+ *      List of some unknown type.
+ *
+ *
+ * It does NOT mean:
+ *
+ *      List<Object>
+ *
+ *
+ * These are different:
+ *
+ *      List<?>       -> List of unknown type
+ *
+ *      List<Object>  -> specifically a List<Object>
+ *
+ *
+ * A List<String> can be passed to:
+ *
+ *      List<?>
+ *
+ * but NOT to:
+ *
+ *      List<Object>
+ *
+ *
+ * ================================================================
+ * 39. INVARIANCE + WILDCARD
+ * ================================================================
+ *
+ * Remember:
+ *
+ *      List<Dog>
+ *
+ * is NOT a subtype of:
+ *
+ *      List<Animal>
+ *
+ *
+ * But:
+ *
+ *      List<Dog>
+ *
+ * IS compatible with:
+ *
+ *      List<? extends Animal>
+ *
+ *
+ * And:
+ *
+ *      List<Animal>
+ *
+ * IS compatible with:
+ *
+ *      List<? super Dog>
+ *
+ *
+ * This is how wildcards give us controlled flexibility
+ * without breaking generic type safety.
+ *
+ *
+ * ================================================================
+ * 40. INTERVIEW QUESTIONS TO REMEMBER
+ * ================================================================
+ *
+ *
+ * Q1. What is a wildcard?
+ *
+ * Answer:
+ *
+ *      '?' represents an unknown generic type.
+ *
+ *
+ * Q2. What is an unbounded wildcard?
+ *
+ * Answer:
+ *
+ *      List<?> represents a list of an unknown type.
+ *
+ *
+ * Q3. What is ? extends?
+ *
+ * Answer:
+ *
+ *      It creates an upper bound.
+ *      The unknown type can be the specified type
+ *      or one of its subclasses.
+ *
+ *
+ * Q4. What is ? super?
+ *
+ * Answer:
+ *
+ *      It creates a lower bound.
+ *      The unknown type can be the specified type
+ *      or one of its superclasses.
+ *
+ *
+ * Q5. Why are Generics invariant?
+ *
+ * Answer:
+ *
+ *      To maintain type safety and prevent unsafe insertion
+ *      of objects into generic collections.
+ *
+ *
+ * Q6. What is PECS?
+ *
+ * Answer:
+ *
+ *      Producer Extends, Consumer Super.
+ *
+ *
+ * Q7. Difference between T and ?
+ *
+ * Answer:
+ *
+ *      T is a type parameter used to define and maintain
+ *      a generic type relationship.
+ *
+ *      ? represents an unknown type and is mainly used
+ *      with wildcards.
+ *
+ *
+ * Q8. Why List<int> is not allowed?
+ *
+ * Answer:
+ *
+ *      Generics work with reference types, not primitive types.
+ *      Use wrapper classes such as Integer instead.
+ *
+ *
+ * Q9. What is type erasure?
+ *
+ * Answer:
+ *
+ *      The process by which generic type information is removed
+ *      at compile time so that the generated bytecode works
+ *      with erased types.
+ *
+ *
+ * Q10. What happens to an unbounded T after erasure?
+ *
+ * Answer:
+ *
+ *      T -> Object
+ *
+ *
+ * Q11. What happens to T extends Animal?
+ *
+ * Answer:
+ *
+ *      T -> Animal
+ *
+ *
+ * Q12. Why does the compiler insert casts?
+ *
+ * Answer:
+ *
+ *      After type erasure, generic values may be represented
+ *      as Object or the bound, so the compiler inserts casts
+ *      where the original generic type is expected.
+ *
+ *
+ * Q13. What is a bridge method?
+ *
+ * Answer:
+ *
+ *      A compiler-generated method used to preserve
+ *      polymorphism when type erasure changes method signatures
+ *      involving generics.
+ *
+ *
+ * ================================================================
+ *                    FINAL MEMORY CHEAT SHEET
+ * ================================================================
+ *
+ *
+ *      Dog extends Animal
+ *
+ *      BUT
+ *
+ *      List<Dog> does NOT extend List<Animal>
+ *
+ *                     ↓
+ *
+ *                 INVARIANCE
+ *
+ *
+ * ---------------------------------------------------------------
+ *
+ *      List<?>
+ *
+ *      = unknown type
+ *
+ *      READ -> Object
+ *      WRITE -> No specific type
+ *
+ *
+ * ---------------------------------------------------------------
+ *
+ *      List<? extends Animal>
+ *
+ *      = Animal or child
+ *
+ *      READ -> Animal
+ *      WRITE -> No specific object
+ *
+ *      PECS:
+ *      Producer -> Extends
+ *
+ *
+ * ---------------------------------------------------------------
+ *
+ *      List<? super Animal>
+ *
+ *      = Animal or parent
+ *
+ *      WRITE -> Animal + children
+ *      READ -> Object
+ *
+ *      PECS:
+ *      Consumer -> Super
+ *
+ *
+ * ---------------------------------------------------------------
+ *
+ *      T
+ *
+ *      = Type Parameter
+ *
+ *
+ *      ?
+ *
+ *      = Unknown Type / Wildcard
+ *
+ *
+ * ---------------------------------------------------------------
+ *
+ *      TYPE ERASURE:
+ *
+ *      T                  -> Object
+ *      T extends Animal   -> Animal
+ *
+ *      Compiler may insert casts.
+ *
+ *      Compiler may generate bridge methods.
+ *
+ *
+ * ---------------------------------------------------------------
+ *
+ *      GENERICS:
+ *
+ *      Reference types only
+ *
+ *      List<Integer>  -> YES
+ *      List<int>      -> NO
+ *
+ *      int -> Integer
+ *      char -> Character
+ *      double -> Double
+ *
+ *
+ * ================================================================
+ *                 ONE-LINE MEMORY TRICK
+ * ================================================================
+ *
+ *
+ *      INVARIANT:
+ *      List<Dog> != List<Animal>
+ *
+ *      ?:
+ *      "I don't know the type."
+ *
+ *      extends:
+ *      "I can READ."
+ *
+ *      super:
+ *      "I can WRITE."
+ *
+ *      PECS:
+ *      Producer Extends
+ *      Consumer Super
+ *
+ *      ERASURE:
+ *      Generic information -> removed at runtime
+ *
+ * ================================================================
+ */
