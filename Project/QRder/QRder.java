@@ -36,8 +36,10 @@ public class QRder {
             default:
                 System.out.println("Invalid input");
         }
+        System.out.print("Enter input : ");
+        inp = sc.nextInt();
         }
-        
+        System.out.println("Thanks for visiting!!");
     }
     static void user() {
         
