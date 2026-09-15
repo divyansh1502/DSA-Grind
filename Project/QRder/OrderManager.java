@@ -4,6 +4,10 @@ public class OrderManager {
     static Scanner sc = new Scanner(System.in);
     static int choice = 0;
     static String status = "Pending";
+    static int pendingOrders = 0;
+    static int preparingOrders = 0;
+    static int readyOrders = 0;
+    static int completedOrders = 0;
     void orderManager() {
         while(choice != 5) {
             System.out.println();
@@ -44,6 +48,7 @@ public class OrderManager {
     }
     void viewPendingOrders() {
         if(status == "Pending") {
+            pendingOrders++;
             QRder.viewOrder();
         } else {
             System.out.println("No Pending Order");
@@ -63,12 +68,15 @@ public class OrderManager {
                 break;
             case 2:
                 status = "Placed";
+                preparingOrders++;
                 break;
             case 3:
                 status = "Ready";
+                readyOrders++;
                 break;
             case 4:
                 status = "Completed";
+                completedOrders++;
                 break;
             default:
                 System.out.println("Enter valid input");

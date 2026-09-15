@@ -11,6 +11,7 @@ public class QRder {
     static String orderID = "1001";
     static String gmail = "a";
     static String password = "a";
+    static int totalOrders = 0;
     public static void main(String[] args) {
         System.out.println("====================QRder===================");
         System.out.println();
@@ -280,6 +281,7 @@ public class QRder {
             System.out.println("Order placed successfully!");
             System.out.println("Order id: " + orderID);
             System.out.println("Total : " + total);
+            totalOrders++;
         } else if(choice == 2) {
             System.out.println("Order cancelled successfully!");
             cart.clear();
@@ -331,7 +333,7 @@ public class QRder {
             System.out.println("Wrong gmail or password");
         }
         int inp = 0;
-        while(inp != 5) {
+        while(inp != 4) {
         System.out.println();
         System.out.println("=============================================");
         System.out.println("                  ADMIN PANNEL               ");
@@ -341,19 +343,22 @@ public class QRder {
         System.out.println();
         System.out.println("1. Food Management");
         System.out.println("2. Order Management");
-        System.out.println("3. Outlet Management");
-        System.out.println("4. View Statsistics");
-        System.out.println("5. Logout");
+        System.out.println("3. View Statsistics");
+        System.out.println("4. Logout");
         System.out.print("Enter choice: ");
         inp = sc.nextInt();
         FoodManager fm = new FoodManager();
         OrderManager om = new OrderManager();
+        Statistics stats = new Statistics();
         switch(inp) {
             case 1:
                 fm.foodOperationMenu();;
                 break;
             case 2:
                 om.orderManager();
+                break;
+            case 3: 
+                stats.qrderStats();
                 break;
             case 5:
                 QRder.main(null);
