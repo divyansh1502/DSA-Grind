@@ -1,8 +1,4 @@
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Iterator1 {
     public static void main(String[] args) {
@@ -23,11 +19,14 @@ public class Iterator1 {
         }
 
         Collection<Integer> c = new HashSet<>();
-        c.add(1);
-        c.add(2);
-        c.add(3);
-        c.add(4);
-        c.add(5);
+        // Collection<Integer> c = new ArrayDeque<>();
+        // Collection<Integer> c = new TreeSet<>();
+
+        c.add(12);
+        c.add(27);
+        c.add(30);
+        c.add(45);
+        c.add(59);
 
         Iterator<Integer> hs = c.iterator();
         while(hs.hasNext()) {
