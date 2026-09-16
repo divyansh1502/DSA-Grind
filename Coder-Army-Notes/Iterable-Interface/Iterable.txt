@@ -3423,6 +3423,7 @@ This separation allows:
     ✓ nested iteration
     ✓ collection-independent traversal
 
+    Grind it broooooooooo
 ================================================================================
                          END OF ITERATOR NOTES
 ================================================================================
