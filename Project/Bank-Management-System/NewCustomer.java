@@ -12,15 +12,19 @@ public class NewCustomer {
         System.out.println();
         System.out.println("=============Personal Details=============");
         System.out.println();
-        System.out.print("Enter Name: ");
-        String name = sc.nextLine();
+        System.out.print("Enter First Name: ");
+        String firstName = sc.next();
+        System.out.print("Enter Last Name: ");
+        String lastName = sc.next();
+        String name = firstName + " " + lastName;
         System.out.print("Enter Email: ");
         String email = sc.next();
         System.out.print("Enter Phone Number: ");
         long phone = sc.nextLong();
+        sc.nextLine();
         System.out.print("Enter Address: ");
         String address = sc.nextLine();
-        sc.nextLine();
+        
 
         // Account Details
         System.out.println();
@@ -36,7 +40,7 @@ public class NewCustomer {
         if(ch == 1) {
             accountType = "Saving Account";
         } else if(ch == 2) {
-            accountType = "Current Type";
+            accountType = "Current Account";
         } else {
             System.out.println();
             System.out.println("Enter valid choice");
@@ -98,6 +102,7 @@ class Customer {
     String accountType;
     String password;
     double balance;
+    
 
     public Customer(String name, String email, long phone, long accountNumber, String accountType, String password, double balance) {
         this.name = name;
