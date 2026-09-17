@@ -35,8 +35,12 @@ public class NewCustomer {
         String accountType = "";
         if(ch == 1) {
             accountType = "Saving Account";
-        } else {
+        } else if(ch == 2) {
             accountType = "Current Type";
+        } else {
+            System.out.println();
+            System.out.println("Enter valid choice");
+            return;
         }
         System.out.println();
 

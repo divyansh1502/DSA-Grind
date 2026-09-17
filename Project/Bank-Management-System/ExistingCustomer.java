@@ -86,11 +86,11 @@ public class ExistingCustomer {
         System.out.println();
         System.out.println("============Account Details============");
         System.out.println();
-        System.out.println("Name : " + customers.name);
-        System.out.println("Account Number : " + customers.accountNumber);
-        System.out.println("IFSC Code : " + ifsc);
-        System.out.println("Branch : " + branch);
-        System.out.println("Bank Status : " + status);
+        System.out.println("Name            : " + customers.name);
+        System.out.println("Account Number  : " + customers.accountNumber);
+        System.out.println("IFSC Code       : " + ifsc);
+        System.out.println("Branch          : " + branch);
+        System.out.println("Bank Status     : " + status);
         System.out.println();
     }
     private static void checkBalance() {

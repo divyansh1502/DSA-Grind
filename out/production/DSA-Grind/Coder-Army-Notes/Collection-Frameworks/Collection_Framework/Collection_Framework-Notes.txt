@@ -1,0 +1,3242 @@
+```java
+/*
+╔══════════════════════════════════════════════════════════════════════╗
+║                  JAVA COLLECTION FRAMEWORK                         ║
+║                 DSA + INTERVIEW NOTES                              ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+Topics:
+1. What is Collection Framework?
+2. Main Hierarchy
+3. Iterable, Collection and List
+4. Dynamic Array / ArrayList
+5. LinkedList
+6. List vs ArrayList vs LinkedList
+7. Set
+8. HashSet
+9. Hashing, hashCode(), modulo and buckets
+10. Collision and Chaining
+11. LinkedHashSet
+12. TreeSet
+13. Queue
+14. Map
+15. HashMap
+16. LinkedHashMap
+17. TreeMap
+18. Tree / BST / Self-Balancing Tree
+19. Map vs Set
+20. Complete Hierarchy
+21. DSA Selection Guide
+*/
+
+
+// ================================================================
+// 1. WHAT IS COLLECTION FRAMEWORK?
+// ================================================================
+
+/*
+Collection Framework = A set of interfaces + classes + algorithms
+provided by Java to store and manipulate groups of objects.
+
+Instead of creating our own data structures every time, Java provides:
+
+    List
+    Set
+    Queue
+    Map
+
+and implementations such as:
+
+    ArrayList
+    LinkedList
+    HashSet
+    LinkedHashSet
+    TreeSet
+    PriorityQueue
+    HashMap
+    LinkedHashMap
+    TreeMap
+
+Example:
+
+    ArrayList<Integer> list = new ArrayList<>();
+
+    list.add(10);
+    list.add(20);
+    list.add(30);
+
+
+Why Collection Framework?
+
+Without it, we would have to manually implement:
+
+    - dynamic arrays
+    - linked lists
+    - hash tables
+    - trees
+    - queues
+    - searching
+    - resizing
+    - collision handling
+    etc.
+
+Collection Framework gives us ready-made implementations.
+*/
+
+
+// ================================================================
+// 2. IMPORTANT: COLLECTION vs COLLECTIONS
+// ================================================================
+
+/*
+Collection
+----------
+Collection is an INTERFACE.
+
+java.util.Collection
+
+It is the root interface for most individual-element
+collection types.
+
+Collections
+-----------
+Collections is a UTILITY CLASS.
+
+java.util.Collections
+
+It contains utility methods such as:
+
+    Collections.sort()
+    Collections.reverse()
+    Collections.max()
+    Collections.min()
+    Collections.shuffle()
+
+Do NOT confuse:
+
+    Collection  -> interface
+    Collections -> utility class
+*/
+
+
+// ================================================================
+// 3. MAIN COLLECTION HIERARCHY
+// ================================================================
+
+/*
+Important hierarchy:
+
+                        Object
+                           |
+                       Iterable
+                           |
+                       Collection
+                    /       |       \
+                   /        |        \
+                List       Set       Queue
+                 |          |          |
+          -------------   -------   PriorityQueue
+          |            |   |     |
+      ArrayList    LinkedList |  ...
+                            HashSet
+                            LinkedHashSet
+                            TreeSet
+
+
+BUT Map is NOT inside Collection.
+
+                         Object
+                            |
+                         Map
+                    /       |       \
+                   /        |        \
+              HashMap  LinkedHashMap  TreeMap
+
+
+More accurately:
+
+Object
+  |
+Iterable
+  |
+Collection
+  |
+  +---------------- List
+  |                    |
+  |                    +-- ArrayList
+  |                    +-- LinkedList
+  |
+  +---------------- Set
+  |                    |
+  |                    +-- HashSet
+  |                    +-- LinkedHashSet
+  |                    +-- TreeSet
+  |
+  +---------------- Queue
+                       |
+                       +-- PriorityQueue
+                       +-- LinkedList
+
+
+Map
+ |
+ +-- HashMap
+ +-- LinkedHashMap
+ +-- TreeMap
+
+
+IMPORTANT:
+
+Map does NOT extend Collection.
+
+Why?
+
+Collection stores INDIVIDUAL ELEMENTS:
+
+    [10, 20, 30, 40]
+
+Map stores KEY-VALUE PAIRS:
+
+    {
+        "id"   -> 101,
+        "name" -> "Yashu"
+    }
+
+So their purposes are fundamentally different.
+*/
+
+
+// ================================================================
+// 4. ITERABLE
+// ================================================================
+
+/*
+Iterable is an interface.
+
+It represents something whose elements can be traversed.
+
+It provides the ability to use:
+
+    for-each loop
+
+Example:
+
+    for(Integer x : list) {
+        System.out.println(x);
+    }
+
+Conceptually:
+
+Iterable
+   |
+   +-- Collection
+        |
+        +-- List
+        +-- Set
+        +-- Queue
+
+
+Why Iterable comes before Collection?
+
+Because traversal is a more general concept.
+
+An object can be "iterable" without necessarily being
+a full Collection.
+*/
+
+
+// ================================================================
+// 5. COLLECTION INTERFACE
+// ================================================================
+
+/*
+Collection is an interface.
+
+It defines common operations for groups of elements.
+
+Important methods:
+
+    add()
+    remove()
+    contains()
+    size()
+    isEmpty()
+    clear()
+    iterator()
+    etc.
+
+Example:
+
+    Collection<Integer> data = new ArrayList<>();
+
+    data.add(10);
+    data.add(20);
+    data.remove(10);
+
+The implementation decides HOW these operations work.
+
+Collection says:
+
+    "These methods should exist."
+
+ArrayList / LinkedList / HashSet say:
+
+    "This is HOW I implement them."
+
+
+IMPORTANT:
+
+List, Set and Queue are major interfaces extending Collection.
+*/
+
+
+// ================================================================
+// 6. LIST
+// ================================================================
+
+/*
+List is an INTERFACE.
+
+It represents:
+
+    - ordered collection
+    - indexed elements
+    - duplicates generally allowed
+    - insertion order maintained
+
+Examples:
+
+    [10, 20, 30, 20]
+
+20 can appear multiple times.
+
+Important List methods:
+
+    add()
+    add(index, element)
+    get(index)
+    set(index, element)
+    remove()
+    contains()
+    indexOf()
+    size()
+
+
+Example:
+
+    List<Integer> list = new ArrayList<>();
+
+    list.add(10);
+    list.add(20);
+    list.add(20);
+
+    System.out.println(list);
+
+Output:
+
+    [10, 20, 20]
+
+
+List
+ |
+ +-- ArrayList
+ |
+ +-- LinkedList
+
+
+The List interface defines common behavior.
+
+ArrayList and LinkedList implement that behavior.
+*/
+
+
+// ================================================================
+// 7. DYNAMIC ARRAY
+// ================================================================
+
+/*
+Normal array:
+
+    int[] arr = new int[5];
+
+Capacity = 5
+
+You cannot directly make it:
+
+    arr = 7 elements
+
+because array size is fixed after creation.
+
+Example:
+
+    [10][20][30][40][50]
+       capacity = 5
+
+
+Dynamic Array:
+
+A dynamic array automatically grows when it runs out of capacity.
+
+Java's ArrayList is a dynamic-array-based implementation.
+
+Example:
+
+    ArrayList<Integer> list = new ArrayList<>();
+
+
+Conceptually:
+
+Initially:
+
+    capacity = 10
+
+    [ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]
+
+Add elements:
+
+    [10][20][30][ ][ ][ ][ ][ ][ ][ ]
+
+
+Continue adding...
+
+    [10][20][30][40][50][60][70][80][90][100]
+
+Now capacity is full.
+
+If another element is added:
+
+    list.add(110);
+
+ArrayList needs a larger internal array.
+
+
+Conceptually:
+
+OLD ARRAY:
+
+    [10][20][30][40][50][60][70][80][90][100]
+
+                    ↓ resize
+
+NEW ARRAY:
+
+    [10][20][30][40][50][60][70][80][90][100][110][ ][ ]...
+
+
+The old elements are copied/moved into the new array.
+
+
+IMPORTANT:
+
+ArrayList has two concepts:
+
+    size
+    capacity
+
+size = number of actual elements
+
+capacity = amount of space currently available
+
+
+Example:
+
+    [10][20][30][ ][ ][ ][ ][ ][ ][ ]
+
+size = 3
+capacity = 10
+
+
+When size reaches capacity:
+
+    resize occurs.
+
+Modern JDK ArrayList grows by roughly 1.5x when it
+needs to grow.
+
+Do NOT memorize this as a universal rule for every
+dynamic array implementation.
+
+
+Why resizing is expensive?
+
+Because elements need to be copied into a larger array.
+
+One resize:
+
+    O(n)
+
+But ArrayList.add(element) is:
+
+    O(1) amortized
+
+
+What does amortized mean?
+
+Most additions are cheap:
+
+    O(1)
+
+Occasionally one addition causes resizing:
+
+    O(n)
+
+But averaged over many insertions:
+
+    O(1) amortized.
+
+
+This is VERY important for DSA interviews.
+*/
+
+
+// ================================================================
+// 8. ARRAYLIST INTERNAL STRUCTURE
+// ================================================================
+
+/*
+Conceptually:
+
+ArrayList
+    |
+    +-- internal array
+            |
+            +-- element
+            +-- element
+            +-- element
+            +-- ...
+
+
+Example:
+
+ArrayList<Integer>
+
+    index
+      0     1     2     3
+      ↓     ↓     ↓     ↓
+
+    [10]  [20]  [30]  [40]
+
+Access:
+
+    list.get(2)
+
+Java directly accesses:
+
+    internalArray[2]
+
+Therefore:
+
+    get(index) = O(1)
+
+
+Searching:
+
+    list.contains(30)
+
+May have to inspect:
+
+    10 -> 20 -> 30
+
+Therefore:
+
+    search = O(n)
+
+
+Adding at end:
+
+    add(50)
+
+Usually:
+
+    O(1) amortized
+
+
+Adding at beginning:
+
+    add(0, 5)
+
+Existing elements need to shift:
+
+    BEFORE:
+
+    [10][20][30][40]
+
+    AFTER:
+
+    [5][10][20][30][40]
+
+Time:
+
+    O(n)
+
+
+Removing from middle:
+
+    [10][20][30][40][50]
+           ↑
+         remove
+
+After removal:
+
+    [10][20][40][50]
+
+Elements after the removed element shift left.
+
+Therefore:
+
+    O(n)
+*/
+
+
+// ================================================================
+// 9. LINKED LIST
+// ================================================================
+
+/*
+LinkedList stores elements using nodes.
+
+Unlike ArrayList, elements do NOT need to be stored
+next to each other in memory.
+
+A node conceptually contains:
+
+    [data | next]
+
+Example:
+
+    [10 | •] ---> [20 | •] ---> [30 | null]
+
+
+Each node knows where the next node is.
+
+Singly Linked List:
+
+    HEAD
+      |
+      v
+    [10|•] ---> [20|•] ---> [30|•] ---> null
+
+
+Java's LinkedList is actually a DOUBLY LINKED LIST.
+
+A node conceptually contains:
+
+    [previous | data | next]
+
+
+Example:
+
+        ┌───────────────┐
+        ↓               |
+    [null|10|•] <-> [•|20|•] <-> [•|30|null]
+        ↑
+       head
+
+and there is also a tail reference.
+
+
+So Java LinkedList supports traversal in both directions.
+*/
+
+
+// ================================================================
+// 10. WHY LINKED LIST IS GOOD FOR INSERTION / DELETION
+// ================================================================
+
+/*
+Suppose:
+
+    A <-> B <-> C <-> D
+
+We want to insert X between B and C.
+
+Before:
+
+    B <-> C
+
+
+After:
+
+    B <-> X <-> C
+
+
+Only links around the insertion point need to change.
+
+Conceptually:
+
+    B.next = X
+    X.prev = B
+    X.next = C
+    C.prev = X
+
+
+So LINK CHANGES are cheap.
+
+BUT IMPORTANT:
+
+LinkedList insertion is NOT automatically O(1).
+
+Why?
+
+Because first you must FIND the location.
+
+Example:
+
+    list.add(500, X)
+
+LinkedList may need to traverse to index 500.
+
+Finding node:
+
+    O(n)
+
+Changing links:
+
+    O(1)
+
+Overall:
+
+    O(n)
+
+
+If you ALREADY HAVE the node/position:
+
+    insertion = O(1)
+
+
+This distinction is very important in DSA.
+
+
+ArrayList:
+
+    finding index = O(1)
+    shifting elements = O(n)
+
+LinkedList:
+
+    finding node = O(n)
+    changing links = O(1)
+*/
+
+
+// ================================================================
+// 11. LINKED LIST TRAVERSAL
+// ================================================================
+
+/*
+Suppose:
+
+    HEAD
+      |
+      v
+    [10] -> [20] -> [30] -> [40]
+
+To get index 3:
+
+    Start at HEAD
+
+    10
+     ↓
+    20
+     ↓
+    30
+     ↓
+    40
+
+Therefore:
+
+    get(index) = O(n)
+
+Unlike ArrayList:
+
+    get(index) = O(1)
+
+
+This is why ArrayList is generally better when your
+DSA problem requires frequent random/index-based access.
+*/
+
+
+// ================================================================
+// 12. ARRAYLIST vs LINKEDLIST
+// ================================================================
+
+/*
++----------------------+----------------------+----------------------+
+| Feature              | ArrayList            | LinkedList           |
++----------------------+----------------------+----------------------+
+| Internal structure   | Dynamic array        | Doubly linked list   |
+| get(index)           | O(1)                 | O(n)                 |
+| Search               | O(n)                 | O(n)                 |
+| Add at end           | O(1) amortized       | O(1)                 |
+| Add at beginning     | O(n)                 | O(1) if position known|
+| Remove middle        | O(n)                 | O(1) if node known   |
+| Random access        | Excellent            | Poor                 |
+| Memory                | Less overhead         | More node overhead   |
++----------------------+----------------------+----------------------+
+
+DSA rule:
+
+Need frequent get(index)?
+        ↓
+    ArrayList
+
+Need frequent insert/delete around known nodes?
+        ↓
+    LinkedList
+
+
+But in real Java applications:
+
+ArrayList is usually the default choice.
+
+LinkedList has a specific use case and is NOT automatically
+faster just because insertion/deletion can be O(1).
+*/
+
+
+// ================================================================
+// 13. SET
+// ================================================================
+
+/*
+Set is an INTERFACE.
+
+Main property:
+
+    DUPLICATES ARE NOT ALLOWED.
+
+Example:
+
+    Set<Integer> set = new HashSet<>();
+
+    set.add(10);
+    set.add(20);
+    set.add(10);
+
+
+Result:
+
+    [10, 20]
+
+The second 10 is not added.
+
+
+Why?
+
+A Set represents a collection of UNIQUE elements.
+
+
+Common Set implementations:
+
+    HashSet
+    LinkedHashSet
+    TreeSet
+*/
+
+
+// ================================================================
+// 14. HASHSET
+// ================================================================
+
+/*
+HashSet stores UNIQUE elements using hashing.
+
+Example:
+
+    HashSet<Integer> set = new HashSet<>();
+
+    set.add(10);
+    set.add(20);
+    set.add(30);
+
+
+Conceptual structure:
+
+                 Hash function
+                      |
+                      ↓
+
+10 -------------> bucket
+20 -------------> bucket
+30 -------------> bucket
+
+
+HashSet internally uses a hash-table structure.
+
+The exact implementation is more sophisticated than
+"just an array", but for DSA understanding think:
+
+    HashSet
+       |
+       +-- hash table
+              |
+              +-- buckets
+*/
+
+
+// ================================================================
+// 15. HASHING
+// ================================================================
+
+/*
+Hashing = converting a value into a number that helps
+determine where it should be stored.
+
+Java objects provide:
+
+    hashCode()
+
+Example:
+
+    Integer x = 10;
+
+    x.hashCode()
+
+returns a hash code associated with the object/value.
+
+
+Conceptually:
+
+    object
+       |
+       ↓
+    hashCode()
+       |
+       ↓
+    hash value
+       |
+       ↓
+    bucket index
+*/
+
+
+// ================================================================
+// 16. HOW MODULO HELPS FIND A BUCKET
+// ================================================================
+
+/*
+Suppose our hash table has:
+
+    10 buckets
+
+Indexes:
+
+    0 1 2 3 4 5 6 7 8 9
+
+Suppose hash code = 47.
+
+Conceptually:
+
+    bucketIndex = hash % numberOfBuckets
+
+    bucketIndex = 47 % 10
+
+    bucketIndex = 7
+
+
+Therefore:
+
+    47 → bucket 7
+
+
+Example:
+
+    hash = 123
+
+    123 % 10 = 3
+
+So:
+
+    123 → bucket 3
+
+
+IMPORTANT:
+
+This is the conceptual idea.
+
+Actual HashMap/HashSet implementation performs additional
+hash spreading and uses efficient power-of-two table
+indexing rather than simply doing "% capacity" in the
+straightforward way.
+
+For DSA understanding:
+
+    hash → bucket index
+
+is the key idea.
+*/
+
+
+// ================================================================
+// 17. COLLISION
+// ================================================================
+
+/*
+What if two different values produce the same bucket?
+
+Example:
+
+    17 % 10 = 7
+    27 % 10 = 7
+    37 % 10 = 7
+
+
+All want bucket 7.
+
+This is called:
+
+    COLLISION
+
+
+Diagram:
+
+bucket 7
+
+    [17] -> [27] -> [37]
+
+
+Multiple elements are associated with the same bucket.
+
+
+How can this be handled?
+
+One important technique:
+
+    CHAINING
+*/
+
+
+// ================================================================
+// 18. CHAINING
+// ================================================================
+
+/*
+Chaining means maintaining multiple entries in the same
+bucket using a linked structure/tree structure as needed.
+
+Conceptually:
+
+    bucket[0] -> null
+    bucket[1] -> 11 -> 21
+    bucket[2] -> 12
+    bucket[3] -> 13 -> 23 -> 33
+    bucket[4] -> null
+
+
+If:
+
+    13 % 10 = 3
+    23 % 10 = 3
+    33 % 10 = 3
+
+Then:
+
+    bucket[3]
+
+contains multiple entries.
+
+This is a collision-resolution technique.
+
+
+Java HashMap/HashSet use bucket-based collision handling,
+with linked nodes and, under certain conditions, tree
+structures for heavily-colliding buckets.
+*/
+
+
+// ================================================================
+// 19. HOW HASHSET PREVENTS DUPLICATES
+// ================================================================
+
+/*
+Suppose:
+
+    HashSet<Integer> set = new HashSet<>();
+
+    set.add(10);
+
+
+Conceptually:
+
+Step 1:
+    Java calculates hash information.
+
+Step 2:
+    Determine appropriate bucket.
+
+Step 3:
+    Check existing elements in that bucket.
+
+Step 4:
+    If an equal element already exists:
+
+        DO NOT INSERT
+
+
+Example:
+
+First:
+
+    set.add(10)
+
+    bucket X:
+        [10]
+
+
+Again:
+
+    set.add(10)
+
+    bucket X:
+        [10]
+
+    10 already exists.
+
+Therefore:
+
+    duplicate rejected.
+
+
+IMPORTANT:
+
+HashSet uses BOTH:
+
+    hashCode()
+    equals()
+
+Hash code helps find the likely bucket.
+
+equals() helps determine whether the element is actually equal.
+
+
+Rule:
+
+    hashCode() → where to look
+    equals()   → whether it is the same element
+*/
+
+
+// ================================================================
+// 20. hashCode() AND equals()
+// ================================================================
+
+/*
+Very important interview rule:
+
+If:
+
+    a.equals(b) == true
+
+then:
+
+    a.hashCode() == b.hashCode()
+
+must also be true.
+
+But the reverse is NOT required.
+
+Same hash code does NOT necessarily mean objects are equal.
+
+
+Example:
+
+    Object A → hash 10
+    Object B → hash 10
+
+They may still be different objects.
+
+Therefore:
+
+    same hash ≠ necessarily same object
+
+
+But:
+
+    equal objects → MUST have same hash code.
+
+
+This is why overriding equals() and hashCode() correctly
+is extremely important when using custom objects in:
+
+    HashSet
+    HashMap
+    etc.
+*/
+
+
+// ================================================================
+// 21. HASHSET TIME COMPLEXITY
+// ================================================================
+
+/*
+Average expected complexity:
+
+    add()       → O(1)
+    remove()    → O(1)
+    contains()  → O(1)
+
+Worst-case behavior can become worse because of collisions,
+although modern Java implementations use treeification in
+certain heavily-collided buckets.
+
+For basic DSA:
+
+    HashSet = average O(1) lookup for uniqueness.
+
+
+This makes HashSet extremely useful for problems like:
+
+    - remove duplicates
+    - check duplicate
+    - check whether an element exists
+    - maintain unique values
+    - visited elements in graph problems
+*/
+
+
+// ================================================================
+// 22. LINKEDHASHSET
+// ================================================================
+
+/*
+LinkedHashSet combines:
+
+    HashSet behavior
+    +
+    insertion-order maintenance
+
+
+Example:
+
+    set.add(30);
+    set.add(10);
+    set.add(20);
+
+
+HashSet:
+
+    order is NOT guaranteed.
+
+
+LinkedHashSet:
+
+    [30, 10, 20]
+
+
+It remembers insertion order.
+
+Conceptually:
+
+Hash table:
+
+    30
+    10
+    20
+
+
+PLUS linked ordering:
+
+    30 <-> 10 <-> 20
+
+
+Properties:
+
+    - duplicates not allowed
+    - fast average lookup
+    - insertion order maintained
+
+
+Think:
+
+    HashSet       → unique + fast
+    LinkedHashSet → unique + fast + insertion order
+*/
+
+
+// ================================================================
+// 23. TREESET
+// ================================================================
+
+/*
+TreeSet stores UNIQUE elements in SORTED ORDER.
+
+Example:
+
+    TreeSet<Integer> set = new TreeSet<>();
+
+    set.add(40);
+    set.add(10);
+    set.add(30);
+    set.add(20);
+
+
+Output:
+
+    [10, 20, 30, 40]
+
+
+Properties:
+
+    - duplicates not allowed
+    - sorted order
+    - tree-based
+    - operations generally O(log n)
+
+
+Conceptually:
+
+                30
+               /  \
+             10    40
+               \
+                20
+
+
+TreeSet is based on a navigable balanced tree structure
+in the JDK.
+
+For DSA-level understanding:
+
+    TreeSet ≈ balanced BST
+
+
+Operations:
+
+    add()      → O(log n)
+    remove()   → O(log n)
+    contains() → O(log n)
+
+
+Use TreeSet when you need:
+
+    UNIQUE + SORTED
+*/
+
+
+// ================================================================
+// 24. TREE / BINARY TREE
+// ================================================================
+
+/*
+A tree is a hierarchical data structure.
+
+Example:
+
+                    10
+                  /    \
+                 5      20
+                / \    /  \
+               2   7  15  30
+
+
+Important terms:
+
+    Root
+    Parent
+    Child
+    Leaf
+    Edge
+    Height
+    Depth
+    Subtree
+
+
+Root:
+
+    10
+
+
+Children of 10:
+
+    5, 20
+
+
+Leaf nodes:
+
+    2, 7, 15, 30
+
+
+Tree is NOT necessarily sorted.
+
+That distinction is important.
+*/
+
+
+// ================================================================
+// 25. BINARY TREE
+// ================================================================
+
+/*
+Binary Tree:
+
+Every node has at most TWO children.
+
+Example:
+
+             10
+            /  \
+           5    20
+          / \
+         2   7
+
+
+A binary tree does NOT automatically follow ordering rules.
+*/
+
+
+// ================================================================
+// 26. BINARY SEARCH TREE (BST)
+// ================================================================
+
+/*
+BST = Binary Search Tree
+
+It follows:
+
+For every node:
+
+    LEFT subtree < node < RIGHT subtree
+
+Example:
+
+                  50
+                /    \
+              30      70
+             /  \    /  \
+           20   40  60   80
+
+
+Search for 60:
+
+    60 < 50? NO
+        ↓
+    go RIGHT
+
+    60 < 70? YES
+        ↓
+    go LEFT
+
+    found 60.
+
+
+This allows searching without checking every element
+when the tree is reasonably balanced.
+
+
+Average balanced BST:
+
+    search = O(log n)
+
+But a normal BST can become skewed.
+
+
+Example:
+
+    10
+      \
+       20
+         \
+          30
+            \
+             40
+
+
+This behaves like a linked list.
+
+Search:
+
+    O(n)
+
+
+So BST performance depends heavily on tree height.
+*/
+
+
+// ================================================================
+// 27. SELF-BALANCING / AUTO-BALANCING TREE
+// ================================================================
+
+/*
+A self-balancing tree automatically tries to maintain
+a controlled height.
+
+Why?
+
+Because:
+
+    height ≈ log n
+
+gives efficient operations.
+
+Examples of balanced tree concepts:
+
+    AVL Tree
+    Red-Black Tree
+
+
+Java TreeSet and TreeMap use a Red-Black Tree internally.
+
+
+Conceptually:
+
+UNBALANCED:
+
+    10
+      \
+       20
+         \
+          30
+            \
+             40
+
+Height = large
+
+
+BALANCED:
+
+           20
+          /  \
+        10    30
+                \
+                 40
+
+Height is much smaller.
+
+
+Self-balancing trees use operations such as:
+
+    rotations
+
+to maintain balance.
+*/
+
+
+// ================================================================
+// 28. QUEUE
+// ================================================================
+
+/*
+Queue is an INTERFACE.
+
+Basic principle:
+
+    FIFO
+
+FIFO = First In, First Out
+
+
+Example:
+
+    Person A enters
+    Person B enters
+    Person C enters
+
+Queue:
+
+    A → B → C
+
+A leaves first.
+
+
+Real-life example:
+
+    Ticket counter
+
+
+Important Queue methods:
+
+    offer()
+    poll()
+    peek()
+
+offer():
+
+    inserts element
+
+poll():
+
+    removes and returns front element
+
+peek():
+
+    returns front element without removing it
+
+
+Example:
+
+    Queue<Integer> q = new LinkedList<>();
+
+    q.offer(10);
+    q.offer(20);
+    q.offer(30);
+
+
+Queue:
+
+    FRONT
+      |
+      v
+    [10] [20] [30]
+                  ↑
+                 rear
+
+
+q.poll()
+
+returns:
+
+    10
+
+
+Queue becomes:
+
+    [20] [30]
+*/
+
+
+// ================================================================
+// 29. QUEUE IN DSA
+// ================================================================
+
+/*
+Queue is extremely important in DSA.
+
+Applications:
+
+    BFS
+    level-order traversal
+    scheduling
+    buffering
+    producer-consumer systems
+    task processing
+
+
+BFS:
+
+              1
+            /   \
+           2     3
+          / \
+         4   5
+
+
+Queue process:
+
+    [1]
+
+remove 1
+add 2, 3
+
+    [2, 3]
+
+remove 2
+add 4, 5
+
+    [3, 4, 5]
+
+etc.
+
+
+Therefore:
+
+    Queue = fundamental BFS data structure.
+*/
+
+
+// ================================================================
+// 30. MAP
+// ================================================================
+
+/*
+Map stores:
+
+    KEY -> VALUE
+
+
+Example:
+
+    101 -> "Rahul"
+    102 -> "Aman"
+    103 -> "Yashu"
+
+
+This is called a:
+
+    KEY-VALUE PAIR
+
+
+Example:
+
+    Map<Integer, String> map = new HashMap<>();
+
+    map.put(101, "Rahul");
+    map.put(102, "Aman");
+    map.put(103, "Yashu");
+
+
+Here:
+
+    101 = key
+    Rahul = value
+
+
+IMPORTANT:
+
+Keys are UNIQUE.
+
+Values CAN be duplicated.
+
+
+Example:
+
+    101 -> "Java"
+    102 -> "Java"
+
+This is valid.
+
+But:
+
+    101 -> "Java"
+    101 -> "Python"
+
+does NOT create two separate entries.
+
+Instead, value for key 101 is replaced:
+
+    101 -> "Python"
+*/
+
+
+// ================================================================
+// 31. WHY MAP KEYS CANNOT BE DUPLICATED
+// ================================================================
+
+/*
+A Map represents an association:
+
+    key -> value
+
+
+If the same key could have multiple values:
+
+    101 -> Java
+    101 -> Python
+    101 -> C++
+
+then:
+
+    map.get(101)
+
+would be ambiguous.
+
+Which value should it return?
+
+Therefore:
+
+    keys are unique.
+
+
+But values do not need to be unique:
+
+    101 -> Java
+    102 -> Java
+    103 -> Java
+
+is perfectly valid.
+
+
+Important:
+
+    Map does NOT mean "no duplicate values."
+
+It means:
+
+    keys are unique.
+*/
+
+
+// ================================================================
+// 32. MAP vs SET
+// ================================================================
+
+/*
+SET:
+
+    Stores individual unique elements.
+
+    {10, 20, 30}
+
+
+MAP:
+
+    Stores key-value associations.
+
+    {
+        1 -> "A",
+        2 -> "B",
+        3 -> "C"
+    }
+
+
+Set asks:
+
+    "Does this element exist?"
+
+Map asks:
+
+    "What value is associated with this key?"
+
+
+Example:
+
+Set:
+
+    HashSet<Integer> set
+
+    set.contains(10)
+
+
+Map:
+
+    HashMap<Integer, String> map
+
+    map.get(10)
+
+
+Conceptually:
+
+    Set:
+        value
+         ↓
+       unique
+
+
+    Map:
+        key → value
+         ↓
+       association
+*/
+
+
+// ================================================================
+// 33. HASHMAP
+// ================================================================
+
+/*
+HashMap is a Map implementation based on hashing.
+
+Example:
+
+    HashMap<Integer, String> map = new HashMap<>();
+
+    map.put(101, "A");
+    map.put(102, "B");
+    map.put(103, "C");
+
+
+Conceptually:
+
+             hash(key)
+                |
+                ↓
+             bucket
+                |
+                ↓
+        [key -> value]
+
+
+Example:
+
+    key = 101
+
+    hashCode(101)
+         ↓
+    hash processing
+         ↓
+    bucket index
+         ↓
+    store entry
+
+
+Entry conceptually:
+
+    [key | value | next]
+
+
+HashMap uses buckets and collision handling.
+
+
+Average:
+
+    put()     → O(1)
+    get()     → O(1)
+    remove()  → O(1)
+
+
+Worst-case depends on collisions and implementation details.
+Modern Java can treeify heavily-collided buckets.
+*/
+
+
+// ================================================================
+// 34. HASHMAP INTERNAL IDEA
+// ================================================================
+
+/*
+Suppose table has buckets:
+
+    0
+    1
+    2
+    3
+    4
+    5
+    6
+    7
+
+
+put(15, "A")
+
+Suppose hashing maps 15 to bucket 7.
+
+Then:
+
+    bucket 7
+       |
+       v
+    [15 -> "A"]
+
+
+Now:
+
+put(23, "B")
+
+Suppose 23 also maps to bucket 7.
+
+Collision:
+
+    bucket 7
+       |
+       v
+    [15 -> "A"] -> [23 -> "B"]
+
+
+Now get(23):
+
+    23
+     ↓
+   hash
+     ↓
+ bucket 7
+     ↓
+ compare keys
+     ↓
+ 23 found
+     ↓
+ return "B"
+
+
+This is the basic internal idea.
+*/
+
+
+// ================================================================
+// 35. HASHMAP KEY LOOKUP
+// ================================================================
+
+/*
+When we execute:
+
+    map.get(key)
+
+
+Conceptual steps:
+
+    1. Calculate hash information from key.
+
+    2. Determine bucket.
+
+    3. Go to that bucket.
+
+    4. Compare candidate keys.
+
+    5. If matching key is found:
+           return value.
+
+Therefore hashing makes lookup much faster than scanning
+the entire collection in the average case.
+*/
+
+
+// ================================================================
+// 36. LINKEDHASHMAP
+// ================================================================
+
+/*
+LinkedHashMap = HashMap + ordering information.
+
+It maintains insertion order by default.
+
+Example:
+
+    map.put(3, "C");
+    map.put(1, "A");
+    map.put(2, "B");
+
+
+LinkedHashMap iteration:
+
+    3 -> C
+    1 -> A
+    2 -> B
+
+
+HashMap:
+
+    ordering is NOT guaranteed.
+
+
+LinkedHashMap internally maintains:
+
+    hash table
+        +
+    linked ordering between entries
+
+
+Think:
+
+    HashMap:
+        fast key lookup
+
+
+    LinkedHashMap:
+        fast key lookup
+        +
+        predictable insertion order
+
+
+LinkedHashMap can also be configured for access-order,
+which is useful for cache-like structures.
+*/
+
+
+// ================================================================
+// 37. TREEMAP
+// ================================================================
+
+/*
+TreeMap stores key-value pairs in SORTED KEY ORDER.
+
+Example:
+
+    TreeMap<Integer, String> map = new TreeMap<>();
+
+    map.put(30, "C");
+    map.put(10, "A");
+    map.put(20, "B");
+
+
+Result:
+
+    10 -> A
+    20 -> B
+    30 -> C
+
+
+TreeMap is tree-based.
+
+Java TreeMap uses a Red-Black Tree.
+
+
+Complexity:
+
+    put()     → O(log n)
+    get()     → O(log n)
+    remove()  → O(log n)
+
+
+Use TreeMap when you need:
+
+    KEY-VALUE PAIRS
+            +
+    SORTED KEYS
+*/
+
+
+// ================================================================
+// 38. HASHMAP vs LINKEDHASHMAP vs TREEMAP
+// ================================================================
+
+/*
++-------------------+-------------+-------------------+-----------+
+| Feature           | HashMap     | LinkedHashMap     | TreeMap   |
++-------------------+-------------+-------------------+-----------+
+| Structure         | Hash table  | Hash + links      | Tree      |
+| Ordering          | No guarantee| Insertion/access  | Sorted    |
+| Average get       | O(1)        | O(1)              | O(log n)  |
+| Average put       | O(1)        | O(1)              | O(log n)  |
+| Duplicate keys    | No          | No                | No        |
+| Duplicate values  | Yes         | Yes               | Yes       |
++-------------------+-------------+-------------------+-----------+
+
+
+Memory trick:
+
+    HashMap
+        = FAST
+
+
+    LinkedHashMap
+        = FAST + ORDER
+
+
+    TreeMap
+        = SORTED + TREE
+*/
+
+
+// ================================================================
+// 39. HASHSET vs LINKEDHASHSET vs TREESET
+// ================================================================
+
+/*
++-------------------+-------------+------------------+-----------+
+| Feature           | HashSet     | LinkedHashSet    | TreeSet   |
++-------------------+-------------+------------------+-----------+
+| Duplicates        | No          | No               | No        |
+| Ordering          | No guarantee| Insertion order  | Sorted    |
+| Structure         | Hash table  | Hash + links     | Tree      |
+| contains avg      | O(1)        | O(1)             | O(log n)  |
+| add avg            | O(1)        | O(1)             | O(log n)  |
++-------------------+-------------+------------------+-----------+
+
+
+Memory trick:
+
+    HashSet
+        = Unique + Fast
+
+
+    LinkedHashSet
+        = Unique + Fast + Insertion Order
+
+
+    TreeSet
+        = Unique + Sorted
+*/
+
+
+// ================================================================
+// 40. LIST vs SET vs QUEUE vs MAP
+// ================================================================
+
+/*
+LIST
+----
+    Ordered/indexed
+    Duplicates allowed
+
+Example:
+
+    [10, 20, 10, 30]
+
+
+SET
+---
+    Unique elements
+    No duplicates
+
+Example:
+
+    [10, 20, 30]
+
+
+QUEUE
+-----
+    Process elements according to queue rules
+    Usually FIFO
+
+Example:
+
+    [10, 20, 30]
+
+    10 leaves first.
+
+
+MAP
+---
+    Key-value association
+    Keys unique
+    Values can repeat
+
+Example:
+
+    101 -> "A"
+    102 -> "B"
+*/
+
+
+// ================================================================
+// 41. WHY MAP IS OUTSIDE COLLECTION
+// ================================================================
+
+/*
+Collection:
+
+    A group of individual elements.
+
+Example:
+
+    [10, 20, 30]
+
+
+Map:
+
+    A group of mappings.
+
+Example:
+
+    10 -> "A"
+    20 -> "B"
+    30 -> "C"
+
+
+If Map extended Collection, it would have to behave like
+a collection of individual elements, which does not match
+its primary abstraction.
+
+Map instead has its own interface hierarchy.
+
+
+Map can provide views such as:
+
+    keySet()
+    values()
+    entrySet()
+
+
+Example:
+
+    map.keySet()
+
+returns a Set of keys.
+
+    map.values()
+
+returns a Collection of values.
+
+    map.entrySet()
+
+returns a Set of key-value entries.
+*/
+
+
+// ================================================================
+// 42. MAP ENTRY
+// ================================================================
+
+/*
+One key-value pair is conceptually an ENTRY.
+
+Example:
+
+    101 -> "Java"
+
+
+Entry:
+
+    key   = 101
+    value = "Java"
+
+
+Java provides:
+
+    Map.Entry<K, V>
+
+
+Conceptually:
+
+    Entry
+    +--------+
+    | key    |
+    | value  |
+    +--------+
+
+
+A HashMap internally stores entries in buckets.
+*/
+
+
+// ================================================================
+// 43. IMPORTANT: REPLACE vs ADD IN MAP
+// ================================================================
+
+/*
+Example:
+
+    map.put(1, "A");
+
+Map:
+
+    1 -> A
+
+
+Now:
+
+    map.put(1, "B");
+
+
+There is still only one key 1.
+
+Result:
+
+    1 -> B
+
+
+So put() with an existing key replaces the old value.
+
+This is different from List:
+
+    list.add(1)
+
+adds another element.
+
+Map:
+
+    same key
+       ↓
+    update value
+*/
+
+
+// ================================================================
+// 44. COLLECTION METHODS YOU SHOULD KNOW
+// ================================================================
+
+/*
+Common Collection methods:
+
+    add(element)
+    remove(element)
+    contains(element)
+    size()
+    isEmpty()
+    clear()
+
+
+Example:
+
+    List<Integer> list = new ArrayList<>();
+
+    list.add(10);
+    list.add(20);
+
+    list.contains(10);     // true
+    list.size();            // 2
+    list.remove(10);
+    list.isEmpty();         // false
+
+
+List-specific:
+
+    get(index)
+    set(index, element)
+    add(index, element)
+    indexOf()
+    lastIndexOf()
+
+
+Set-specific:
+
+    uniqueness
+    contains()
+
+
+Queue-specific:
+
+    offer()
+    poll()
+    peek()
+
+
+Map-specific:
+
+    put()
+    get()
+    remove()
+    containsKey()
+    containsValue()
+    keySet()
+    values()
+    entrySet()
+*/
+
+
+// ================================================================
+// 45. IMPORTANT CORRECTION: "REPLACE"
+// ================================================================
+
+/*
+The Collection interface does NOT define a universal
+"replace()" operation for all collections.
+
+Why?
+
+Because replacement depends on the data structure.
+
+List has:
+
+    set(index, element)
+
+Map has:
+
+    put(key, newValue)
+
+Map also provides:
+
+    replace(key, value)
+
+So don't memorize:
+
+    Collection -> replace()
+
+as a rule.
+
+Instead:
+
+    List  -> set()
+    Map   -> put()/replace()
+*/
+
+
+// ================================================================
+// 46. COLLECTION FRAMEWORK COMPLETE HIERARCHY
+// ================================================================
+
+/*
+                         Object
+                            |
+                         Iterable
+                            |
+                       Collection
+                            |
+          ┌─────────────────┼─────────────────┐
+          |                 |                 |
+         List              Set              Queue
+          |                 |                 |
+     ┌────┴────┐       ┌────┼────┐            |
+     |         |       |    |    |            |
+ ArrayList LinkedList HashSet LinkedHashSet TreeSet
+                             
+     
+Queue implementations/examples:
+
+    Queue
+      |
+      +-- LinkedList
+      |
+      +-- PriorityQueue
+      |
+      +-- ArrayDeque
+
+
+Separate hierarchy:
+
+                         Object
+                            |
+                           Map
+                            |
+                ┌───────────┼───────────┐
+                |           |           |
+             HashMap  LinkedHashMap  TreeMap
+
+
+IMPORTANT:
+
+LinkedList can implement BOTH:
+
+    List
+    Deque / Queue-related interfaces
+
+Therefore it can be used as a List OR as a Queue/Deque.
+
+
+ArrayDeque is another important queue/deque implementation.
+*/
+
+
+// ================================================================
+// 47. ARRAYLIST vs HASHSET vs HASHMAP — THINKING MODEL
+// ================================================================
+
+/*
+Suppose you have:
+
+    [10, 20, 30, 20, 40]
+
+
+Question 1:
+"Maintain all elements and allow duplicates."
+
+Use:
+
+    ArrayList
+
+
+Question 2:
+"Remove duplicates."
+
+Use:
+
+    HashSet
+
+
+Question 3:
+"Associate each ID with a name."
+
+Use:
+
+    HashMap
+
+
+Example:
+
+ArrayList:
+
+    [10, 20, 30, 20, 40]
+
+
+HashSet:
+
+    [10, 20, 30, 40]
+
+
+HashMap:
+
+    101 -> "Aman"
+    102 -> "Rahul"
+    103 -> "Yashu"
+*/
+
+
+// ================================================================
+// 48. DSA PROBLEM-SOLVING: WHEN TO USE ARRAYLIST
+// ================================================================
+
+/*
+Use ArrayList when:
+
+    - you need indexed access
+    - duplicates are allowed
+    - order matters
+    - you mostly add at the end
+    - you frequently use get(index)
+
+
+Example:
+
+    List<Integer> nums = new ArrayList<>();
+
+
+DSA examples:
+
+    Store input array dynamically
+    Maintain sequence
+    Store generated answers
+    Store adjacency list of a graph
+    Store elements for sorting
+
+
+Common:
+
+    List<Integer> ans = new ArrayList<>();
+
+
+Very common in LeetCode/DSA.
+*/
+
+
+// ================================================================
+// 49. DSA PROBLEM-SOLVING: WHEN TO USE HASHSET
+// ================================================================
+
+/*
+Use HashSet when:
+
+    - uniqueness matters
+    - fast membership checking is needed
+
+
+Example problem:
+
+"Find whether an array contains duplicates."
+
+
+Brute force:
+
+    Compare every pair
+
+    O(n²)
+
+
+HashSet:
+
+    for every number:
+        if set.contains(number)
+            duplicate found
+
+        set.add(number)
+
+
+Average:
+
+    O(n)
+
+
+This is one of the most important HashSet use cases.
+*/
+
+
+// ================================================================
+// 50. DSA PROBLEM-SOLVING: WHEN TO USE HASHMAP
+// ================================================================
+
+/*
+HashMap is extremely important for DSA.
+
+Use it for:
+
+    - frequency counting
+    - lookup
+    - mapping
+    - grouping
+    - two-sum
+    - prefix-sum problems
+    - character frequency
+    - caching
+
+
+Example:
+
+Array:
+
+    [1, 2, 2, 3, 3, 3]
+
+
+Frequency map:
+
+    1 -> 1
+    2 -> 2
+    3 -> 3
+
+
+Conceptually:
+
+    map.put(x, map.getOrDefault(x, 0) + 1)
+
+
+Time:
+
+    O(n) average
+*/
+
+
+// ================================================================
+// 51. HASHMAP EXAMPLE: TWO SUM
+// ================================================================
+
+/*
+Array:
+
+    [2, 7, 11, 15]
+
+Target:
+
+    9
+
+
+We need:
+
+    current + required = target
+
+For 2:
+
+    required = 9 - 2
+             = 7
+
+Store:
+
+    2 -> index 0
+
+
+Next 7:
+
+    required = 9 - 7
+             = 2
+
+2 exists in HashMap.
+
+Therefore:
+
+    answer = [0, 1]
+
+
+Why HashMap?
+
+Because we need:
+
+    value -> index
+
+That is a key-value relationship.
+
+HashSet would only tell us:
+
+    "2 exists"
+
+but we also need:
+
+    "Where does 2 exist?"
+
+Therefore HashMap is better.
+*/
+
+
+// ================================================================
+// 52. HASHSET vs HASHMAP IN DSA
+// ================================================================
+
+/*
+Problem:
+
+"Have I seen this number before?"
+
+Use:
+
+    HashSet
+
+
+Problem:
+
+"Where did I see this number?"
+
+Use:
+
+    HashMap
+
+
+Problem:
+
+"How many times have I seen this number?"
+
+Use:
+
+    HashMap
+
+
+Problem:
+
+"Store each number only once."
+
+Use:
+
+    HashSet
+
+
+Memory trick:
+
+    SET  → membership / uniqueness
+
+    MAP  → mapping / information associated with something
+*/
+
+
+// ================================================================
+// 53. TREESET / TREEMAP IN DSA
+// ================================================================
+
+/*
+Use TreeSet when:
+
+    unique elements
+    +
+    sorted order
+
+
+Example:
+
+    Input:
+
+    50, 10, 30, 20, 40
+
+
+TreeSet:
+
+    10, 20, 30, 40, 50
+
+
+Use TreeMap when:
+
+    key-value mapping
+    +
+    sorted keys
+
+
+Example:
+
+    50 -> A
+    10 -> B
+    30 -> C
+
+
+TreeMap:
+
+    10 -> B
+    30 -> C
+    50 -> A
+
+
+Useful when you need:
+
+    floor()
+    ceiling()
+    lower()
+    higher()
+
+because TreeSet/TreeMap support navigational operations.
+*/
+
+
+// ================================================================
+// 54. HASHING vs SORTING
+// ================================================================
+
+/*
+Suppose:
+
+    [50, 10, 40, 20, 30]
+
+
+If you need:
+
+    "Is 40 present?"
+
+HashSet:
+
+    average O(1)
+
+
+If you need:
+
+    "Give me all elements in sorted order."
+
+TreeSet:
+
+    O(log n) insertion
+    sorted iteration
+
+
+Therefore:
+
+    HashSet  -> fast lookup
+    TreeSet  -> sorted lookup
+
+
+Don't choose a data structure only based on complexity.
+
+Choose based on the REQUIREMENT.
+*/
+
+
+// ================================================================
+// 55. BIG-O CHEAT SHEET
+// ================================================================
+
+/*
+                    ArrayList  LinkedList  HashSet  TreeSet
+----------------------------------------------------------------
+get(index)            O(1)       O(n)        --       --
+add(end)              O(1)*      O(1)        O(1)*    O(log n)
+remove                O(n)       O(n)**      O(1)*    O(log n)
+contains              O(n)       O(n)        O(1)*    O(log n)
+
+
+* Average/amortized expected behavior where applicable.
+** Depends heavily on whether the node/location is already known.
+
+
+                    HashMap  LinkedHashMap  TreeMap
+----------------------------------------------------------------
+put()                  O(1)*       O(1)*       O(log n)
+get()                  O(1)*       O(1)*       O(log n)
+remove()               O(1)*       O(1)*       O(log n)
+
+
+Think:
+
+    ArrayList -> index
+    LinkedList -> links
+    HashSet -> unique + hash
+    TreeSet -> unique + sorted
+    HashMap -> key -> value + hash
+    LinkedHashMap -> map + order
+    TreeMap -> map + sorted keys
+*/
+
+
+// ================================================================
+// 56. ONE BIG MEMORY DIAGRAM
+// ================================================================
+
+/*
+
+                         JAVA COLLECTION FRAMEWORK
+                                  |
+              ┌───────────────────┴───────────────────┐
+              |                                       |
+          Collection                                  Map
+              |                                       |
+       ┌──────┼──────┐                    ┌───────────┼───────────┐
+       |      |      |                    |           |           |
+      List   Set   Queue               HashMap   LinkedHashMap TreeMap
+       |      |      |
+    ┌──┴──┐  ┌┼┐    ├── PriorityQueue
+    |     |  |||    |
+ArrayList | HashSet LinkedList
+          | LinkedHashSet
+      LinkedList TreeSet
+
+
+LIST
+ ↓
+ordered + duplicates
+
+SET
+ ↓
+unique
+
+QUEUE
+ ↓
+processing order / FIFO-style abstraction
+
+MAP
+ ↓
+key → value
+unique keys
+
+
+HASH
+ ↓
+fast average lookup
+
+
+TREE
+ ↓
+ordered/sorted data
+
+
+LINKED
+ ↓
+maintains links/order or node connections
+*/
+
+
+// ================================================================
+// 57. HOW TO REMEMBER ALL COLLECTIONS
+// ================================================================
+
+/*
+ARRAYLIST
+---------
+    Array underneath
+    Index fast
+    Dynamic size
+
+
+LINKEDLIST
+----------
+    Nodes + links
+    Sequential access
+    Insert/delete can be efficient when position/node known
+
+
+HASHSET
+-------
+    Unique
+    Hashing
+    Fast average lookup
+    No guaranteed iteration order
+
+
+LINKEDHASHSET
+-------------
+    Unique
+    Hashing
+    Insertion order
+
+
+TREESET
+-------
+    Unique
+    Sorted
+    Tree
+    O(log n)
+
+
+HASHMAP
+-------
+    Key -> Value
+    Unique keys
+    Hashing
+    Fast average lookup
+
+
+LINKEDHASHMAP
+-------------
+    Key -> Value
+    Hashing
+    Maintains insertion/access order
+
+
+TREEMAP
+-------
+    Key -> Value
+    Sorted keys
+    Tree
+    O(log n)
+
+
+QUEUE
+-----
+    FIFO concept
+    Processing order
+*/
+
+
+// ================================================================
+// 58. MOST IMPORTANT INTERVIEW QUESTIONS
+// ================================================================
+
+/*
+Q1. What is Collection Framework?
+
+Answer:
+
+Java Collection Framework is a unified architecture of
+interfaces and classes used to store, retrieve and manipulate
+groups of objects.
+
+
+Q2. Is Map a Collection?
+
+Answer:
+
+No.
+
+Map is a separate hierarchy because it stores key-value
+associations rather than individual elements.
+
+
+Q3. Difference between List and Set?
+
+List:
+    duplicates allowed
+    ordered/indexed
+
+Set:
+    duplicates not allowed
+
+
+Q4. Why does HashSet not allow duplicates?
+
+Because it uses hashing and equality checking.
+It uses hashCode() to locate a bucket and equals() to
+determine whether an equivalent element already exists.
+
+
+Q5. What is Hashing?
+
+Hashing is a technique of transforming data into a hash
+value used to efficiently locate a storage bucket.
+
+
+Q6. What is collision?
+
+When multiple different keys/elements map to the same bucket.
+
+
+Q7. What is chaining?
+
+A collision-handling technique where multiple entries associated
+with the same bucket are maintained through a linked/tree structure.
+
+
+Q8. HashSet vs TreeSet?
+
+HashSet:
+    unique + hash-based
+    average O(1)
+    no guaranteed sorted order
+
+TreeSet:
+    unique + sorted
+    O(log n)
+    tree-based
+
+
+Q9. HashMap vs TreeMap?
+
+HashMap:
+    key-value
+    average O(1)
+    no guaranteed sorted order
+
+TreeMap:
+    key-value
+    sorted keys
+    O(log n)
+
+
+Q10. HashMap vs LinkedHashMap?
+
+HashMap:
+    no guaranteed iteration order
+
+LinkedHashMap:
+    maintains predictable insertion order by default.
+
+
+Q11. Why does HashMap allow duplicate values?
+
+Because uniqueness is required for keys, not values.
+
+
+Q12. Why is ArrayList called dynamic?
+
+Because its internal storage automatically grows when
+its current capacity is insufficient.
+
+
+Q13. Why is LinkedList good for insertion?
+
+Once the relevant node/position is known, links can be changed
+without shifting all subsequent elements.
+
+
+Q14. Why is ArrayList get() O(1)?
+
+Because it uses an array and can directly access an index.
+
+
+Q15. Why is LinkedList get() O(n)?
+
+Because it must traverse nodes from the appropriate end
+until it reaches the requested position.
+*/
+
+
+// ================================================================
+// 59. FINAL DSA DECISION TREE
+// ================================================================
+
+/*
+START
+  |
+  v
+Do you need key -> value?
+  |
+  +---- YES ----> MAP
+  |                |
+  |                +-- Fast lookup? → HashMap
+  |                |
+  |                +-- Preserve order? → LinkedHashMap
+  |                |
+  |                +-- Sorted keys? → TreeMap
+  |
+  NO
+  |
+  v
+Do you need unique elements?
+  |
+  +---- YES ----> SET
+  |                |
+  |                +-- Fast lookup? → HashSet
+  |                |
+  |                +-- Insertion order? → LinkedHashSet
+  |                |
+  |                +-- Sorted? → TreeSet
+  |
+  NO
+  |
+  v
+Do you need FIFO-style processing?
+  |
+  +---- YES ----> QUEUE
+  |
+  NO
+  |
+  v
+Need indexed/sequence-based storage?
+  |
+  +---- YES ----> ArrayList
+  |
+  v
+Need linked-node structure / frequent structural
+insertions/deletions around known positions?
+  |
+  +---- YES ----> LinkedList
+
+
+FINAL MEMORY TRICK:
+
+    LIST
+      = Duplicates + Order
+
+
+    SET
+      = Unique
+
+
+    QUEUE
+      = Processing order
+
+
+    MAP
+      = Key → Value
+
+
+    HASH
+      = Fast average lookup
+
+
+    TREE
+      = Sorted
+
+
+    LINKED
+      = Maintains links/order
+
+
+MOST IMPORTANT:
+
+    ArrayList       → dynamic array
+    LinkedList      → doubly linked list
+    HashSet         → unique + hashing
+    LinkedHashSet   → unique + hashing + insertion order
+    TreeSet         → unique + sorted tree
+    HashMap         → key-value + hashing
+    LinkedHashMap   → key-value + hashing + order
+    TreeMap         → key-value + sorted tree
+
+
+For DSA:
+
+    Need index?             → ArrayList
+    Need unique?            → HashSet
+    Need frequency?         → HashMap
+    Need value → index?     → HashMap
+    Need sorted unique?     → TreeSet
+    Need sorted key-value?  → TreeMap
+    Need FIFO/BFS?          → Queue
+*/
+```
