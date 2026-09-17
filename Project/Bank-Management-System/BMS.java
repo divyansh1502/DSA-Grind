@@ -58,6 +58,7 @@ public class BMS {
                     ExistingCustomer.coustomerLogin();
                     break;
                 case 2:
+                    NewCustomer.openAccount();
                     break;
                 default:
                     System.out.println("Invaild Input");

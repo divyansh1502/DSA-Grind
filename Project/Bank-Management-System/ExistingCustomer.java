@@ -2,14 +2,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ExistingCustomer {
-    static private long accountNumber = 1234567890; 
-    static private String password = "User@123";
-    static private String name = "Divyansh Singh";
     static private String ifsc = "CBIN07890";
     static private String branch = "Sarojini Nagar, Lucknow";
     static private String status = "Active";
-    static private double balance = 0;
     static Scanner sc = new Scanner(System.in);
+    static Customer customers;
     public static void coustomerLogin() {
         System.out.println();
         System.out.println("================Coustomer Login=================");
@@ -18,15 +15,19 @@ public class ExistingCustomer {
         long accNo = sc.nextLong();
         System.out.print("Enter Password: ");
         String pass = sc.next();
-
-        if(accountNumber == accNo && password.equals(pass)) {
-            System.out.println();
-            System.out.println("Coustomer Logged in Successfully!!");
-            coustomerDashboard();
-        } else {
+        for (Customer customer : Customer.customers) {
+            if(accNo == customer.accountNumber && pass.equals(customer.password)) {
+                customers = customer;
+                System.out.println();
+                System.out.println("Coustomer Logged in Successfully!!");
+                coustomerDashboard();
+                return;
+            }
+        }
+        // No customer Matched
             System.out.println();
             System.out.println("Oops! Wrong Account number or Password");
-        }
+            
     }
     public static void coustomerDashboard() {
         System.out.println();
@@ -85,8 +86,8 @@ public class ExistingCustomer {
         System.out.println();
         System.out.println("============Account Details============");
         System.out.println();
-        System.out.println("Name : " + name);
-        System.out.println("Account Number : " + accountNumber);
+        System.out.println("Name : " + customers.name);
+        System.out.println("Account Number : " + customers.accountNumber);
         System.out.println("IFSC Code : " + ifsc);
         System.out.println("Branch : " + branch);
         System.out.println("Bank Status : " + status);
@@ -96,7 +97,7 @@ public class ExistingCustomer {
         System.out.println();
         System.out.println("==================Balance=================");
         System.out.println();
-        System.out.println("Balance: " + balance);
+        System.out.println("Balance: " + customers.balance);
         System.out.println();
     }
     private static void depositMoney() {
@@ -105,11 +106,11 @@ public class ExistingCustomer {
         System.out.println();
         System.out.print("Enter Amount: ");
         double amt = sc.nextDouble();
-        balance += amt;
-        Transaction transaction = new Transaction("Deposit", amt, balance);
+        customers.balance += amt;
+        Transaction transaction = new Transaction("Deposit", amt, customers.balance);
         Transaction.transactions.add(transaction);
         System.out.println("Money Deposited Successfully!");
-        System.out.println("Current Balance: " + balance);
+        System.out.println("Current Balance: " + customers.balance);
         System.out.println();
     }
     private static void withdrawMoney() {
@@ -118,9 +119,9 @@ public class ExistingCustomer {
         System.out.println();
         System.out.print("Enter Amount: ");
         double amt = sc.nextDouble();
-        if(balance >= amt) {
-            balance -= amt;
-            Transaction transaction = new Transaction("Withdraw", amt, balance);
+        if(customers.balance >= amt) {
+            customers.balance -= amt;
+            Transaction transaction = new Transaction("Withdraw", amt, customers.balance);
             Transaction.transactions.add(transaction);
             System.out.println("Money Withdrawn Successfully!");
             System.out.println();
@@ -128,7 +129,7 @@ public class ExistingCustomer {
             System.out.println("Low Balance!");
             System.out.println();
         }
-        System.out.println("Current Balance: " + balance);
+        System.out.println("Current Balance: " + customers.balance);
         System.out.println();
     }
     private static void transferMoney() {
@@ -139,9 +140,9 @@ public class ExistingCustomer {
         long acc = sc.nextLong();
         System.out.print("Enter Amount: ");
         double amt = sc.nextDouble();
-        if(balance >= amt) {
-            balance -= amt;
-            Transaction transaction = new Transaction("Transfer", amt, balance);
+        if(customers.balance >= amt) {
+            customers.balance -= amt;
+            Transaction transaction = new Transaction("Transfer", amt, customers.balance);
             Transaction.transactions.add(transaction);
             System.out.println("Money Transferred Successfully!");
             System.out.println("Account Number: " + acc);
@@ -151,7 +152,7 @@ public class ExistingCustomer {
             System.out.println("Low Balance!");
             System.out.println();
         }
-        System.out.println("Current Balance: " + balance);
+        System.out.println("Current Balance: " + customers.balance);
         System.out.println();
     }
     private static void transactionHistory() {
@@ -182,5 +183,4 @@ class Transaction {
         this.balanceAfter = balanceAfter;
     }
     static ArrayList<Transaction> transactions = new ArrayList<>();
-    
 }
