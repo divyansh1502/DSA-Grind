@@ -1,0 +1,2423 @@
+# JAVA COLLECTION FRAMEWORK — LIST DEEP DIVE
+
+============================================================
+
+# 1. COLLECTION FRAMEWORK HIERARCHY
+
+============================================================
+
+The Java Collection Framework provides interfaces and classes
+to store and manipulate groups of objects.
+
+Basic hierarchy:
+
+```text
+                         Iterable
+                            |
+                       Collection
+                            |
+          +-----------------+------------------+
+          |                 |                  |
+         List               Set               Queue
+          |                  |                  |
+   +------+------+       HashSet          PriorityQueue
+   |      |     |        LinkedHashSet    Deque
+ArrayList LinkedList Vector                   |
+   |                |                    ArrayDeque
+   |               Stack
+   |
+AbstractList
+```
+
+Important interfaces/classes:
+
+```text
+Collection
+   |
+   +---- List
+   |      |
+   |      +---- ArrayList
+   |      +---- LinkedList
+   |      +---- Vector
+   |             |
+   |            Stack
+   |
+   +---- Set
+   |
+   +---- Queue
+          |
+          +---- Deque
+```
+
+There are also Map types:
+
+```text
+Map
+ |
+ +---- HashMap
+ +---- LinkedHashMap
+ +---- TreeMap
+ +---- Hashtable
+```
+
+IMPORTANT:
+
+```text
+Collection != Map
+```
+
+`Map` is part of the Java Collections Framework, but
+`Map` does NOT extend `Collection`.
+
+Why?
+
+Because:
+
+```text
+Collection → stores individual elements
+
+Map        → stores key-value pairs
+```
+
+Example:
+
+```java
+List<Integer> list = new ArrayList<>();
+
+list.add(10);
+list.add(20);
+list.add(30);
+```
+
+versus:
+
+```java
+Map<Integer, String> map = new HashMap<>();
+
+map.put(101, "Rahul");
+map.put(102, "Aman");
+```
+
+============================================================
+
+# 2. WHAT IS LIST?
+
+============================================================
+
+`List` is an interface in Java.
+
+```java
+public interface List<E> extends Collection<E>
+```
+
+A List represents an:
+
+```text
+ORDERED COLLECTION
+```
+
+where:
+
+1. Elements have positions/indexes.
+2. Duplicate elements are allowed.
+3. Insertion order is generally preserved.
+4. Elements can be accessed using an index.
+5. Elements can be replaced using `set()`.
+
+Example:
+
+```java
+List<String> list = new ArrayList<>();
+
+list.add("A");
+list.add("B");
+list.add("A");
+```
+
+Result:
+
+```text
+Index       0    1    2
+            ↓    ↓    ↓
+List       [A,   B,   A]
+```
+
+Duplicates:
+
+```text
+A appears twice
+```
+
+are completely valid.
+
+---
+
+# WHY DOES LIST HAVE INDEX?
+
+---
+
+A List represents a sequence of elements.
+
+For example:
+
+```text
+[10, 20, 30, 40]
+```
+
+Every element has a position:
+
+```text
+index:  0   1   2   3
+value: 10  20  30  40
+```
+
+Therefore:
+
+```java
+list.get(2);
+```
+
+returns:
+
+```text
+30
+```
+
+This is one of the major differences between `List` and `Set`.
+
+```text
+List
+→ position/index matters
+
+Set
+→ uniqueness matters
+```
+
+============================================================
+
+# 3. LIST PROPERTIES
+
+============================================================
+
+| Property             | List                                        |
+| -------------------- | ------------------------------------------- |
+| Ordered              | Yes                                         |
+| Index-based          | Yes                                         |
+| Duplicates           | Allowed                                     |
+| Null                 | Generally allowed, implementation-dependent |
+| Random access        | Depends on implementation                   |
+| Replacement          | Yes                                         |
+| Main implementations | ArrayList, LinkedList, Vector               |
+
+Example:
+
+```java
+List<Integer> list = new ArrayList<>();
+
+list.add(10);
+list.add(20);
+list.add(10);
+list.add(30);
+```
+
+Output:
+
+```text
+[10, 20, 10, 30]
+```
+
+Notice:
+
+```text
+10 → duplicate allowed
+order → preserved
+index → available
+```
+
+============================================================
+
+# 4. WHAT IS A SEQUENCE COLLECTION?
+
+============================================================
+
+Java 21 introduced:
+
+```java
+SequencedCollection<E>
+```
+
+It represents a collection where elements have a defined
+encounter sequence.
+
+Conceptually:
+
+```text
+first element
+      |
+      v
+[A, B, C, D]
+            ^
+            |
+       last element
+```
+
+It provides direct operations for both ends.
+
+Important methods:
+
+```java
+addFirst()
+addLast()
+
+getFirst()
+getLast()
+
+removeFirst()
+removeLast()
+
+reversed()
+```
+
+Example:
+
+```java
+SequencedCollection<Integer> numbers =
+        new ArrayList<>();
+
+numbers.add(10);
+numbers.add(20);
+numbers.add(30);
+
+numbers.addFirst(5);
+numbers.addLast(40);
+```
+
+Result:
+
+```text
+[5, 10, 20, 30, 40]
+```
+
+---
+
+# SEQUENCED COLLECTION HIERARCHY
+
+---
+
+Conceptually:
+
+```text
+Collection
+    |
+    +---- SequencedCollection
+              |
+              +---- List
+              |
+              +---- SequencedSet
+              |
+              +---- Deque
+```
+
+`List` became a subtype of `SequencedCollection` in Java 21.
+
+Therefore a List can naturally work with:
+
+```java
+getFirst()
+getLast()
+addFirst()
+addLast()
+removeFirst()
+removeLast()
+reversed()
+```
+
+============================================================
+
+# 5. SEQUENCED COLLECTION METHODS
+
+============================================================
+
+## addFirst(E)
+
+Adds element at the beginning.
+
+```java
+list.addFirst(10);
+```
+
+Before:
+
+```text
+[20, 30, 40]
+```
+
+After:
+
+```text
+[10, 20, 30, 40]
+```
+
+---
+
+## addLast(E)
+
+Adds element at the end.
+
+```java
+list.addLast(50);
+```
+
+Before:
+
+```text
+[10, 20, 30]
+```
+
+After:
+
+```text
+[10, 20, 30, 50]
+```
+
+---
+
+## getFirst()
+
+Returns the first element.
+
+```java
+list.getFirst();
+```
+
+```text
+[10, 20, 30]
+
+getFirst()
+    ↓
+   10
+```
+
+---
+
+## getLast()
+
+Returns the last element.
+
+```java
+list.getLast();
+```
+
+```text
+[10, 20, 30]
+
+getLast()
+    ↓
+   30
+```
+
+---
+
+## removeFirst()
+
+Removes and returns first element.
+
+```java
+list.removeFirst();
+```
+
+Before:
+
+```text
+[10, 20, 30]
+```
+
+After:
+
+```text
+[20, 30]
+```
+
+---
+
+## removeLast()
+
+Removes and returns last element.
+
+```java
+list.removeLast();
+```
+
+Before:
+
+```text
+[10, 20, 30]
+```
+
+After:
+
+```text
+[10, 20]
+```
+
+---
+
+## reversed()
+
+Returns a reversed view of the sequence.
+
+```java
+var reversed = list.reversed();
+```
+
+Original:
+
+```text
+[10, 20, 30]
+```
+
+Reversed view:
+
+```text
+[30, 20, 10]
+```
+
+IMPORTANT:
+
+`reversed()` is different from manually creating a new
+reversed copy.
+
+It provides a reversed-order view backed by the original
+sequence.
+
+============================================================
+
+# 6. IMPORTANT LIST METHODS
+
+============================================================
+
+## add(E)
+
+Adds an element.
+
+```java
+list.add(10);
+```
+
+Example:
+
+```text
+Before:
+[20, 30]
+
+add(10)
+
+After:
+[20, 30, 10]
+```
+
+---
+
+## add(int index, E element)
+
+Adds at a particular position.
+
+```java
+list.add(1, 50);
+```
+
+Before:
+
+```text
+[10, 20, 30]
+```
+
+After:
+
+```text
+[10, 50, 20, 30]
+```
+
+Elements after index 1 shift right.
+
+---
+
+## addAll(Collection)
+
+Adds all elements of another collection.
+
+```java
+List<Integer> a = new ArrayList<>();
+a.add(10);
+a.add(20);
+
+List<Integer> b = new ArrayList<>();
+b.add(30);
+b.add(40);
+
+a.addAll(b);
+```
+
+Result:
+
+```text
+[10, 20, 30, 40]
+```
+
+---
+
+## addAll(int index, Collection)
+
+Adds another collection starting at a particular position.
+
+```java
+a.addAll(1, b);
+```
+
+---
+
+## get(index)
+
+Returns the element at an index.
+
+```java
+list.get(2);
+```
+
+Example:
+
+```text
+[10, 20, 30, 40]
+          ↑
+        index 2
+
+get(2) → 30
+```
+
+---
+
+# set(index, element)
+
+REPLACES the existing element.
+
+```java
+list.set(1, 20);
+```
+
+Before:
+
+```text
+[10, 15, 30]
+```
+
+After:
+
+```text
+[10, 20, 30]
+```
+
+IMPORTANT:
+
+`set()` does NOT increase the size.
+
+```text
+size before = 3
+size after  = 3
+```
+
+Think:
+
+```text
+set() = REPLACE
+add() = INSERT
+```
+
+---
+
+# remove(index)
+
+Removes element at a particular index.
+
+```java
+list.remove(1);
+```
+
+Before:
+
+```text
+[10, 20, 30]
+```
+
+After:
+
+```text
+[10, 30]
+```
+
+20 is removed and elements after it shift left.
+
+---
+
+# remove(Object)
+
+Removes the first matching object.
+
+```java
+list.remove(Integer.valueOf(20));
+```
+
+IMPORTANT WITH INTEGER:
+
+```java
+list.remove(1);
+```
+
+means:
+
+```text
+remove element at index 1
+```
+
+while:
+
+```java
+list.remove(Integer.valueOf(1));
+```
+
+means:
+
+```text
+remove the Integer object whose value is 1
+```
+
+This is a common interview question.
+
+---
+
+# indexOf(Object)
+
+Returns the first occurrence.
+
+```java
+List<Integer> list =
+        new ArrayList<>(List.of(10, 20, 30, 20));
+
+list.indexOf(20);
+```
+
+Result:
+
+```text
+1
+```
+
+---
+
+# lastIndexOf(Object)
+
+Returns the last occurrence.
+
+```java
+list.lastIndexOf(20);
+```
+
+Result:
+
+```text
+3
+```
+
+---
+
+# contains(Object)
+
+Checks whether element exists.
+
+```java
+list.contains(20);
+```
+
+Returns:
+
+```text
+true
+```
+
+---
+
+# containsAll(Collection)
+
+Checks whether all elements of another collection exist.
+
+```java
+list.containsAll(otherList);
+```
+
+Returns:
+
+```text
+true / false
+```
+
+---
+
+# size()
+
+Returns number of elements.
+
+```java
+list.size();
+```
+
+---
+
+# isEmpty()
+
+Checks whether list contains zero elements.
+
+```java
+list.isEmpty();
+```
+
+---
+
+# clear()
+
+Removes all elements.
+
+```java
+list.clear();
+```
+
+Before:
+
+```text
+[10, 20, 30]
+```
+
+After:
+
+```text
+[]
+```
+
+---
+
+# subList(from, to)
+
+Returns a view of a portion of the list.
+
+```java
+list.subList(1, 4);
+```
+
+`from` = inclusive
+
+`to` = exclusive
+
+Example:
+
+```text
+[10, 20, 30, 40, 50]
+     ↑           ↑
+    1           4
+
+Result:
+
+[20, 30, 40]
+```
+
+---
+
+# iterator()
+
+Returns an Iterator.
+
+```java
+Iterator<Integer> it = list.iterator();
+```
+
+Used for sequential traversal.
+
+---
+
+# listIterator()
+
+Returns a ListIterator.
+
+```java
+ListIterator<Integer> it =
+        list.listIterator();
+```
+
+Unlike Iterator, ListIterator can move:
+
+```text
+forward
+   AND
+backward
+```
+
+It also supports modification operations.
+
+---
+
+# sort()
+
+Sorts the list.
+
+```java
+list.sort(null);
+```
+
+---
+
+# replaceAll()
+
+Applies an operation to every element.
+
+```java
+list.replaceAll(x -> x * 2);
+```
+
+Example:
+
+```text
+[10, 20, 30]
+
+↓
+
+[20, 40, 60]
+```
+
+============================================================
+
+# 7. ARRAYLIST
+
+============================================================
+
+`ArrayList` is a resizable-array implementation of List.
+
+```java
+ArrayList<Integer> list =
+        new ArrayList<>();
+```
+
+or preferably:
+
+```java
+List<Integer> list =
+        new ArrayList<>();
+```
+
+Why?
+
+Because:
+
+```text
+List = interface
+ArrayList = implementation
+```
+
+This promotes loose coupling.
+
+============================================================
+
+# 8. INTERNAL STRUCTURE OF ARRAYLIST
+
+============================================================
+
+Conceptually, ArrayList uses an internal array.
+
+```text
+ArrayList
+    |
+    v
++----+----+----+----+----+
+| 10 | 20 | 30 | 40 |    |
++----+----+----+----+----+
+  0    1    2    3    4
+```
+
+The array has:
+
+```text
+elements
+```
+
+and the ArrayList keeps track of:
+
+```text
+current size
+```
+
+and internally manages capacity.
+
+IMPORTANT:
+
+```text
+size != capacity
+```
+
+Example:
+
+```text
+size = 4
+capacity = 10
+```
+
+means:
+
+```text
+4 positions contain actual elements
+10 positions are available internally
+```
+
+============================================================
+
+# 9. WHY ARRAYLIST HAS RANDOM ACCESS
+
+============================================================
+
+ArrayList stores elements in an array.
+
+Arrays use contiguous indexed storage.
+
+Suppose:
+
+```text
+[10, 20, 30, 40, 50]
+```
+
+If we ask:
+
+```java
+list.get(3);
+```
+
+the implementation can directly calculate where index 3
+is located.
+
+Conceptually:
+
+```text
+base address + index × element-reference-size
+```
+
+Therefore:
+
+```text
+get(index)
+```
+
+is generally:
+
+```text
+O(1)
+```
+
+This is called:
+
+```text
+RANDOM ACCESS
+```
+
+Random access means:
+
+```text
+You can directly access any position
+without traversing all previous elements.
+```
+
+============================================================
+
+# 10. WHY ARRAYLIST IS CACHE-FRIENDLY
+
+============================================================
+
+Modern CPUs use cache memory.
+
+ArrayList stores its element references in an array, which
+provides good spatial locality.
+
+Conceptually:
+
+```text
+memory:
+
++----+----+----+----+----+
+| A  | B  | C  | D  | E  |
++----+----+----+----+----+
+```
+
+Nearby array positions are close together in memory.
+
+Therefore sequential iteration can make good use of CPU
+cache behavior.
+
+LinkedList is different.
+
+Its nodes are separate objects:
+
+```text
+Node A → Node B → Node C → Node D
+```
+
+Those nodes may be located in different areas of memory.
+
+Therefore LinkedList generally has poorer cache locality.
+
+============================================================
+
+# 11. WHY ARRAYLIST IS COMMONLY PREFERRED
+
+============================================================
+
+Do NOT memorize:
+
+```text
+"ArrayList is used 90% of the time."
+```
+
+as a Java rule.
+
+There is no official 90% rule.
+
+The practical idea is:
+
+```text
+For general-purpose List usage,
+ArrayList is often the default choice.
+```
+
+Why?
+
+```text
+1. Fast get(index)
+2. Fast set(index, value)
+3. Efficient sequential traversal
+4. Good cache locality
+5. Simple internal structure
+6. Low per-element memory overhead
+7. Amortized O(1) append
+8. Excellent general-purpose performance
+```
+
+LinkedList should not automatically be chosen just because
+you frequently add/remove elements.
+
+In many real workloads, ArrayList can still perform better
+because of cache locality and lower object overhead.
+
+============================================================
+
+# 12. ARRAYLIST CONSTRUCTORS
+
+============================================================
+
+There are three commonly discussed constructors.
+
+---
+
+## 1. Empty constructor
+
+```java
+ArrayList<Integer> list =
+        new ArrayList<>();
+```
+
+Creates an empty ArrayList.
+
+```text
+[]
+```
+
+---
+
+## 2. Initial capacity
+
+```java
+ArrayList<Integer> list =
+        new ArrayList<>(100);
+```
+
+Here:
+
+```text
+100 = initial capacity
+```
+
+IMPORTANT:
+
+It does NOT mean:
+
+```text
+size = 100
+```
+
+It means approximately:
+
+```text
+capacity = 100
+size = 0
+```
+
+You cannot do:
+
+```java
+list.get(0);
+```
+
+because no element exists yet.
+
+---
+
+## 3. Collection constructor
+
+```java
+ArrayList<Integer> list =
+        new ArrayList<>(otherCollection);
+```
+
+Example:
+
+```java
+List<Integer> a =
+        List.of(10, 20, 30);
+
+ArrayList<Integer> b =
+        new ArrayList<>(a);
+```
+
+Result:
+
+```text
+[10, 20, 30]
+```
+
+It creates a new ArrayList initialized with elements from
+the supplied Collection.
+
+============================================================
+
+# 13. HOW ARRAYLIST GROWS
+
+============================================================
+
+ArrayList is dynamically resizable.
+
+Suppose internally:
+
+```text
+capacity = 5
+size = 5
+```
+
+Now:
+
+```java
+list.add(60);
+```
+
+There is no free capacity.
+
+Therefore ArrayList must create a larger internal array.
+
+Conceptually:
+
+```text
+OLD:
+
+[10][20][30][40][50]
+       capacity = 5
+
+        ↓ grow
+
+NEW:
+
+[10][20][30][40][50][ ][ ][ ]
+```
+
+The old elements are copied into the new array.
+
+IMPORTANT:
+
+The Java specification does NOT require a particular growth
+factor.
+
+In the commonly used OpenJDK implementation, growth is
+approximately:
+
+```text
+new capacity ≈ old capacity × 1.5
+```
+
+So:
+
+```text
+10 → 15 → 22 → 33 → ...
+```
+
+The exact implementation details can differ between Java
+versions/vendors.
+
+============================================================
+
+# 14. WHY DOES ARRAYLIST GROW INSTEAD OF USING A FIXED ARRAY?
+
+============================================================
+
+Normal arrays have fixed length.
+
+```java
+int[] arr = new int[5];
+```
+
+You cannot increase:
+
+```text
+5 → 10
+```
+
+directly.
+
+ArrayList solves this by:
+
+```text
+1. Maintaining an internal array.
+2. Detecting insufficient capacity.
+3. Creating a larger array.
+4. Copying existing elements.
+5. Using the new array.
+```
+
+Therefore:
+
+```text
+ArrayList = dynamically resizable array abstraction
+```
+
+============================================================
+
+# 15. AMORTIZED O(1) ADD
+
+============================================================
+
+Normally:
+
+```java
+list.add(element);
+```
+
+is approximately:
+
+```text
+O(1) amortized
+```
+
+But during resizing:
+
+```text
+new array
++
+copy old elements
+```
+
+requires:
+
+```text
+O(n)
+```
+
+So:
+
+```text
+Normal add     → O(1)
+Resize add     → O(n)
+Amortized add  → O(1)
+```
+
+This is an important interview concept.
+
+============================================================
+
+# 16. ARRAYLIST — ensureCapacity()
+
+============================================================
+
+Method:
+
+```java
+list.ensureCapacity(1000);
+```
+
+Purpose:
+
+```text
+Ensure that the ArrayList can accommodate at least the
+specified number of elements without needing to resize
+immediately.
+```
+
+Example:
+
+```java
+ArrayList<Integer> list =
+        new ArrayList<>();
+
+list.ensureCapacity(1000);
+```
+
+This is useful when you already know that many elements are
+likely to be added.
+
+Example:
+
+```java
+ArrayList<Employee> employees =
+        new ArrayList<>();
+
+employees.ensureCapacity(10000);
+
+for (...) {
+    employees.add(employee);
+}
+```
+
+Potential benefit:
+
+```text
+fewer resizing operations
+```
+
+IMPORTANT:
+
+```text
+ensureCapacity(1000)
+```
+
+does NOT mean:
+
+```text
+size = 1000
+```
+
+It affects capacity, not logical size.
+
+============================================================
+
+# 17. ARRAYLIST — trimToSize()
+
+============================================================
+
+Method:
+
+```java
+list.trimToSize();
+```
+
+Purpose:
+
+```text
+Reduce the internal capacity to the current size.
+```
+
+Suppose:
+
+```text
+size     = 5
+capacity = 20
+```
+
+After:
+
+```java
+list.trimToSize();
+```
+
+conceptually:
+
+```text
+size     = 5
+capacity ≈ 5
+```
+
+Why?
+
+To reduce unused internal storage.
+
+Useful when:
+
+```text
+You have finished adding elements
+AND
+you want to reduce unused capacity.
+```
+
+But don't call it unnecessarily after every operation because
+it can cause extra resizing/copying work.
+
+============================================================
+
+# 18. ARRAYLIST COMPLEXITY
+
+============================================================
+
+| Operation     | Typical Complexity |
+| ------------- | -----------------: |
+| get(index)    |               O(1) |
+| set(index)    |               O(1) |
+| add(end)      |     O(1) amortized |
+| add(index)    |               O(n) |
+| remove(end)   |     O(1) amortized |
+| remove(index) |               O(n) |
+| contains()    |               O(n) |
+| indexOf()     |               O(n) |
+| clear()       |               O(n) |
+| iteration     |               O(n) |
+
+Why:
+
+```text
+get/set
+→ direct array indexing
+
+add(index)
+→ elements may need shifting
+
+remove(index)
+→ elements may need shifting
+```
+
+============================================================
+
+# 19. LINKEDLIST
+
+============================================================
+
+`LinkedList` is a doubly linked list implementation.
+
+It implements:
+
+```text
+List
+Deque
+Queue
+```
+
+Conceptually:
+
+```java
+LinkedList<Integer> list =
+        new LinkedList<>();
+```
+
+Its internal structure is fundamentally different from
+ArrayList.
+
+============================================================
+
+# 20. NODE STRUCTURE OF LINKEDLIST
+
+============================================================
+
+Conceptually, a doubly linked list node looks like:
+
+```java
+class Node<T> {
+
+    T data;
+
+    Node<T> next;
+
+    Node<T> prev;
+}
+```
+
+Each node contains:
+
+```text
+data
++
+reference to next node
++
+reference to previous node
+```
+
+Example:
+
+```text
+        prev        next
+          ↓          ↓
+
+      +-------+
+      |  10   |
+      +-------+
+       /     \
+     null    Node20
+```
+
+Complete structure:
+
+```text
+head
+ ↓
++------+------+     +------+------+     +------+------+
+| prev | 10   | ←→  | prev | 20   | ←→  | prev | 30   |
++------+------+     +------+------+     +------+------+
+                                              ↓
+                                             null
+```
+
+Conceptually:
+
+```text
+head
+ ↓
+[10] ⇄ [20] ⇄ [30]
+                  ↑
+                 tail
+```
+
+The LinkedList maintains references to the beginning and
+end of the list.
+
+============================================================
+
+# 21. WHY GENERIC T IN NODE?
+
+============================================================
+
+Suppose:
+
+```java
+Node<Integer>
+```
+
+Then:
+
+```text
+T = Integer
+```
+
+Suppose:
+
+```java
+Node<String>
+```
+
+Then:
+
+```text
+T = String
+```
+
+Generic Node:
+
+```java
+class Node<T> {
+
+    T data;
+    Node<T> next;
+    Node<T> prev;
+}
+```
+
+This makes Node reusable for different data types.
+
+Example:
+
+```text
+Node<Integer>
+Node<String>
+Node<Employee>
+```
+
+============================================================
+
+# 22. SINGLY LINKED LIST
+
+============================================================
+
+A singly linked list node contains:
+
+```text
+data
++
+next
+```
+
+Structure:
+
+```text
+class Node<T> {
+
+    T data;
+    Node<T> next;
+}
+```
+
+Diagram:
+
+```text
+head
+ ↓
+[10 | next] → [20 | next] → [30 | null]
+```
+
+Each node knows:
+
+```text
+where the next node is
+```
+
+but does NOT know its previous node.
+
+Therefore:
+
+```text
+forward traversal → possible
+backward traversal → not directly possible
+```
+
+============================================================
+
+# 23. DOUBLY LINKED LIST
+
+============================================================
+
+A doubly linked list contains:
+
+```text
+data
++
+next
++
+previous
+```
+
+Structure:
+
+```java
+class Node<T> {
+
+    T data;
+
+    Node<T> next;
+
+    Node<T> prev;
+}
+```
+
+Diagram:
+
+```text
+null ← [10] ⇄ [20] ⇄ [30] → null
+        ↑                 ↑
+       head              tail
+```
+
+Advantages:
+
+```text
+Forward traversal
+Backward traversal
+Efficient removal when node is known
+Efficient operations at both ends
+```
+
+Cost:
+
+```text
+Extra memory for prev reference
+More pointer/reference manipulation
+Poorer cache locality than array-based storage
+```
+
+============================================================
+
+# 24. ARRAYLIST VS LINKEDLIST
+
+============================================================
+
+```text
+ARRAYLIST
+
+[10][20][30][40][50]
+
+Memory:
+contiguous array-like storage
+
+LINKEDLIST
+
+[10] ⇄ [20] ⇄ [30] ⇄ [40]
+
+Memory:
+separate Node objects connected by references
+```
+
+Comparison:
+
+| Feature                | ArrayList      | LinkedList              |
+| ---------------------- | -------------- | ----------------------- |
+| Internal structure     | Dynamic array  | Doubly linked nodes     |
+| get(index)             | O(1)           | O(n)                    |
+| set(index)             | O(1)           | O(n)                    |
+| add(end)               | O(1) amortized | O(1)                    |
+| add(index)             | O(n)           | O(n) to locate position |
+| remove(index)          | O(n)           | O(n) to locate position |
+| Memory overhead        | Lower          | Higher                  |
+| Cache locality         | Better         | Generally worse         |
+| Random access          | Excellent      | Poor                    |
+| Queue/Deque operations | Less natural   | Natural                 |
+
+IMPORTANT:
+
+A common misconception is:
+
+```text
+LinkedList insertion = always O(1)
+```
+
+Not exactly.
+
+If you already have the Node/position:
+
+```text
+link manipulation = O(1)
+```
+
+But if you need:
+
+```java
+list.add(50000, value);
+```
+
+the list must locate the position first.
+
+That traversal can be:
+
+```text
+O(n)
+```
+
+============================================================
+
+# 25. LINKEDLIST AS STACK
+
+============================================================
+
+A Stack follows:
+
+```text
+LIFO
+
+Last In
+First Out
+```
+
+Example:
+
+```text
+push(10)
+push(20)
+push(30)
+```
+
+Stack:
+
+```text
+TOP
+ ↓
+30
+20
+10
+```
+
+Remove:
+
+```text
+pop()
+```
+
+returns:
+
+```text
+30
+```
+
+With LinkedList:
+
+```java
+LinkedList<Integer> stack =
+        new LinkedList<>();
+
+stack.push(10);
+stack.push(20);
+stack.push(30);
+
+stack.pop();
+```
+
+But in modern Java, prefer:
+
+```java
+Deque<Integer> stack =
+        new ArrayDeque<>();
+```
+
+instead of using the legacy `Stack` class.
+
+============================================================
+
+# 26. LINKEDLIST AS QUEUE
+
+============================================================
+
+Queue follows:
+
+```text
+FIFO
+
+First In
+First Out
+```
+
+Example:
+
+```text
+10 → 20 → 30
+↑          ↑
+front      rear
+```
+
+Remove:
+
+```text
+10
+```
+
+With LinkedList:
+
+```java
+Queue<Integer> queue =
+        new LinkedList<>();
+
+queue.offer(10);
+queue.offer(20);
+queue.offer(30);
+
+queue.poll();
+```
+
+Result:
+
+```text
+10
+```
+
+Again, for many stack/queue use cases, `ArrayDeque` is the
+modern choice.
+
+============================================================
+
+# 27. VECTOR
+
+============================================================
+
+`Vector` is an older dynamic-array implementation.
+
+Conceptually:
+
+```text
+Vector
+  |
+  +---- dynamic array
+```
+
+It is similar in many ways to ArrayList.
+
+Example:
+
+```java
+Vector<Integer> vector =
+        new Vector<>();
+```
+
+Both can dynamically grow:
+
+```text
+Vector
+ArrayList
+   ↓
+dynamic array
+```
+
+The major historical difference is synchronization.
+
+Many Vector methods are synchronized.
+
+Therefore:
+
+```text
+Vector
+→ legacy
+→ synchronized methods
+→ older design
+```
+
+============================================================
+
+# 28. WHY VECTOR IS CALLED LEGACY
+
+============================================================
+
+Vector existed before the modern Collections Framework was
+introduced.
+
+It was later integrated into the framework.
+
+So it is called a:
+
+```text
+legacy collection class
+```
+
+It still exists mainly for:
+
+```text
+backward compatibility
+```
+
+It is not "deleted" because old Java applications may still
+depend on it.
+
+For normal modern List usage:
+
+```java
+List<Integer> list =
+        new ArrayList<>();
+```
+
+is generally the conventional choice.
+
+If thread safety is required, choose the appropriate
+concurrent/synchronized design based on the actual requirement
+rather than automatically choosing Vector.
+
+============================================================
+
+# 29. STACK
+
+============================================================
+
+Java's:
+
+```java
+java.util.Stack
+```
+
+is also a legacy class.
+
+It extends:
+
+```text
+Vector
+  |
+ Stack
+```
+
+Therefore:
+
+```text
+Stack inherits Vector's old design
+```
+
+Example:
+
+```java
+Stack<Integer> stack =
+        new Stack<>();
+
+stack.push(10);
+stack.push(20);
+stack.push(30);
+
+stack.pop();
+```
+
+But modern Java generally recommends:
+
+```java
+Deque<Integer> stack =
+        new ArrayDeque<>();
+```
+
+Then:
+
+```java
+stack.push(10);
+stack.push(20);
+stack.push(30);
+
+stack.pop();
+```
+
+Why?
+
+`ArrayDeque` is designed as a modern double-ended queue and
+works very well for stack/queue operations.
+
+============================================================
+
+# 30. HASH TABLE
+
+============================================================
+
+`Hashtable` is another legacy class.
+
+It implements:
+
+```text
+Map
+```
+
+Conceptually:
+
+```text
+Hashtable
+   |
+hashing
+   |
+key → value
+```
+
+Example:
+
+```java
+Hashtable<Integer, String> table =
+        new Hashtable<>();
+
+table.put(101, "Aman");
+table.put(102, "Rahul");
+```
+
+============================================================
+
+# 31. WHY HASHTABLE IS LEGACY
+
+============================================================
+
+`Hashtable` predates the modern Collections Framework.
+
+Important characteristics include:
+
+```text
+1. Legacy class
+2. Synchronized methods
+3. Does not allow null keys
+4. Does not allow null values
+```
+
+For modern non-concurrent Map usage:
+
+```java
+Map<Integer, String> map =
+        new HashMap<>();
+```
+
+is generally preferred.
+
+For concurrent access, depending on the use case:
+
+```java
+ConcurrentHashMap
+```
+
+is often the modern choice.
+
+So:
+
+```text
+Hashtable
+    ↓
+older synchronized Map
+
+HashMap
+    ↓
+modern general-purpose Map
+
+ConcurrentHashMap
+    ↓
+modern concurrent Map
+```
+
+============================================================
+
+# 32. WHY ARE LEGACY CLASSES STILL IN JAVA?
+
+============================================================
+
+The biggest reason is:
+
+```text
+BACKWARD COMPATIBILITY
+```
+
+Imagine Java removed:
+
+```text
+Vector
+Stack
+Hashtable
+```
+
+Old applications containing:
+
+```java
+Vector<Employee> employees;
+```
+
+could break.
+
+Java strongly values compatibility with existing code.
+
+Therefore these classes remain available even though newer
+alternatives are commonly preferred.
+
+============================================================
+
+# 33. QUICK MODERN REPLACEMENT MAP
+
+============================================================
+
+```text
+LEGACY                  COMMON MODERN CHOICE
+
+Vector            →     ArrayList
+Stack             →     ArrayDeque
+Hashtable         →     HashMap
+Hashtable for     →     ConcurrentHashMap
+concurrent use
+```
+
+The replacement depends on the actual requirements.
+
+============================================================
+
+# 34. COMPLETE CONCEPT MAP
+
+============================================================
+
+```text
+                 JAVA COLLECTION FRAMEWORK
+                          |
+             +------------+-------------+
+             |                          |
+        Collection                     Map
+             |                          |
+       +-----+------+            +------+------+
+       |            |            |             |
+      List          Set       HashMap      Hashtable
+       |
+ +-----+---------+
+ |       |       |
+ArrayList LinkedList Vector
+                    |
+                   Stack
+
+
+Java 21+:
+
+Collection
+    |
+SequencedCollection
+    |
+ +--+----------------+
+ |                   |
+List                Deque
+ |                   |
+ArrayList          ArrayDeque
+LinkedList
+Vector
+```
+
+============================================================
+
+# 35. MOST IMPORTANT INTERVIEW DIFFERENCES
+
+============================================================
+
+## List vs Set
+
+```text
+List:
+→ ordered
+→ index-based
+→ duplicates allowed
+
+Set:
+→ uniqueness is the primary property
+→ no List-style index
+```
+
+---
+
+## ArrayList vs LinkedList
+
+```text
+ArrayList:
+→ dynamic array
+→ O(1) random access
+→ cache-friendly
+→ lower memory overhead
+→ common default List choice
+
+LinkedList:
+→ doubly linked nodes
+→ O(n) index access
+→ supports efficient operations at ends
+→ higher memory overhead
+```
+
+---
+
+## ArrayList vs Vector
+
+```text
+ArrayList:
+→ modern
+→ generally unsynchronized
+→ commonly preferred
+
+Vector:
+→ legacy
+→ synchronized methods
+→ retained for compatibility
+```
+
+---
+
+## Stack vs ArrayDeque
+
+```text
+Stack:
+→ legacy
+→ extends Vector
+
+ArrayDeque:
+→ modern Deque implementation
+→ commonly preferred for stack operations
+```
+
+---
+
+## Hashtable vs HashMap
+
+```text
+Hashtable:
+→ legacy
+→ synchronized
+→ no null key/value
+
+HashMap:
+→ modern general-purpose Map
+→ allows one null key and null values
+```
+
+============================================================
+
+# 36. FINAL MEMORY MAP
+
+============================================================
+
+Remember this:
+
+```text
+LIST
+ |
+ |-- ORDER
+ |-- INDEX
+ |-- DUPLICATES
+ |-- POSITION
+ |
+ +---- ArrayList
+ |       |
+ |       +-- Dynamic Array
+ |       +-- Random Access
+ |       +-- Cache Friendly
+ |       +-- O(1) get
+ |       +-- Amortized O(1) add(end)
+ |
+ +---- LinkedList
+         |
+         +-- Doubly Linked List
+         +-- Node<T>
+         +-- data
+         +-- next
+         +-- prev
+         +-- O(n) get(index)
+         +-- Efficient end operations
+
+
+LEGACY
+ |
+ +---- Vector
+ |       ↓
+ |    ArrayList
+ |
+ +---- Stack
+ |       ↓
+ |    ArrayDeque
+ |
+ +---- Hashtable
+         ↓
+      HashMap
+      /     \
+     /       \
+HashMap   ConcurrentHashMap
+```
+
+# ONE-LINE INTERVIEW DEFINITIONS
+
+```text
+List:
+An ordered collection that allows duplicate elements and
+provides positional/index-based access.
+
+ArrayList:
+A resizable-array implementation of the List interface that
+provides fast random access.
+
+LinkedList:
+A doubly linked list implementation of List and Deque where
+elements are stored in linked nodes.
+
+SequencedCollection:
+An interface introduced in Java 21 representing collections
+with a defined encounter order and operations for accessing
+both ends.
+
+Vector:
+A legacy synchronized resizable-array implementation.
+
+Stack:
+A legacy LIFO collection class extending Vector; ArrayDeque
+is generally preferred for stack behavior.
+
+Hashtable:
+A legacy synchronized Map implementation that does not
+permit null keys or null values.
+
+Random Access:
+The ability to directly access an element by its position
+without traversing preceding elements.
+
+Cache Friendly:
+A data layout that tends to make efficient use of CPU cache
+because related data is stored close together.
+
+Amortized O(1):
+An operation may occasionally be expensive, but averaged over
+a sequence of operations, the cost per operation is constant.
+```
