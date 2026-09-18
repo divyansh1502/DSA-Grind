@@ -12,5 +12,6 @@ public class Subsets {
         char ch = up.charAt(0);
         subset(p + ch, up.substring(1));
         subset(p, up.substring(1));
+        
     }
 }
