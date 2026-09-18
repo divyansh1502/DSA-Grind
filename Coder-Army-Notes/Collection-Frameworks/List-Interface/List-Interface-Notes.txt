@@ -253,11 +253,11 @@ Conceptually:
 
 ```text
 first element
-      |
-      v
+ |
+ v
 [A, B, C, D]
-            ^
-            |
+          ^
+          |
        last element
 ```
 
@@ -467,7 +467,7 @@ After:
 Returns a reversed view of the sequence.
 
 ```java
-var reversed = list.reversed();
+List<Integer> reversed = list.reversed();
 ```
 
 Original:
