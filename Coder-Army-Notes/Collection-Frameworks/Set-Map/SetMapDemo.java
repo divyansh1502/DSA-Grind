@@ -15,6 +15,7 @@ public class SetMapDemo {
         map.put(102, "Aditya");
         map.put(103, "Anushika");
 
+        System.out.println(map);
         System.out.println(map.containsKey(102));
         System.out.println(map.get(103));
     }
